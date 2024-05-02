@@ -16,7 +16,7 @@ public class BackendApplication {
     }
 
     @Bean
-    CommandLineRunner runner(RoleRepository roleRepository, UserService userService) {
+    CommandLineRunner runner(RoleRepository roleRepository) {
         return args -> {
             roleRepository.save(new Role(1, "USER"));
             roleRepository.save(new Role(2, "ADMIN"));
