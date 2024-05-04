@@ -1,5 +1,3 @@
-import { ValidatedTextInput } from './../components/ValidatedInput/ValidatedTextInput';
-import { Label } from "@mui/icons-material";
 import { StyledInputProps, ValidatedInputState } from "./GlobalInterface";
 
 export const determineStyledInputBorder = (props: StyledInputProps): string => {

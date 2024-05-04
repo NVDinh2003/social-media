@@ -1,8 +1,4 @@
-import {
-  ClassRounded,
-  ArrowBackRounded,
-  ClearRounded,
-} from "@mui/icons-material";
+import { ArrowBackRounded, ClearRounded } from "@mui/icons-material";
 
 export const displayIcon = (step: number): JSX.Element => {
   switch (step) {

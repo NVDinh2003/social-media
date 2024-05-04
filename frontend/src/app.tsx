@@ -1,9 +1,12 @@
 import React from "react";
 
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import "./assets/global.css";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { Landing } from "./pages/Landing";
 import { Theme } from "./utils/GlobalInterface";
+import { Feed } from "./pages/Feed";
 
 const theme: Theme = {
   colors: {
@@ -27,7 +30,12 @@ export const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <Landing></Landing>;
+      <Router>
+        <Routes>
+          <Route path="/" element={<Landing></Landing>} />
+          <Route path="/home" element={<Feed></Feed>} />
+        </Routes>
+      </Router>
     </ThemeProvider>
   );
 };
