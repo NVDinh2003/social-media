@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../../../redux/Store";
-import { incrementStep } from "../../../../redux/Slices/RegisterSlice";
+import {
+  incrementStep,
+  updateRegister,
+} from "../../../../redux/Slices/RegisterSlice";
 
 import "./RegisterFormOne.css";
-import { validateName } from "../../../../services/Validator";
-import { ValidatedInput } from "../../../../components/ValidatedInput/ValidatedInput";
 import { RegisterDateInput } from "../RegisterDateInput/RegisterDateInput";
 import { RegisterNameInputs } from "../RegisterNameInput/RegisterNameInputs";
 import { RegisterEmailInput } from "../RegisterEmailInput/RegisterEmailInput";
@@ -24,6 +25,12 @@ export const RegisterFormOne: React.FC = () => {
   // };
 
   const nextPage = () => {
+    dispatch(
+      updateRegister({
+        name: "error",
+        value: false,
+      })
+    );
     dispatch(incrementStep());
   };
 

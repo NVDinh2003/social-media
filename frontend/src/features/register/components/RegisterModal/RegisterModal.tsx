@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Modal } from "../../../../components/Modal/Modal";
-import { UseDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { decrementStep } from "../../../../redux/Slices/RegisterSlice";
 import { RegistrationStepCounter } from "../RegisterStepCounter/RegistrationStepCounter";
