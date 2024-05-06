@@ -14,7 +14,7 @@ p {
 }
 
 .reg-step-four-subhead {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .reg-step-four-container {
@@ -33,7 +33,7 @@ p {
 }
 
 .reg-step-four-input {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .reg-step-four-invalid {
@@ -50,7 +50,8 @@ p {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
+  margin-top: 15px;
 }
 
 .reg-step-four-link {
@@ -62,8 +63,4 @@ p {
 
 .reg-step-four-link:hover {
   text-decoration: underline;
-}
-
-.reg-step-four-check-group > p {
-  margin-right: 15px;
 }
