@@ -5,7 +5,7 @@ import { incrementStep } from "../../../../redux/Slices/RegisterSlice";
 import { StyledNextButton } from "../RegisterNextButton/RegisterNextButton";
 
 import "./RegisterFormTwo.css";
-import { Checkbox } from "../../../../components/StyledCheckbox/Checkbox";
+import { Checkbox } from "../../../../components/Checkbox/Checkbox";
 
 export const RegisterFormTwo: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();

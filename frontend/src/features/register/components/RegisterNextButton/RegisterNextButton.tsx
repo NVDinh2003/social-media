@@ -13,5 +13,6 @@ export const StyledNextButton = styled.button<StyledNextButtonProps>`
 
   opacity: ${(props) => (props.active ? 1.0 : 0.5)};
   border-radius: 50px;
+  border: none;
   cursor: ${(props) => (props.active ? "pointer" : "auto")};
 `;

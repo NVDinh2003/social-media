@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Checkbox } from "../../../../components/StyledCheckbox/Checkbox";
+import { Checkbox } from "../../../../components/Checkbox/Checkbox";
 import { DropDown } from "../../../../components/DropDown/DropDown";
 import { ValidatedTextInput } from "../../../../components/ValidatedInput/ValidatedTextInput";
 import { countryCodeDropDown } from "../../utils/RegisterModalUtils";
