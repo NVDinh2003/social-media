@@ -1,13 +1,15 @@
 package com.nvd;
 
+import com.nvd.config.RSAKeyProperties;
 import com.nvd.models.Role;
 import com.nvd.repositories.RoleRepository;
-import com.nvd.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
+@EnableConfigurationProperties(RSAKeyProperties.class)
 @SpringBootApplication
 public class BackendApplication {
 
