@@ -145,4 +145,37 @@ public class UserService implements UserDetailsService {
 
         return userRepository.save(user);
     }
+
+    public Set<ApplicationUser> followUser(String user, String followee) {
+        ApplicationUser loggedInUser = userRepository.findByUsername(user).orElseThrow(UserDoesNotExistException::new);
+
+        Set<ApplicationUser> followingList = loggedInUser.getFollowing();
+        ApplicationUser followedUser = userRepository.findByUsername(followee).orElseThrow(UserDoesNotExistException::new);
+
+        Set<ApplicationUser> followersList = followedUser.getFollowers();
+
+        // Add the followed user to the following list
+        followingList.add(followedUser);
+        loggedInUser.setFollowing(followingList);
+
+        // Add the current user to the followers list of the followee
+        followersList.add(loggedInUser);
+        followedUser.setFollowers(followersList);
+
+        // Save both users
+        userRepository.save(loggedInUser);
+        userRepository.save(followedUser);
+
+        return loggedInUser.getFollowing();
+    }
+
+    public Set<ApplicationUser> retrieveFollowingList(String username) {
+        ApplicationUser user = userRepository.findByUsername(username).orElseThrow(UserDoesNotExistException::new);
+        return user.getFollowing();
+    }
+
+    public Set<ApplicationUser> retrieveFollowersList(String username) {
+        ApplicationUser user = userRepository.findByUsername(username).orElseThrow(UserDoesNotExistException::new);
+        return user.getFollowers();
+    }
 }
