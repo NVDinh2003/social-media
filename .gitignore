@@ -175,3 +175,17 @@ sketch
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,react,visualstudiocod
+
+
+# personal ignore:
+
+# Ignore specific sensitive files
+src/main/resources/credentials.json
+tokens/**
+tokens/StoredCredential
+tokens/gmail_token
+
+# Để đảm bảo, thêm các pattern tổng quát
+**/credentials.json
+**/StoredCredential
+**/gmail_token

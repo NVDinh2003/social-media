@@ -7,8 +7,6 @@ import com.nvd.service.ImageService;
 import com.nvd.service.TokenService;
 import com.nvd.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,27 +22,25 @@ public class UserController {
 
     @GetMapping("/verify")
     public ApplicationUser verifyIdentity(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        String username = "";
-        ApplicationUser user;
-
-        if (token.startsWith("Bearer")) {  // or token.substring(0, 6).equals("Bearer")
-            String strippedToken = token.substring(7);
-            username = tokenService.getUsernameFromToken(strippedToken);
-        }
-
-        try {
-            user = userService.getUserByUsername(username);
-        } catch (Exception e) {
-            user = null;
-        }
-        return user;
+        String username = tokenService.getUsernameFromToken(token);
+        return userService.getUserByUsername(username);
     }
 
     @PostMapping("/pfp") // profile picture
-    public ResponseEntity<String> uploadProfilePicture(@RequestParam("image") MultipartFile file) throws UnableToSavePhotoException {
+    public ApplicationUser uploadProfilePicture(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @RequestParam("image") MultipartFile file)
+            throws UnableToSavePhotoException {
+        String username = tokenService.getUsernameFromToken(token);
+        return userService.setProfileOrBannerPicture(username, file, "pfp");
+    }
 
-        String uploadImage = imageService.uploadImage(file, "pfp");
-
-        return ResponseEntity.status(HttpStatus.OK).body(uploadImage);
+    @PostMapping("/banner") // profile picture
+    public ApplicationUser uploadBannerPicture(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @RequestParam("image") MultipartFile file)
+            throws UnableToSavePhotoException {
+        String username = tokenService.getUsernameFromToken(token);
+        return userService.setProfileOrBannerPicture(username, file, "bnr");
     }
 }

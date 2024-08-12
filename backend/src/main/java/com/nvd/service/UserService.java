@@ -1,15 +1,13 @@
 package com.nvd.service;
 
-import com.nvd.exceptions.EmailAlreadyTakenException;
-import com.nvd.exceptions.EmailFaildToSendException;
-import com.nvd.exceptions.IncorrectVerificationCodeException;
-import com.nvd.exceptions.UserDoesNotExistException;
+import com.nvd.exceptions.*;
 import com.nvd.models.ApplicationUser;
+import com.nvd.models.Image;
 import com.nvd.models.RegistrationObject;
 import com.nvd.models.Role;
 import com.nvd.repositories.RoleRepository;
 import com.nvd.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -18,20 +16,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private MailService mailService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final MailService mailService;
+    private final PasswordEncoder passwordEncoder;
+    private final ImageService imageService;
 
     public ApplicationUser registerUser(RegistrationObject ro) {
         ApplicationUser user = new ApplicationUser();
@@ -134,5 +131,18 @@ public class UserService implements UserDetailsService {
         return userDetails;
     }
 
-    
+    public ApplicationUser setProfileOrBannerPicture(String username, MultipartFile file, String prefix)
+            throws UnableToSavePhotoException {
+        ApplicationUser user = userRepository.findByUsername(username).orElseThrow(UserDoesNotExistException::new);
+
+        Image image = imageService.uploadImage(file, prefix);
+
+        if (prefix.equals("pfp")) {
+            user.setProfilePicture(image);
+        } else {
+            user.setBannerPicture(image);
+        }
+
+        return userRepository.save(user);
+    }
 }
