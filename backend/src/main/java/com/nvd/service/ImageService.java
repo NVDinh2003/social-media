@@ -23,7 +23,7 @@ public class ImageService {
     private static final File DIRECTORY = new File("D:\\WorkSpace\\Spring_Project\\social-media\\backend\\img");
     private static final String URL = "http://localhost:8000/images/";
 
-    public String uploadImage(MultipartFile file, String prefix) throws UnableToSavePhotoException {
+    public Image uploadImage(MultipartFile file, String prefix) throws UnableToSavePhotoException {
         try {
             // the content type form the request looks something like this img/jpeg
             String extention = "." + file.getContentType().split("/")[1];
@@ -38,7 +38,8 @@ public class ImageService {
 
             Image saved = imageRepository.save(i);
 
-            return "file uploaded successfully: " + img.getName();
+//            return "file uploaded successfully: " + img.getName();
+            return saved;
         } catch (IOException e) {
             throw new UnableToSavePhotoException();
 

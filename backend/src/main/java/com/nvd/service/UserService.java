@@ -130,7 +130,9 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toSet());
 
         UserDetails userDetails = new User(u.getUsername(), u.getPassword(), authorities);
-        
+
         return userDetails;
     }
+
+    
 }

@@ -19,6 +19,4 @@ import java.security.interfaces.RSAPublicKey;
 public class RSAKeyProperties {
     private RSAPublicKey publicKey;
     private RSAPrivateKey privateKey;
-
-
 }

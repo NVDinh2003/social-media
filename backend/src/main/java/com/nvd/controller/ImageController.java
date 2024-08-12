@@ -18,7 +18,7 @@ public class ImageController {
 
     @ExceptionHandler({UnableToResolvePhotoException.class, UnableToResolvePhotoException.class})
     public ResponseEntity<String> handlePhotoException() {
-        return new ResponseEntity<String>("Unable to process the photo", HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>("Unable to process the photo", HttpStatus.NOT_ACCEPTABLE);
     }
 
     @GetMapping("/{fileName}")
