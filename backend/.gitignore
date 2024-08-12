@@ -4,6 +4,19 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# personal ignore:
+
+# Ignore specific sensitive files
+src/main/resources/credentials.json
+tokens/**
+tokens/StoredCredential
+tokens/gmail_token
+
+# Để đảm bảo, thêm các pattern tổng quát
+**/credentials.json
+**/StoredCredential
+**/gmail_token
+
 ### STS ###
 .apt_generated
 .classpath
