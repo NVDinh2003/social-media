@@ -7,6 +7,10 @@ import { RegistrationStepCounter } from "../RegisterStepCounter/RegistrationStep
 import { determineModalContent } from "../../utils/RegisterModalUtils";
 import "./RegisterModal.css";
 import { useDispatch } from "react-redux";
+import {
+  RegisterNextButton,
+  StyledNextButton,
+} from "../RegisterNextButton/RegisterNextButton";
 
 export const RegisterModal: React.FC = () => {
   const state = useSelector((state: RootState) => state.register);
@@ -18,9 +22,14 @@ export const RegisterModal: React.FC = () => {
 
   return (
     <Modal
-      topContent={<div>Top</div>}
-      content={<div>Content</div>}
-      bottomContent={<div>Bottom</div>}
+      topContent={
+        <RegistrationStepCounter
+          step={state.step}
+          changeStep={stepButtonClicked}
+        />
+      }
+      content={determineModalContent(state.step)}
+      bottomContent={<RegisterNextButton step={state.step} />}
     />
     // <Modal>
     //   <div className="register-container">

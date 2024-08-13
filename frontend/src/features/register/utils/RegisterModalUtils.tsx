@@ -5,6 +5,7 @@ import { RegisterFormFour } from "../components/RegisterFormFour/RegisterFormFou
 import data from "../../../data/countrycodes.json";
 import { RegisterFormFive } from "../components/RegisterFormFive/RegisterFormFive";
 import { RegisterFormSix } from "../components/RegisterFormSix/RegisterFormSix";
+import { StyledNextButton } from "../components/RegisterNextButton/RegisterNextButton";
 
 export const determineModalContent = (step: number): JSX.Element => {
   switch (step) {

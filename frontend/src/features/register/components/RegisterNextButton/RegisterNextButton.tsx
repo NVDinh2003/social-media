@@ -16,3 +16,22 @@ export const StyledNextButton = styled.button<StyledNextButtonProps>`
   border: none;
   cursor: ${(props) => (props.active ? "pointer" : "auto")};
 `;
+
+interface RegisterNextButtonProps {
+  step: number;
+}
+
+export const RegisterNextButton: React.FC<RegisterNextButtonProps> = ({
+  step,
+}) => {
+  return (
+    <StyledNextButton
+      disabled={true}
+      color={"black"}
+      active={false}
+      onClick={() => console.log("Hehe")}
+    >
+      {step}
+    </StyledNextButton>
+  );
+};
