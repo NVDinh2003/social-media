@@ -60,7 +60,7 @@ const initialState: RegisterSliceState = {
     year: 0,
   },
   dobValid: false,
-  step: 6,
+  step: 1,
   username: "",
   phoneNumber: "",
 };
@@ -170,6 +170,7 @@ export const RegisterSlice = createSlice({
 
     incrementStep(state) {
       state.step++;
+      state.error = false;
       return state;
     },
 

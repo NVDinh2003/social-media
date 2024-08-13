@@ -68,9 +68,6 @@ export const RegisterFormThree: React.FC = () => {
           choose otherwise <span className="reg-step-three-link">here</span>.
         </p>
       </div>
-      <StyledNextButton onClick={submitUser} color={"blue"} active={true}>
-        Sign up
-      </StyledNextButton>
     </div>
   );
 };

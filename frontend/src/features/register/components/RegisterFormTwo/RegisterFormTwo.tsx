@@ -8,11 +8,6 @@ import "./RegisterFormTwo.css";
 import { Checkbox } from "../../../../components/Checkbox/Checkbox";
 
 export const RegisterFormTwo: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const nextStep = () => {
-    dispatch(incrementStep());
-  };
-
   return (
     <div className="reg-step-two-container">
       <div className="reg-step-two-content">
@@ -39,9 +34,6 @@ export const RegisterFormTwo: React.FC = () => {
           <span className="reg-step-two-link">learn more</span>
         </p>
       </div>
-      <StyledNextButton active={true} color={"black"} onClick={nextStep}>
-        Next step
-      </StyledNextButton>
     </div>
   );
 };

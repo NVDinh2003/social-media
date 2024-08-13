@@ -16,37 +16,6 @@ import { StyledNextButton } from "../RegisterNextButton/RegisterNextButton";
 export const RegisterFormOne: React.FC = () => {
   const registerState = useSelector((state: RootState) => state.register);
 
-  const dispatch: AppDispatch = useDispatch();
-
-  const [buttonActive, setButtonActive] = useState<boolean>(false);
-
-  // const updateUser = (e: React.ChangeEvent<HTMLInputElement>): void => {
-  //   setStepOneState({ ...stepOneState, [e.target.name]: e.target.value });
-  // };
-
-  const nextPage = () => {
-    dispatch(
-      updateRegister({
-        name: "error",
-        value: false,
-      })
-    );
-    dispatch(incrementStep());
-  };
-
-  useEffect(() => {
-    if (
-      registerState.dobValid &&
-      registerState.emailValid &&
-      registerState.firstNameValid &&
-      registerState.lastNameValid
-    ) {
-      setButtonActive(true);
-    } else {
-      setButtonActive(false);
-    }
-  }, [registerState]);
-
   return (
     <div className="reg-step-one-container">
       <div className="reg-step-one-content">
@@ -67,15 +36,6 @@ export const RegisterFormOne: React.FC = () => {
         </div>
         <RegisterDateInput date={registerState.dob} />
       </div>
-
-      <StyledNextButton
-        disabled={!buttonActive}
-        color={"black"}
-        active={buttonActive}
-        onClick={nextPage}
-      >
-        Next
-      </StyledNextButton>
     </div>
   );
 };
