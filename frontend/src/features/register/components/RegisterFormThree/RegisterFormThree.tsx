@@ -10,20 +10,6 @@ import "./RegisterFormThree.css";
 
 export const RegisterFormThree: React.FC = () => {
   const state = useSelector((state: RootState) => state.register);
-  const dispatch: AppDispatch = useDispatch();
-
-  const submitUser = () => {
-    const user = {
-      firstName: state.firstName,
-      lastName: state.lastName,
-      email: state.email,
-      dob: cleanDateForRequest(state.dob),
-    };
-
-    console.log("We are attempting to register the user");
-
-    dispatch(registerUser(user));
-  };
 
   return (
     <div className="reg-step-three-container">

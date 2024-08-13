@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   incrementStep,
   registerUser,
+  sendVerification,
+  updateUserPassword,
+  updateUserPhone,
 } from "../../../../redux/Slices/RegisterSlice";
 import { register } from "module";
 import { cleanDateForRequest } from "../../utils/DateUtils";
@@ -50,11 +53,38 @@ export const RegisterNextButton: React.FC<RegisterNextButtonProps> = ({
     dispatch(registerUser(user));
   };
 
+  const sendPhoneNumber = () => {
+    dispatch(
+      updateUserPhone({
+        username: state.username,
+        phone: state.phoneNumber,
+      })
+    );
+  };
+
+  const verifyEmail = () => {
+    dispatch(
+      sendVerification({
+        username: state.username,
+        code: state.code,
+      })
+    );
+  };
+
+  const sendPassword = () => {
+    dispatch(
+      updateUserPassword({
+        username: state.username,
+        password: state.password,
+      })
+    );
+  };
+
   const determineButtonContent = (step: number): JSX.Element => {
     // console.log("rendering the button");
     switch (step) {
       case 1:
-        let active =
+        let stepOneActive =
           state.dobValid &&
           state.emailValid &&
           state.firstNameValid &&
@@ -62,9 +92,9 @@ export const RegisterNextButton: React.FC<RegisterNextButtonProps> = ({
 
         return (
           <StyledNextButton
-            disabled={!active}
+            disabled={!stepOneActive}
             color={"black"}
-            active={active}
+            active={stepOneActive}
             onClick={nextStep}
           >
             Next
@@ -82,6 +112,45 @@ export const RegisterNextButton: React.FC<RegisterNextButtonProps> = ({
         return (
           <StyledNextButton onClick={sendUserInfo} color={"blue"} active={true}>
             Sign up
+          </StyledNextButton>
+        );
+
+      case 4:
+        let stepFourActive =
+          state.phoneNumber && state.phoneNumberValid ? true : false;
+        return (
+          <StyledNextButton
+            disabled={!stepFourActive}
+            color={"black"}
+            active={stepFourActive}
+            onClick={sendPhoneNumber}
+          >
+            Update number
+          </StyledNextButton>
+        );
+
+      case 5:
+        let stepFiveActive = state.code ? true : false;
+        return (
+          <StyledNextButton
+            active={stepFiveActive}
+            disabled={!stepFiveActive}
+            color={"black"}
+            onClick={verifyEmail}
+          >
+            Next
+          </StyledNextButton>
+        );
+
+      case 6:
+        return (
+          <StyledNextButton
+            active={state.password.length >= 8}
+            disabled={!(state.password.length >= 8)}
+            onClick={sendPassword}
+            color={"black"}
+          >
+            Next
           </StyledNextButton>
         );
       default:

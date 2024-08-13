@@ -8,6 +8,7 @@ import "./RegisterFormFive.css";
 import {
   resendEmail,
   sendVerification,
+  updateRegister,
 } from "../../../../redux/Slices/RegisterSlice";
 
 export const RegisterFormFive: React.FC = () => {
@@ -19,19 +20,16 @@ export const RegisterFormFive: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCode(e.target.value);
+    dispatch(
+      updateRegister({
+        name: "code",
+        value: e.target.value,
+      })
+    );
   };
 
   const resend = () => {
     dispatch(resendEmail(state.username));
-  };
-
-  const verify = () => {
-    dispatch(
-      sendVerification({
-        username: state.username,
-        code,
-      })
-    );
   };
 
   return (
@@ -50,14 +48,6 @@ export const RegisterFormFive: React.FC = () => {
           Didn't receive a mail?
         </p>
       </div>
-      <StyledNextButton
-        active={code ? true : false}
-        disabled={code ? false : true}
-        color={"black"}
-        onClick={verify}
-      >
-        Next
-      </StyledNextButton>
     </div>
   );
 };

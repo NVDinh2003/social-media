@@ -1,11 +1,14 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { ValidatedTextInput } from "../../../../components/ValidatedInput/ValidatedTextInput";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import { StyledNextButton } from "../RegisterNextButton/RegisterNextButton";
 import { UseSelector, useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../../../redux/Store";
-import { updateUserPassword } from "../../../../redux/Slices/RegisterSlice";
+import {
+  updateRegister,
+  updateUserPassword,
+} from "../../../../redux/Slices/RegisterSlice";
 
 import { useNavigate } from "react-router-dom";
 
@@ -22,23 +25,25 @@ export const RegisterFormSix: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+    dispatch(
+      updateRegister({
+        name: "password",
+        value: e.target.value,
+      })
+    );
   };
 
   const toggleView = () => {
     setActive(!active);
   };
 
-  const sendPassword = async () => {
-    await dispatch(
-      updateUserPassword({
-        username: state.username,
-        password,
-      })
-    );
-
-    console.log("navigate");
-    navigate("/home");
-  };
+  useEffect(() => {
+    if (state.login) {
+      // store some user info into local storage, that way we can load the user into ther user slice
+      // when we hit the feed page
+      navigate("/home");
+    }
+  }, [state.login]);
 
   return (
     <div className="reg-step-six-container">
@@ -74,15 +79,6 @@ export const RegisterFormSix: React.FC = () => {
           )}
         </div>
       </div>
-
-      <StyledNextButton
-        active={password.length >= 8}
-        disabled={!(password.length >= 8)}
-        onClick={sendPassword}
-        color={"black"}
-      >
-        Next
-      </StyledNextButton>
     </div>
   );
 };
