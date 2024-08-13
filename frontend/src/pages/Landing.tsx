@@ -2,6 +2,7 @@ import React from "react";
 
 import "./Landing.css";
 import "../assets/global.css";
+import { ModalOld } from "../components/Modal/ModalOld";
 import { RegisterModal } from "../features/register/components/RegisterModal/RegisterModal";
 
 export const Landing: React.FC = () => {
