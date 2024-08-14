@@ -190,6 +190,11 @@ export const RegisterSlice = createSlice({
         return state;
       }
     },
+
+    cleanRegisterState(state) {
+      state = initialState;
+      return state;
+    },
   },
   extraReducers: (builder) => {
     // ======================== Pending
@@ -333,6 +338,10 @@ export const RegisterSlice = createSlice({
   },
 });
 
-export const { updateRegister, incrementStep, decrementStep } =
-  RegisterSlice.actions;
+export const {
+  updateRegister,
+  incrementStep,
+  decrementStep,
+  cleanRegisterState,
+} = RegisterSlice.actions;
 export default RegisterSlice.reducer;

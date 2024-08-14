@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { ValidatedTextInput } from "../../../../components/ValidatedInput/ValidatedTextInput";
-import { StyledNextButton } from "../RegisterNextButton/RegisterNextButton";
 
-import "./RegisterFormFive.css";
+import "./RegisterForm.css";
+import "../../../../assets/global.css";
+
 import {
   resendEmail,
-  sendVerification,
   updateRegister,
 } from "../../../../redux/Slices/RegisterSlice";
 
@@ -33,20 +33,24 @@ export const RegisterFormFive: React.FC = () => {
   };
 
   return (
-    <div className="reg-step-five-container">
-      <div className="reg-step-five-content">
-        <h1>We sent you a code</h1>
-        <p>Enter it below to verify {state.email}</p>
-
-        <ValidatedTextInput
-          valid={true}
-          name={"code"}
-          label={"Verification Code"}
-          changeValue={handleChange}
-        />
-        <p className="reg-step-five-message" onClick={resend}>
-          Didn't receive a mail?
+    <div className="register-container">
+      <div className="register-content">
+        <h1 className="register-header-2">We sent you a code</h1>
+        <p className="register-text color-gray">
+          Enter it below to verify {state.email}
         </p>
+
+        <div className="register-five-input-wrapper">
+          <ValidatedTextInput
+            valid={true}
+            name={"code"}
+            label={"Verification Code"}
+            changeValue={handleChange}
+          />
+          <p className="register-five-message color-blue" onClick={resend}>
+            Didn't receive a mail?
+          </p>
+        </div>
       </div>
     </div>
   );

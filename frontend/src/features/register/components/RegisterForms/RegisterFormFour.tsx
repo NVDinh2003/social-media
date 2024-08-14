@@ -7,7 +7,9 @@ import { validatePhone } from "../../../../services/Validator";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { updateRegister } from "../../../../redux/Slices/RegisterSlice";
-import "./RegisterFormFour.css";
+
+import "./RegisterForm.css";
+import "../../../../assets/global.css";
 
 export const RegisterFormFour: React.FC = () => {
   const state = useSelector((state: RootState) => state.register);
@@ -45,15 +47,21 @@ export const RegisterFormFour: React.FC = () => {
   }, [phoneCode, phoneNumber]);
 
   return (
-    <div className="reg-step-four-container">
-      <div className="reg-step-four-content">
-        <h1>Add a phone number</h1>
-        <p className="reg-step-four-subhead">
+    <div className="register-container">
+      <div className="register-content">
+        <h1 className="register-header-2">Add a phone number</h1>
+        <p className="register-text color-gray">
           Enter the phone number you would like to associate with your Fwitter
           account. You won't get a verification code sent here.
         </p>
 
-        <div className="reg-step-four-input">
+        <div
+          className={
+            validNumber
+              ? "register-four-input-wrapper"
+              : "register-four-input-wrapper-condensed"
+          }
+        >
           <DropDown
             content={countryCodeDropDown}
             change={changeCode}
@@ -69,27 +77,27 @@ export const RegisterFormFour: React.FC = () => {
           {validNumber ? (
             <></>
           ) : (
-            <p className="reg-step-four-invalid">
+            <p className="register-error color-red">
               Please enter a valid 10 digit number
             </p>
           )}
         </div>
 
-        <div className="reg-step-four-check-group">
-          <p>
+        <div className="register-four-checkbox-wrapper">
+          <p className="register-text color-gray">
             Let people who have your phone number find and connect with you on
             Fwitter. <span className="reg-step-four-link">Learn more</span>.
           </p>
           <Checkbox />
         </div>
 
-        <div className="reg-step-four-check-group">
-          <p>
+        <div className="register-four-checkbox-wrapper">
+          <p className="register-text color-gray">
             Let Fwitter use your phone number to personalize our service,
             including ads (if permitted by Ads preference). If you don't enable
             this, Fwitter will still use your phone number for purpose including
             account security, spam, fraud, and abuse prevention.{" "}
-            <span className="reg-step-four-link">
+            <span className="register-link color-blue">
               See our Privacy Policy for more information.
             </span>
           </p>

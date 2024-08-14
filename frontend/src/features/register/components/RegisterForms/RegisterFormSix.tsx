@@ -1,21 +1,19 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ValidatedTextInput } from "../../../../components/ValidatedInput/ValidatedTextInput";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import { StyledNextButton } from "../RegisterNextButton/RegisterNextButton";
-import { UseSelector, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../../../redux/Store";
-import {
-  updateRegister,
-  updateUserPassword,
-} from "../../../../redux/Slices/RegisterSlice";
+import { updateRegister } from "../../../../redux/Slices/RegisterSlice";
+import { setFromRegister, loginUser } from "../../../../redux/Slices/UserSlice";
 
 import { useNavigate } from "react-router-dom";
 
-import "./RegisterFormSix.css";
+import "./RegisterForm.css";
+import "../../../../assets/global.css";
 
 export const RegisterFormSix: React.FC = () => {
-  const state = useSelector((state: RootState) => state.register);
+  const state = useSelector((state: RootState) => state);
   const dispatch: AppDispatch = useDispatch();
 
   const [active, setActive] = useState<boolean>(false);
@@ -38,19 +36,39 @@ export const RegisterFormSix: React.FC = () => {
   };
 
   useEffect(() => {
-    if (state.login) {
-      // store some user info into local storage, that way we can load the user into ther user slice
-      // when we hit the feed page
+    if (state.user.loggedIn) {
       navigate("/home");
     }
-  }, [state.login]);
+
+    if (state.user.fromRegister) {
+      //we are ready to dispatch the login
+      dispatch(
+        loginUser({
+          username: state.register.username,
+          password: password,
+        })
+      );
+      return;
+    }
+
+    if (state.register.login) {
+      // store some user info into local storage, that way we can load the user into ther user slice
+      // when we hit the feed page
+      // navigate("/home");
+
+      // set the dispath to set user.fromRegister
+      dispatch(setFromRegister(true));
+    }
+  }, [state.register.login, state.user.loggedIn, state.user.fromRegister]);
 
   return (
-    <div className="reg-step-six-container">
-      <div className="reg-step-six-content">
-        <h1>You'll need a password</h1>
-        <p>Make sure it's 8 characters or more.</p>
-        <div className="reg-step-six-password">
+    <div className="register-container">
+      <div className="register-content">
+        <h1 className="register-header-2">You'll need a password</h1>
+        <p className="register-text color-gray">
+          Make sure it's 8 characters or more.
+        </p>
+        <div className="register-six-password">
           <ValidatedTextInput
             valid={true}
             label={"Password"}
@@ -63,7 +81,7 @@ export const RegisterFormSix: React.FC = () => {
           />
         </div>
 
-        <div className="reg-step-six-icon" onClick={toggleView}>
+        <div className="register-six-icon" onClick={toggleView}>
           {active ? (
             <VisibilityOffOutlinedIcon
               sx={{
