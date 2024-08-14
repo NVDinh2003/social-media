@@ -16,8 +16,11 @@ export const Landing: React.FC = () => {
       {register ? <RegisterModal toggleModal={toggleRegister} /> : <></>}
       <div className="landing-layout">
         <div className="landing-top-left bg-blue"></div>
-        <div className="landing-top-right"></div>
-        <button onClick={toggleRegister}>Register Here</button>
+
+        <div className="landing-top-right">
+          <button onClick={toggleRegister}>Register Here</button>
+        </div>
+
         <div className="landing-bottom">Content yo</div>
       </div>
     </div>
