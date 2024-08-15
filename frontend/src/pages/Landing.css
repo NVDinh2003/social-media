@@ -13,6 +13,15 @@
 .landing-top-left {
   grid-area: one;
   height: 33vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../assets/whatshappening.png");
+}
+
+.landing-top-left-logo {
+  max-width: auto;
+  height: 60%;
 }
 
 .landing-top-right {
@@ -47,6 +56,11 @@
     height: 100%;
     justify-content: flex-start;
   }
+
+  .landing-top-left-logo {
+    max-width: 35%;
+    height: auto;
+  }
 }
 
 @media (min-width: 1300px) {
@@ -66,5 +80,10 @@
     grid-area: two;
     height: 100%;
     justify-content: flex-start;
+  }
+
+  .landing-top-left-logo {
+    max-width: 35%;
+    height: auto;
   }
 }
