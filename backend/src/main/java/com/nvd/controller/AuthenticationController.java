@@ -1,5 +1,6 @@
 package com.nvd.controller;
 
+import com.nvd.dto.FindUsernameDTO;
 import com.nvd.exceptions.EmailAlreadyTakenException;
 import com.nvd.exceptions.EmailFaildToSendException;
 import com.nvd.exceptions.IncorrectVerificationCodeException;
@@ -10,7 +11,9 @@ import com.nvd.models.RegistrationObject;
 import com.nvd.service.TokenService;
 import com.nvd.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -100,5 +103,13 @@ public class AuthenticationController {
         } catch (AuthenticationException e) {
             return new LoginResponse(null, "");
         }
+    }
+
+    @PostMapping("/find")
+    public ResponseEntity<String> verifyUsername(@RequestBody FindUsernameDTO credential) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_PLAIN);  // response một chuỗi văn bản thuần (plain text).
+        String username = userService.verifyUsername(credential);
+        return new ResponseEntity<>(username, HttpStatus.OK);
     }
 }

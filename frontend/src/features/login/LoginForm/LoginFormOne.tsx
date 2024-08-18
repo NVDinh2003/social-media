@@ -1,4 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
+
+import { AppDispatch, RootState } from "../../../redux/Store";
+import { useDispatch, useSelector } from "react-redux";
+import { verifyUsername } from "../../../redux/Slices/UserSlice";
+import { validateEmail, validatePhone } from "../../../services/Validator";
 
 import { ValidatedTextInput } from "../../../components/ValidatedInput/ValidatedTextInput";
 import { ModalButton } from "../../../components/ModalButton/ModalButton";
@@ -10,6 +15,32 @@ import "../../../assets/global.css";
 import "./LoginForms.css";
 
 export const LoginFormOne: React.FC = () => {
+  const state = useSelector((state: RootState) => state.user);
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const [credential, setCredential] = useState<string>("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setCredential(e.target.value);
+  };
+
+  const findUsername = (): void => {
+    let body = {
+      email: "",
+      phone: "",
+      username: "",
+    };
+
+    if (validateEmail(credential)) body.email = credential;
+    else if (validatePhone(credential)) body.phone = credential;
+    else body.username = credential;
+
+    console.log(body);
+
+    dispatch(verifyUsername(body));
+  };
+  //
   return (
     <div className="login-form-one-container">
       <h1 className="login-form-header">Sign in to Fwitter</h1>
@@ -65,12 +96,16 @@ export const LoginFormOne: React.FC = () => {
       </div>
 
       <ValidatedTextInput
-        valid={true}
+        valid={!state.error}
         name={"identifier"}
         label={"Phone, email, or username"}
-        changeValue={() => {}}
+        changeValue={handleChange}
       />
-
+      {state.error ? (
+        <p className="login-form-one-error color-red">Unable to find User</p>
+      ) : (
+        <></>
+      )}
       <ModalButton
         fontColor={"white"}
         backgroundColor={"black"}
@@ -82,6 +117,7 @@ export const LoginFormOne: React.FC = () => {
           b: 0,
           a: 0.9,
         }}
+        onClick={findUsername}
       >
         Next
       </ModalButton>

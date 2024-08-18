@@ -38,6 +38,7 @@ public class BackendApplication {
                     .lastName("Nguyen")
                     .email("iamdinhhtvq@gmail.com")
                     .username("dinhhtvq")
+                    .phone("0386264423")
                     .password(encoder.encode("dinhhtvq123"))
                     .enabled(true)
                     .build();

@@ -1,5 +1,6 @@
 package com.nvd.service;
 
+import com.nvd.dto.FindUsernameDTO;
 import com.nvd.exceptions.*;
 import com.nvd.models.ApplicationUser;
 import com.nvd.models.Image;
@@ -177,5 +178,13 @@ public class UserService implements UserDetailsService {
     public Set<ApplicationUser> retrieveFollowersList(String username) {
         ApplicationUser user = userRepository.findByUsername(username).orElseThrow(UserDoesNotExistException::new);
         return user.getFollowers();
+    }
+
+    public String verifyUsername(FindUsernameDTO credential) {
+        ApplicationUser user = userRepository.findByEmailOrPhoneOrUsername(
+                        credential.getEmail(), credential.getPhone(),
+                        credential.getUsername())
+                .orElseThrow(UserDoesNotExistException::new);
+        return user.getUsername();
     }
 }
