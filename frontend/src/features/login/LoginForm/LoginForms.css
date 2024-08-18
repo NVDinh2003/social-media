@@ -53,3 +53,45 @@
   margin-left: 10px;
   margin-top: 5px;
 }
+
+.login-form-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 75%;
+}
+
+.login-form-two-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.login-form-two-password {
+  width: 100%;
+  position: relative;
+  margin-top: 25px;
+  margin-bottom: 0;
+}
+
+.login-form-two-password-icon {
+  position: absolute;
+  bottom: 32px;
+  right: 15px;
+  cursor: pointer;
+}
+
+.login-form-two-forgot {
+  font-size: 13px;
+  margin-top: 0;
+  margin-left: 10px;
+}
+
+.login-form-two-forgot:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
