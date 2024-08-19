@@ -47,7 +47,7 @@ export const loginUser = createAsyncThunk(
       const req = await axios.post("http://localhost:8000/auth/login", body);
       return req.data;
     } catch (e) {
-      thunkAPI.rejectWithValue(e);
+      return thunkAPI.rejectWithValue(e);
     }
   }
 );
@@ -60,6 +60,15 @@ export const UserSlice = createSlice({
       state = {
         ...state,
         fromRegister: action.payload,
+      };
+
+      return state;
+    },
+
+    resetUsername(state) {
+      state = {
+        ...state,
+        username: "",
       };
 
       return state;
@@ -110,10 +119,26 @@ export const UserSlice = createSlice({
       return state;
     });
 
+    builder.addCase(loginUser.pending, (state, action) => {
+      state = {
+        ...state,
+        error: false,
+      };
+      return state;
+    });
+
+    builder.addCase(loginUser.rejected, (state, action) => {
+      state = {
+        ...state,
+        error: true,
+      };
+      return state;
+    });
+
     //
   },
 });
 
-export const { setFromRegister } = UserSlice.actions;
+export const { setFromRegister, resetUsername } = UserSlice.actions;
 
 export default UserSlice.reducer;

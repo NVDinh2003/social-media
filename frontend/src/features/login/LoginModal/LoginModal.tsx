@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Modal } from "../../../components/Modal/Modal";
 import { LoginModalTop } from "../LoginModelTop/LoginModalTop";
 import { LoginFormOne } from "../LoginForm/LoginFormOne";
@@ -17,10 +18,19 @@ export const LoginModal: React.FC<LoginModalProps> = ({ toggleModal }) => {
   //
   const state = useSelector((state: RootState) => state.user);
 
+  const navigate = useNavigate();
+
   const [password, setPassword] = useState<string>("");
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
+
+  useEffect(() => {
+    if (state.loggedIn) {
+      navigate("/home");
+      return () => {};
+    }
+  });
 
   return (
     <Modal

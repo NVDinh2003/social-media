@@ -106,7 +106,7 @@ export const LoginFormOne: React.FC = () => {
         changeValue={handleChange}
       />
       {state.error ? (
-        <p className="login-form-one-error color-red">Unable to find User</p>
+        <p className="login-form-error color-red">Unable to find User</p>
       ) : (
         <></>
       )}

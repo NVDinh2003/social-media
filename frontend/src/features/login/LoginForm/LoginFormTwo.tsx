@@ -31,7 +31,7 @@ export const LoginFormTwo: React.FC<LoginFormTwoProps> = ({ setPassword }) => {
 
         <div className="login-form-two-password">
           <ValidatedTextInput
-            valid={true}
+            valid={!state.error}
             name={"password"}
             label={"Password"}
             changeValue={setPassword}
@@ -56,6 +56,12 @@ export const LoginFormTwo: React.FC<LoginFormTwoProps> = ({ setPassword }) => {
               />
             )}
           </div>
+
+          {state.error ? (
+            <p className="login-form-error color-red">Password is incorrect!</p>
+          ) : (
+            <></>
+          )}
           <p className="login-form-two-forgot color-blue">Forgot Password ?</p>
         </div>
       </div>
