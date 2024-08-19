@@ -11,6 +11,7 @@ import com.nvd.models.RegistrationObject;
 import com.nvd.service.TokenService;
 import com.nvd.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.auth.InvalidCredentialsException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -90,7 +91,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LinkedHashMap<String, String> body) {
+    public LoginResponse login(@RequestBody LinkedHashMap<String, String> body) throws InvalidCredentialsException {
 
         String username = body.get("username");
         String password = body.get("password");
@@ -101,8 +102,13 @@ public class AuthenticationController {
             String token = tokenService.generateToken(auth);
             return new LoginResponse(userService.getUserByUsername(username), token);
         } catch (AuthenticationException e) {
-            return new LoginResponse(null, "");
+            throw new InvalidCredentialsException();
         }
+    }
+
+    @ExceptionHandler({InvalidCredentialsException.class})
+    public ResponseEntity<String> handleInvalidCreadential() {
+        return new ResponseEntity<>("Invalid credentials", HttpStatus.FORBIDDEN);
     }
 
     @PostMapping("/find")

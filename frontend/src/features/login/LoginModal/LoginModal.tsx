@@ -3,6 +3,8 @@ import { Modal } from "../../../components/Modal/Modal";
 import { LoginModalTop } from "../LoginModelTop/LoginModalTop";
 import { LoginFormOne } from "../LoginForm/LoginFormOne";
 
+import { LoginButton } from "../LoginButton/LoginButton";
+
 import { RootState } from "../../../redux/Store";
 import { useSelector, UseSelector } from "react-redux";
 import { LoginFormTwo } from "../LoginForm/LoginFormTwo";
@@ -30,7 +32,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ toggleModal }) => {
           <LoginFormOne />
         )
       }
-      bottomContent={state.username ? <>Login Form 2 Button</> : <></>}
+      bottomContent={
+        state.username ? (
+          <LoginButton username={state.username} password={password} />
+        ) : (
+          <></>
+        )
+      }
     />
   );
 };
