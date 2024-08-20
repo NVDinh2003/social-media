@@ -12,9 +12,13 @@ import { LoginFormTwo } from "../LoginForm/LoginFormTwo";
 
 interface LoginModalProps {
   toggleModal: () => void;
+  toggleRegister: () => void;
 }
 
-export const LoginModal: React.FC<LoginModalProps> = ({ toggleModal }) => {
+export const LoginModal: React.FC<LoginModalProps> = ({
+  toggleModal,
+  toggleRegister,
+}) => {
   //
   const state = useSelector((state: RootState) => state.user);
 
@@ -23,6 +27,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ toggleModal }) => {
   const [password, setPassword] = useState<string>("");
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+
+  const openRegister = () => {
+    toggleModal();
+    toggleRegister();
   };
 
   useEffect(() => {
@@ -39,7 +48,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ toggleModal }) => {
         state.username ? (
           <LoginFormTwo setPassword={handlePassword} />
         ) : (
-          <LoginFormOne />
+          <LoginFormOne noAccount={openRegister} />
         )
       }
       bottomContent={
