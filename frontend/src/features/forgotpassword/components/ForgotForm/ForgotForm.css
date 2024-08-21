@@ -1,0 +1,26 @@
+.forgot-form-container {
+  width: 75%;
+  height: 100%;
+}
+
+.forgot-form-header {
+  margin: 0;
+  margin-bottom: 10px;
+  font-size: 31px;
+  font-weight: 600;
+}
+
+.forgot-form-text {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 400;
+  margin-bottom: 25px;
+}
+
+.forgot-error {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 300;
+  margin-left: 10px;
+  margin-top: 5px;
+}
