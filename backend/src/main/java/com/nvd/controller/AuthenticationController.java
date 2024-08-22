@@ -118,4 +118,5 @@ public class AuthenticationController {
         String username = userService.verifyUsername(credential);
         return new ResponseEntity<>(username, HttpStatus.OK);
     }
+
 }

@@ -4,6 +4,8 @@ import { Modal } from "../../../../components/Modal/Modal";
 import { ForgotModalTop } from "../ForgotModalTop/ForgotModalTop";
 import { ForgotFormOne } from "../ForgotForm/ForgotFormOne";
 import { validateEmail, validatePhone } from "../../../../services/Validator";
+import { ForgotButtonOne } from "../ForgotButtonOne/ForgotButtonOne";
+import { ForgotFormTwo } from "../ForgotForm/ForgotFormTwo";
 import axios from "axios";
 
 export const ForgotPasswordModal: React.FC<{ toggleModal: () => void }> = ({
@@ -59,12 +61,18 @@ export const ForgotPasswordModal: React.FC<{ toggleModal: () => void }> = ({
   return (
     <Modal
       topContent={<ForgotModalTop closeModal={toggleModal} />}
-      content={<ForgotFormOne setCredential={changeCredential} error={error} />}
+      content={
+        step === 1 ? (
+          <ForgotFormOne setCredential={changeCredential} error={error} />
+        ) : (
+          <ForgotFormTwo />
+        )
+      }
       bottomContent={
         step === 1 ? (
-          <button onClick={searchUser}>Search for user</button>
+          <ForgotButtonOne value={credential} handleClick={searchUser} />
         ) : (
-          <></>
+          <>Step two button</>
         )
       }
     />

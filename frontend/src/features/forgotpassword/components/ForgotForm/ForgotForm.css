@@ -24,3 +24,18 @@
   margin-left: 10px;
   margin-top: 5px;
 }
+
+.forgot-form-two-select-group {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: fit-content;
+  margin-bottom: 10px;
+}
+
+.forgot-form-two-select-text {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
