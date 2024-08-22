@@ -3,11 +3,11 @@ import { Modal } from "../../../../components/Modal/Modal";
 
 import { ForgotModalTop } from "../ForgotModalTop/ForgotModalTop";
 import { validateEmail, validatePhone } from "../../../../services/Validator";
-import { ForgotFormOne } from "../ForgotForm/ForgotFormOne";
-import { ForgotButtonOne } from "../ForgotButtonOne/ForgotButtonOne";
-import { ForgotFormTwo } from "../ForgotForm/ForgotFormTwo";
-import { ForgotButtonTwo } from "../ForgotButtonTwo/ForgotButtonTwo";
 import axios from "axios";
+import {
+  determineForgotButton,
+  determineForgotFormContent,
+} from "../../utils/ForgotPasswordUtils";
 
 interface UserInfo {
   email: string;
@@ -28,9 +28,14 @@ export const ForgotPasswordModal: React.FC<{ toggleModal: () => void }> = ({
   const [error, setError] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
   const [resetCode, setResetCode] = useState<number>(0);
+  const [userInputCode, setUserInputCode] = useState<number>(0);
 
   const changeCredential = (credential: string) => {
     setCredential(credential);
+  };
+
+  const changeUserInputCode = (value: number) => {
+    setUserInputCode(value);
   };
 
   const searchUser = async () => {
@@ -97,20 +102,22 @@ export const ForgotPasswordModal: React.FC<{ toggleModal: () => void }> = ({
   return (
     <Modal
       topContent={<ForgotModalTop closeModal={toggleModal} />}
-      content={
-        step === 1 ? (
-          <ForgotFormOne setCredential={changeCredential} error={error} />
-        ) : (
-          <ForgotFormTwo email={userInfo.email} phone={userInfo.phone} />
-        )
-      }
-      bottomContent={
-        step === 1 ? (
-          <ForgotButtonOne value={credential} handleClick={searchUser} />
-        ) : (
-          <ForgotButtonTwo onCancel={toggleModal} sendCode={sendReset} />
-        )
-      }
+      content={determineForgotFormContent(
+        step,
+        setCredential,
+        error,
+        userInfo.email,
+        userInfo.phone,
+        !error,
+        changeUserInputCode
+      )}
+      bottomContent={determineForgotButton(
+        step,
+        credential,
+        searchUser,
+        toggleModal,
+        sendReset
+      )}
     />
   );
 };
