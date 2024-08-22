@@ -187,4 +187,11 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(UserDoesNotExistException::new);
         return user.getUsername();
     }
+
+    public ApplicationUser getUsersEmailAndPhone(FindUsernameDTO credential) {
+        return userRepository.findByEmailOrPhoneOrUsername(
+                        credential.getEmail(), credential.getPhone(),
+                        credential.getUsername())
+                .orElseThrow(UserDoesNotExistException::new);
+    }
 }

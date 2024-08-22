@@ -36,7 +36,7 @@ public class BackendApplication {
                     .authorities(roles)
                     .firstName("Leo")
                     .lastName("Nguyen")
-                    .email("iamdinhhtvq@gmail.com")
+                    .email("hoyexo8397@daypey.com")
                     .username("dinhhtvq")
                     .phone("0386264423")
                     .password(encoder.encode("dinhhtvq123"))

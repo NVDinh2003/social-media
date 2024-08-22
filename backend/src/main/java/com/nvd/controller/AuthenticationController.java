@@ -1,6 +1,7 @@
 package com.nvd.controller;
 
 import com.nvd.dto.FindUsernameDTO;
+import com.nvd.dto.PasswordCodeDTO;
 import com.nvd.exceptions.EmailAlreadyTakenException;
 import com.nvd.exceptions.EmailFaildToSendException;
 import com.nvd.exceptions.IncorrectVerificationCodeException;
@@ -8,6 +9,7 @@ import com.nvd.exceptions.UserDoesNotExistException;
 import com.nvd.models.ApplicationUser;
 import com.nvd.models.LoginResponse;
 import com.nvd.models.RegistrationObject;
+import com.nvd.service.MailService;
 import com.nvd.service.TokenService;
 import com.nvd.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ public class AuthenticationController {
     private final UserService userService;
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
+    private final MailService mailService;
 
     @ExceptionHandler({EmailAlreadyTakenException.class})
     public ResponseEntity<String> handleEmailTaken() {
@@ -117,6 +120,21 @@ public class AuthenticationController {
         headers.setContentType(MediaType.TEXT_PLAIN);  // response một chuỗi văn bản thuần (plain text).
         String username = userService.verifyUsername(credential);
         return new ResponseEntity<>(username, HttpStatus.OK);
+    }
+
+    @PostMapping("/identifiers")
+    public FindUsernameDTO getIdentifiers(@RequestBody FindUsernameDTO credential) {
+        ApplicationUser user = userService.getUsersEmailAndPhone(credential);
+        return new FindUsernameDTO(user.getEmail(), user.getPhone(), user.getUsername());
+    }
+
+    @PostMapping("/password/code")
+    public ResponseEntity<String> retrievePasswordCode(@RequestBody PasswordCodeDTO body)
+            throws EmailFaildToSendException {
+        String email = body.getEmail();
+        int code = body.getCode();
+        mailService.sendMail(email, "Your password reset code", "Here is your password reset code: " + code);
+        return new ResponseEntity<>("Code sent to email", HttpStatus.OK);
     }
 
 }
