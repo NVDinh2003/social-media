@@ -5,7 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setToken } from "../redux/Slices/UserSlice";
 import { useNavigate } from "react-router-dom";
 
-export const Feed: React.FC = () => {
+import "./Home.css";
+
+export const Home: React.FC = () => {
   //
   const state = useSelector((state: RootState) => state.user);
   const dispatch: AppDispatch = useDispatch();
@@ -33,8 +35,14 @@ export const Feed: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <h1>WELCOME FEED PAGE</h1>
+    <div className="home">
+      <div className="home-layout">
+        <div className="home-navigation-section"></div>
+
+        <div className="home-content-section"></div>
+
+        <div className="home-info-section"></div>
+      </div>
     </div>
   );
 };
