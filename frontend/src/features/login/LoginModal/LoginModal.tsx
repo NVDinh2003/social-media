@@ -13,11 +13,13 @@ import { LoginFormTwo } from "../LoginForm/LoginFormTwo";
 interface LoginModalProps {
   toggleModal: () => void;
   toggleRegister: () => void;
+  toggleForgot: () => void;
 }
 
 export const LoginModal: React.FC<LoginModalProps> = ({
   toggleModal,
   toggleRegister,
+  toggleForgot,
 }) => {
   //
   const state = useSelector((state: RootState) => state.user);
@@ -48,7 +50,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         state.username ? (
           <LoginFormTwo setPassword={handlePassword} />
         ) : (
-          <LoginFormOne noAccount={openRegister} />
+          <LoginFormOne noAccount={openRegister} forgot={toggleForgot} />
         )
       }
       bottomContent={

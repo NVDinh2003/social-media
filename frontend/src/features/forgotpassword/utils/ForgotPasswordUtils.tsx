@@ -1,6 +1,8 @@
+import { ForgotButtonFour } from "../components/ForgotButtonFour/ForgotButtonFour";
 import { ForgotButtonOne } from "../components/ForgotButtonOne/ForgotButtonOne";
 import { ForgotButtonThree } from "../components/ForgotButtonThree/ForgotButtonThree";
 import { ForgotButtonTwo } from "../components/ForgotButtonTwo/ForgotButtonTwo";
+import { ForgotFormFour } from "../components/ForgotForm/ForgotFormFour";
 import { ForgotFormOne } from "../components/ForgotForm/ForgotFormOne";
 import { ForgotFormThree } from "../components/ForgotForm/ForgotFormThree";
 import { ForgotFormTwo } from "../components/ForgotForm/ForgotFormTwo";
@@ -12,7 +14,9 @@ export const determineForgotFormContent = (
   email: string,
   phone: string,
   valid: boolean,
-  updateCode: (value: number) => void
+  updateCode: (value: number) => void,
+  updatePassword: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  matching: boolean
 ): JSX.Element => {
   switch (step) {
     case 1:
@@ -21,6 +25,10 @@ export const determineForgotFormContent = (
       return <ForgotFormTwo email={email} phone={phone} />;
     case 3:
       return <ForgotFormThree updateCode={updateCode} valid={valid} />;
+    case 4:
+      return (
+        <ForgotFormFour updatePassword={updatePassword} matching={matching} />
+      );
   }
   return <></>;
 };
@@ -33,7 +41,9 @@ export const determineForgotButton = (
   sendCode: () => void,
   formThreeActive: boolean,
   checkCode: () => void,
-  back: () => void
+  back: () => void,
+  submitNewPassword: () => void,
+  formFourActive: boolean
 ): JSX.Element => {
   switch (step) {
     case 1:
@@ -46,6 +56,13 @@ export const determineForgotButton = (
           active={formThreeActive}
           checkCode={checkCode}
           back={back}
+        />
+      );
+    case 4:
+      return (
+        <ForgotButtonFour
+          submitNewPassword={submitNewPassword}
+          active={formFourActive}
         />
       );
   }

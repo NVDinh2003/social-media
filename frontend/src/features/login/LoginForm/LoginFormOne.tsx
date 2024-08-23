@@ -16,9 +16,13 @@ import "./LoginForms.css";
 
 interface LoginFormOneProps {
   noAccount: () => void;
+  forgot: () => void;
 }
 
-export const LoginFormOne: React.FC<LoginFormOneProps> = ({ noAccount }) => {
+export const LoginFormOne: React.FC<LoginFormOneProps> = ({
+  noAccount,
+  forgot,
+}) => {
   const state = useSelector((state: RootState) => state.user);
 
   const dispatch: AppDispatch = useDispatch();
@@ -152,6 +156,7 @@ export const LoginFormOne: React.FC<LoginFormOneProps> = ({ noAccount }) => {
           b: 211,
           a: 1.0,
         }}
+        onClick={forgot}
       >
         Forgot password ?
       </ModalButton>

@@ -25,6 +25,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -85,8 +86,8 @@ public class AuthenticationController {
         return userService.verifyEmail(username, code);
     }
 
-    @PostMapping("/update/password")
-    public ApplicationUser updatePassword(@RequestBody LinkedHashMap<String, String> body) {
+    @PutMapping("/update/password")
+    public ApplicationUser updatePassword(@RequestBody Map<String, String> body) {
         String username = body.get("username");
         String password = body.get("password");
 

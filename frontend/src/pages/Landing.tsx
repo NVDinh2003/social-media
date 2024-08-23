@@ -19,7 +19,7 @@ export const Landing: React.FC = () => {
 
   const [register, setRegister] = useState<boolean>(false);
   const [login, setLogin] = useState<boolean>(false);
-  const [forgotPassword, setForgotPassword] = useState<boolean>(true);
+  const [forgotPassword, setForgotPassword] = useState<boolean>(false);
 
   const toggleRegister = () => {
     setRegister(!register);
@@ -31,6 +31,7 @@ export const Landing: React.FC = () => {
   };
 
   const toggleForgotPassword = () => {
+    setLogin(false);
     setForgotPassword(!forgotPassword);
   };
 
@@ -38,7 +39,11 @@ export const Landing: React.FC = () => {
     <div className="home-container bg-color">
       {register ? <RegisterModal toggleModal={toggleRegister} /> : <></>}
       {login ? (
-        <LoginModal toggleModal={toggleLogin} toggleRegister={toggleRegister} />
+        <LoginModal
+          toggleModal={toggleLogin}
+          toggleRegister={toggleRegister}
+          toggleForgot={toggleForgotPassword}
+        />
       ) : (
         <></>
       )}
