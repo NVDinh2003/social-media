@@ -1,4 +1,5 @@
 import { ForgotButtonOne } from "../components/ForgotButtonOne/ForgotButtonOne";
+import { ForgotButtonThree } from "../components/ForgotButtonThree/ForgotButtonThree";
 import { ForgotButtonTwo } from "../components/ForgotButtonTwo/ForgotButtonTwo";
 import { ForgotFormOne } from "../components/ForgotForm/ForgotFormOne";
 import { ForgotFormThree } from "../components/ForgotForm/ForgotFormThree";
@@ -29,7 +30,10 @@ export const determineForgotButton = (
   credential: string,
   searchUser: () => void,
   cancel: () => void,
-  sendCode: () => void
+  sendCode: () => void,
+  formThreeActive: boolean,
+  checkCode: () => void,
+  back: () => void
 ): JSX.Element => {
   switch (step) {
     case 1:
@@ -37,7 +41,13 @@ export const determineForgotButton = (
     case 2:
       return <ForgotButtonTwo onCancel={cancel} sendCode={sendCode} />;
     case 3:
-      return <></>;
+      return (
+        <ForgotButtonThree
+          active={formThreeActive}
+          checkCode={checkCode}
+          back={back}
+        />
+      );
   }
   return <></>;
 };

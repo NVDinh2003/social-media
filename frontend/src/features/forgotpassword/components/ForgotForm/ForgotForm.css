@@ -39,3 +39,16 @@
   font-size: 15px;
   font-weight: 700;
 }
+
+.forgot-form-four-password-wrapper {
+  width: 100%;
+  position: relative;
+  margin-top: 25px;
+}
+
+.forgot-form-four-password-icon {
+  position: absolute;
+  bottom: 2px;
+  right: 15px;
+  cursor: pointer;
+}

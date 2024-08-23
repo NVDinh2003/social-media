@@ -99,6 +99,11 @@ export const ForgotPasswordModal: React.FC<{ toggleModal: () => void }> = ({
     }
   };
 
+  const checkCode = () => {
+    if (resetCode === userInputCode) setStep(4);
+    else setError(true);
+  };
+
   return (
     <Modal
       topContent={<ForgotModalTop closeModal={toggleModal} />}
@@ -116,7 +121,12 @@ export const ForgotPasswordModal: React.FC<{ toggleModal: () => void }> = ({
         credential,
         searchUser,
         toggleModal,
-        sendReset
+        sendReset,
+        userInputCode ? true : false,
+        checkCode,
+        () => {
+          setStep(2);
+        }
       )}
     />
   );
