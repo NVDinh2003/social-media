@@ -1,6 +1,6 @@
 import { SVGProps } from "../../utils/GlobalInterface";
 
-export default function ProfileSVG(props: SVGProps) {
+export default function BookmarksSVG(props: SVGProps) {
   return (
     <svg
       viewBox="0 0 24 24"
