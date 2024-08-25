@@ -91,7 +91,7 @@ export const Navigation: React.FC = () => {
         <img
           alt=""
           className="navigation-options-pfp"
-          src="https://christopherscottedwards.com/wp-content/uploads/2018/07/Generic-Profile.jpg"
+          src={process.env.REACT_APP_PFP}
         />
 
         <div className="navigation-options-info">

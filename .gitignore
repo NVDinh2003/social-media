@@ -189,3 +189,12 @@ tokens/gmail_token
 **/credentials.json
 **/StoredCredential
 **/gmail_token
+
+# misc react env
+.env
+frontend/.env
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
