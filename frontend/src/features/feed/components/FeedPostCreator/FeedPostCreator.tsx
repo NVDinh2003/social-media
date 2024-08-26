@@ -10,6 +10,7 @@ import GIFSVG from "../../../../components/SVGs/GIFSVG";
 import EmojiSVG from "../../../../components/SVGs/EmojiSVG";
 import ScheduleSVG from "../../../../components/SVGs/ScheduleSVG";
 import LocationSVG from "../../../../components/SVGs/LocationSVG";
+import { FeedPostCreatorProgress } from "../FeedPostCreatorProgress/FeedPostCreatorProgress";
 
 export const FeedPostCreator: React.FC = () => {
   //
@@ -20,9 +21,11 @@ export const FeedPostCreator: React.FC = () => {
 
   const activate = () => {
     if (!active) setActive(true);
+    if (textAreaRef && textAreaRef.current) textAreaRef.current.focus();
   };
 
-  const autoGrow = () => {
+  const autoGrow = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setPostContent(e.target.value);
     if (textAreaRef && textAreaRef.current) {
       textAreaRef.current.style.height = "25px";
       textAreaRef.current.style.height =
@@ -83,39 +86,59 @@ export const FeedPostCreator: React.FC = () => {
               : "feed-post-creator-bottom-icon"
           }
         >
-          <div className="feed-post-creator-icon-bg">
-            <MediaSVG height={20} width={20} color={"#1DA1F2"} />
+          <div className="feed-post-creator-icons-left">
+            <div className="feed-post-creator-icon-bg">
+              <MediaSVG height={20} width={20} color={"#1DA1F2"} />
+            </div>
+            <div className="feed-post-creator-icon-bg">
+              {" "}
+              <GIFSVG height={20} width={20} color={"#1DA1F2"} />
+            </div>
+            <div className="feed-post-creator-icon-bg">
+              {" "}
+              <PollSVG height={20} width={20} color={"#1DA1F2"} />
+            </div>
+            <div className="feed-post-creator-icon-bg">
+              {" "}
+              <EmojiSVG height={20} width={20} color={"#1DA1F2"} />
+            </div>
+            <div className="feed-post-creator-icon-bg">
+              {" "}
+              <ScheduleSVG height={20} width={20} color={"#1DA1F2"} />
+            </div>
+            <div className="feed-post-creator-location">
+              {" "}
+              <LocationSVG
+                height={20}
+                width={20}
+                color={"rgba(29,161,242,.5)"}
+              />
+            </div>
           </div>
-          <div className="feed-post-creator-icon-bg">
-            {" "}
-            <GIFSVG height={20} width={20} color={"#1DA1F2"} />
+          <div className="feed-post-creator-submit-cluster">
+            {postContent !== "" ? (
+              <div className="feed-post-creator-submit-cluster-left">
+                <FeedPostCreatorProgress
+                  percent={(postContent.length / 256) * 100}
+                />
+                <span className="feed-post-creator-submit-cluster-divider"></span>
+                <div className="feed-post-creator-submit-cluster-add">+</div>
+              </div>
+            ) : (
+              <></>
+            )}
+
+            <button
+              className={
+                postContent === ""
+                  ? "feed-post-creator-post-button"
+                  : "feed-post-creator-post-button post-active"
+              }
+              disabled={postContent === ""}
+            >
+              Post
+            </button>
           </div>
-          <div className="feed-post-creator-icon-bg">
-            {" "}
-            <PollSVG height={20} width={20} color={"#1DA1F2"} />
-          </div>
-          <div className="feed-post-creator-icon-bg">
-            {" "}
-            <EmojiSVG height={20} width={20} color={"#1DA1F2"} />
-          </div>
-          <div className="feed-post-creator-icon-bg">
-            {" "}
-            <ScheduleSVG height={20} width={20} color={"#1DA1F2"} />
-          </div>
-          <div className="feed-post-creator-location">
-            {" "}
-            <LocationSVG height={20} width={20} color={"rgba(29,161,242,.5)"} />
-          </div>
-          <button
-            className={
-              postContent === ""
-                ? "feed-post-creator-post-button"
-                : "feed-post-creator-post-button post-active"
-            }
-            disabled={postContent === ""}
-          >
-            Post
-          </button>
         </div>
       </div>
     </div>
