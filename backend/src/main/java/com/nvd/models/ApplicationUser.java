@@ -50,7 +50,6 @@ public class ApplicationUser {
 
     private Boolean enabled;
     @JsonIgnore
-    @Column(nullable = true)
     private Long verification;
 
     @ManyToMany(fetch = FetchType.EAGER)
