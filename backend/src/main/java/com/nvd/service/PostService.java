@@ -1,23 +1,26 @@
 package com.nvd.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nvd.dto.CreatePostDTO;
+import com.nvd.exceptions.PostDoesNotExistException;
+import com.nvd.exceptions.UnableToCreatePostException;
 import com.nvd.models.ApplicationUser;
+import com.nvd.models.Image;
 import com.nvd.models.Post;
 import com.nvd.repositories.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final ImageService imageService;
 
     public Post createPost(CreatePostDTO dto) {
         Post post = new Post();
@@ -39,7 +42,43 @@ public class PostService {
             return posted;
         } catch (Exception e) {
             //TODO: setup custom exception
-            return null;
+            throw new UnableToCreatePostException();
+        }
+    }
+
+    public Post createMediaPost(String post, List<MultipartFile> files) {
+        CreatePostDTO dto = new CreatePostDTO();
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            dto = objectMapper.readValue(post, CreatePostDTO.class);
+
+            Post p = new Post();
+            p.setContent(dto.getContent());
+            if (dto.getScheduled())
+                p.setPostedDate(dto.getScheduledDate());
+            else
+                p.setPostedDate(new Date());
+
+            p.setAuthor(dto.getAuthor());
+            p.setReplies(dto.getReplies());
+            p.setScheduled(dto.getScheduled());
+            p.setScheduledDate(dto.getScheduledDate());
+            p.setAudience(dto.getAudience());
+            p.setReplyRestriction(dto.getReplyRestriction());
+
+            //upload the images that got passed
+            List<Image> postImages = new ArrayList<>();
+
+            for (int i = 0; i < files.size(); i++) {
+                Image postImage = imageService.uploadImage(files.get(i), "post");
+                postImages.add(postImage);
+            }
+            p.setImages(postImages);
+
+            return postRepository.save(p);
+        } catch (Exception e) {
+            throw new UnableToCreatePostException();
         }
     }
 
@@ -49,7 +88,7 @@ public class PostService {
 
     public Post getPostById(Integer id) {
         //TODO: setup custom exception for post that does not exist
-        return postRepository.findById(id).orElse(null);
+        return postRepository.findById(id).orElseThrow(PostDoesNotExistException::new);
     }
 
     public Set<Post> getAllPostsByAuthor(ApplicationUser author) {
