@@ -34,7 +34,29 @@ export const verifyUsername = createAsyncThunk(
   "user/username",
   async (body: VerifyUserBody, thunkAPI) => {
     try {
-      const req = await axios.post("http://localhost:8000/auth/find", body);
+      const req = await axios.post(
+        `${process.env.REACT_APP_API_URL}/auth/find`,
+        body
+      );
+      return req.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+export const getUserByToken = createAsyncThunk(
+  "user/get",
+  async (token: string, thunkAPI) => {
+    try {
+      const req = await axios.get(
+        `${process.env.REACT_APP_API_URL}/auth/verify`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return req.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
@@ -46,7 +68,10 @@ export const loginUser = createAsyncThunk(
   "user/login",
   async (body: LoginBody, thunkAPI) => {
     try {
-      const req = await axios.post("http://localhost:8000/auth/login", body);
+      const req = await axios.post(
+        `${process.env.REACT_APP_API_URL}/auth/login`,
+        body
+      );
       return req.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
@@ -148,6 +173,31 @@ export const UserSlice = createSlice({
       return state;
     });
 
+    builder.addCase(getUserByToken.fulfilled, (state, action) => {
+      state = {
+        ...state,
+        loggedIn: action.payload,
+        username: action.payload.username,
+      };
+
+      return state;
+    });
+
+    builder.addCase(getUserByToken.pending, (state, action) => {
+      state = {
+        ...state,
+        error: false,
+      };
+      return state;
+    });
+
+    builder.addCase(getUserByToken.rejected, (state, action) => {
+      state = {
+        ...state,
+        error: true,
+      };
+      return state;
+    });
     //
   },
 });

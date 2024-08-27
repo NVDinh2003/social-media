@@ -12,8 +12,13 @@ import CommunitiesSVG from "../SVGs/CommunitiesSVG";
 import ProfileSVG from "../SVGs/ProfileSVG";
 import MoreSVG from "../SVGs/MoreSVG";
 import BookmarksSVG from "../SVGs/BookmarksSVG";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/Store";
 
 export const Navigation: React.FC = () => {
+  //
+  const state = useSelector((state: RootState) => state.user);
+
   return (
     <div className="navigation">
       <nav className="navigation-container">
@@ -95,8 +100,14 @@ export const Navigation: React.FC = () => {
         />
 
         <div className="navigation-options-info">
-          <p className="navigation-options-info-display-name">EnViDii</p>
-          <p className="navigation-options-info-handle">@Envidiii</p>
+          <p className="navigation-options-info-display-name">
+            {state.loggedIn && state.loggedIn.nickname
+              ? state.loggedIn.nickname
+              : state.username}
+          </p>
+          <p className="navigation-options-info-handle">
+            @{state.username ? state.username : ""}
+          </p>
         </div>
 
         <p className="navigation-option-dotdotdot">...</p>

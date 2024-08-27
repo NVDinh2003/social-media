@@ -43,7 +43,19 @@ public class BackendApplication {
                     .enabled(true)
                     .build();
 
+            ApplicationUser user2 = ApplicationUser.builder()
+                    .authorities(roles)
+                    .firstName("Văn Định")
+                    .lastName("Nguyễn")
+                    .email("iamdinhhtvq@gmail.com")
+                    .username("dinhnguyenhtvq123")
+                    .phone("0357794217")
+                    .password(encoder.encode("dinhhtvq123"))
+                    .enabled(true)
+                    .build();
+
             userRepository.save(user);
+            userRepository.save(user2);
 //            userService.registerUser(user);
         };
     }
