@@ -19,6 +19,7 @@ import {
   initializeCurrentPost,
   updateCurrentPost,
 } from "../../../../redux/Slices/PostSlice";
+import { FeedPostAudienceDropDown } from "../FeedPostAudienceDropDown/FeedPostAudienceDropDown";
 
 export const FeedPostCreator: React.FC = () => {
   //
@@ -110,20 +111,7 @@ export const FeedPostCreator: React.FC = () => {
       </Link>
 
       <div className="feed-post-creator-right">
-        <div
-          className={
-            active
-              ? "feed-post-creator-audience"
-              : "feed-post-creator-audience hide"
-          }
-        >
-          Everyone
-          <ExpandMore
-            sx={{
-              fontSize: "22px",
-            }}
-          />
-        </div>
+        <FeedPostAudienceDropDown />
 
         <textarea
           className={
