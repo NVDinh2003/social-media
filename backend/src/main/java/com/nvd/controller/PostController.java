@@ -38,7 +38,7 @@ public class PostController {
         return postService.getAllPosts();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public Post createPost(@RequestBody CreatePostDTO postDTO) {
         return postService.createPost(postDTO);
     }

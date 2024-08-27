@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "./FeedPostCreator.css";
 import { Link } from "react-router-dom";
@@ -11,16 +11,45 @@ import EmojiSVG from "../../../../components/SVGs/EmojiSVG";
 import ScheduleSVG from "../../../../components/SVGs/ScheduleSVG";
 import LocationSVG from "../../../../components/SVGs/LocationSVG";
 import { FeedPostCreatorProgress } from "../FeedPostCreatorProgress/FeedPostCreatorProgress";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../redux/Store";
+import { Post } from "../../../../utils/GlobalInterface";
+import {
+  createPost,
+  initializeCurrentPost,
+  updateCurrentPost,
+} from "../../../../redux/Slices/PostSlice";
 
 export const FeedPostCreator: React.FC = () => {
   //
+  const state = useSelector((state: RootState) => state);
+  const dispatch: AppDispatch = useDispatch();
+
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const [active, setActive] = useState<boolean>(false);
   const [postContent, setPostContent] = useState<string>("");
 
   const activate = () => {
-    if (!active) setActive(true);
+    if (!active) {
+      setActive(true);
+      if (state.user.loggedIn) {
+        let p: Post = {
+          postId: 0,
+          content: "",
+          author: state.user.loggedIn,
+          likes: 0,
+          images: [],
+          reposts: 0,
+          views: 0,
+          scheduled: false,
+          audience: "EVERYONE",
+          replyRestriction: "EVERYONE",
+        };
+
+        dispatch(initializeCurrentPost(p));
+      }
+    }
     if (textAreaRef && textAreaRef.current) textAreaRef.current.focus();
   };
 
@@ -31,7 +60,44 @@ export const FeedPostCreator: React.FC = () => {
       textAreaRef.current.style.height =
         textAreaRef.current.scrollHeight + "px";
     }
+
+    dispatch(
+      updateCurrentPost({
+        name: "content",
+        value: e.target.value,
+      })
+    );
   };
+
+  const submitPost = () => {
+    if (state.post.currentPost && state.user.loggedIn) {
+      let body = {
+        content: state.post.currentPost.content,
+        author: state.post.currentPost.author,
+        replies: [],
+        audience: state.post.currentPost.audience,
+        replyRestriction: state.post.currentPost.replyRestriction,
+        scheduled: state.post.currentPost.scheduled,
+        scheduledDate: state.post.currentPost.scheduledDate,
+        token: state.user.token,
+      };
+
+      dispatch(createPost(body));
+    }
+
+    setActive(false);
+
+    if (textAreaRef && textAreaRef.current) {
+      textAreaRef.current.blur();
+      textAreaRef.current.value = "";
+    }
+  };
+
+  useEffect(() => {
+    if (!state.post.currentPost) setPostContent("");
+
+    console.log(postContent);
+  }, [state.post.currentPost, postContent, activate]);
 
   return (
     <div className="feed-post-creator" onClick={activate}>
@@ -135,6 +201,7 @@ export const FeedPostCreator: React.FC = () => {
                   : "feed-post-creator-post-button post-active"
               }
               disabled={postContent === ""}
+              onClick={submitPost}
             >
               Post
             </button>
