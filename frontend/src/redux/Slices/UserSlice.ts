@@ -50,7 +50,7 @@ export const getUserByToken = createAsyncThunk(
   async (token: string, thunkAPI) => {
     try {
       const req = await axios.get(
-        `${process.env.REACT_APP_API_URL}/auth/verify`,
+        `${process.env.REACT_APP_API_URL}/user/verify`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -102,13 +102,9 @@ export const UserSlice = createSlice({
     },
 
     setToken(state, action: PayloadAction<string>) {
-      state = {
-        ...state,
-        token: action.payload,
-      };
-
-      return state;
+      state.token = action.payload;
     },
+
     //
   },
   extraReducers: (builder) => {

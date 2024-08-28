@@ -15,7 +15,7 @@ export const FeedPostAudienceDropDown: React.FC = () => {
   const state = useSelector((state: RootState) => state);
   const dispatch: AppDispatch = useDispatch();
 
-  const [active, setActive] = React.useState(true);
+  const [active, setActive] = React.useState(false);
   const [selection, setSelection] = useState<string>("Everyone");
 
   const handleClick = () => {

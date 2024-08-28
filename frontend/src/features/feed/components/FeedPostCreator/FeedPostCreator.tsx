@@ -20,6 +20,7 @@ import {
   updateCurrentPost,
 } from "../../../../redux/Slices/PostSlice";
 import { FeedPostAudienceDropDown } from "../FeedPostAudienceDropDown/FeedPostAudienceDropDown";
+import { FeedPostReplyRestrictionDropDown } from "../FeedPostReplyRestrictionDropDown/FeedPostReplyRestrictionDropDown";
 
 export const FeedPostCreator: React.FC = () => {
   //
@@ -111,7 +112,7 @@ export const FeedPostCreator: React.FC = () => {
       </Link>
 
       <div className="feed-post-creator-right">
-        <FeedPostAudienceDropDown />
+        {active ? <FeedPostAudienceDropDown /> : <></>}
 
         <textarea
           className={
@@ -125,14 +126,9 @@ export const FeedPostCreator: React.FC = () => {
           cols={50}
           maxLength={256}
         />
-        <div
-          className={
-            active ? "feed-post-creator-reply" : "feed-post-creator-reply hide"
-          }
-        >
-          {<GlobeSVG height={14} width={14} color={"#1DA1F2"} />}
-          Everyone can reply
-        </div>
+
+        {active ? <FeedPostReplyRestrictionDropDown /> : <></>}
+
         <div
           className={
             active

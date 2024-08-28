@@ -19,12 +19,29 @@ export const Home: React.FC = () => {
 
   const [jwt, setJwt, removeJwt] = useLocalStorage("token", "");
 
+  // useEffect(() => {
+  //   if (jwt !== "" && state.token !== "") dispatch(getUserByToken(state.token));
+  //   else if (jwt === "" && state.token !== "") setJwt(state.token);
+  //   else if (jwt !== "" && state.token === "") setToken(jwt);
+  //   else navigate("/");
+  // }, [state.token]);
+
   useEffect(() => {
-    if (jwt !== "" && state.token !== "") dispatch(getUserByToken(state.token));
-    else if (jwt === "" && state.token !== "") setJwt(state.token);
-    else if (jwt !== "" && state.token === "") setToken(jwt);
-    else navigate("/");
-  }, [state.token]);
+    if (jwt !== "" && state.token === "") {
+      // Nếu có jwt trong localStorage nhưng state.token rỗng, set lại token và lấy user info
+      dispatch(setToken(jwt));
+      dispatch(getUserByToken(jwt));
+    } else if (jwt !== "" && state.token !== "") {
+      // Nếu cả jwt và state.token đều tồn tại, lấy user info
+      dispatch(getUserByToken(state.token));
+    } else if (jwt === "" && state.token !== "") {
+      // Nếu không có jwt trong localStorage nhưng có state.token, lưu lại jwt
+      setJwt(state.token);
+    } else {
+      // Không có jwt hoặc state.token, điều hướng về trang login
+      navigate("/");
+    }
+  }, [jwt, state.token]);
 
   return (
     <div className="home">
