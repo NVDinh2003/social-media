@@ -7,6 +7,7 @@ export interface PostSliceState {
   error: boolean;
   currentPost: Post | undefined;
   posts: Post[];
+  currentPostImages: string[];
 }
 
 interface updatePostPayload {
@@ -30,6 +31,7 @@ const initialState: PostSliceState = {
   error: false,
   currentPost: undefined,
   posts: [],
+  currentPostImages: [],
 };
 
 export const createPost = createAsyncThunk(
@@ -83,6 +85,15 @@ export const PostSlice = createSlice({
 
       return state;
     },
+
+    updateCurrentPostImages(state, action: PayloadAction<string[]>) {
+      state = {
+        ...state,
+        currentPostImages: action.payload,
+      };
+
+      return state;
+    },
   },
 
   extraReducers: (builder) => {
@@ -118,5 +129,9 @@ export const PostSlice = createSlice({
   },
 });
 
-export const { initializeCurrentPost, updateCurrentPost } = PostSlice.actions;
+export const {
+  initializeCurrentPost,
+  updateCurrentPost,
+  updateCurrentPostImages,
+} = PostSlice.actions;
 export default PostSlice.reducer;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 
 import "./FeedPostCreator.css";
 import { Link } from "react-router-dom";
@@ -18,9 +18,11 @@ import {
   createPost,
   initializeCurrentPost,
   updateCurrentPost,
+  updateCurrentPostImages,
 } from "../../../../redux/Slices/PostSlice";
 import { FeedPostAudienceDropDown } from "../FeedPostAudienceDropDown/FeedPostAudienceDropDown";
 import { FeedPostReplyRestrictionDropDown } from "../FeedPostReplyRestrictionDropDown/FeedPostReplyRestrictionDropDown";
+import { FeedPostCreatorImages } from "../FeedPostCreatorImages/FeedPostCreatorImages";
 
 export const FeedPostCreator: React.FC = () => {
   //
@@ -28,9 +30,11 @@ export const FeedPostCreator: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const imageSelectorRef = useRef<HTMLInputElement>(null);
 
   const [active, setActive] = useState<boolean>(false);
   const [postContent, setPostContent] = useState<string>("");
+  const [overloadImages, setOverloadImages] = useState<boolean>(false);
 
   const activate = () => {
     if (!active) {
@@ -95,6 +99,36 @@ export const FeedPostCreator: React.FC = () => {
     }
   };
 
+  const handleGetImages = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const imageURLList: string[] = [];
+
+    if (imageSelectorRef.current && e.target.files) {
+      if (e.target.files.length > 4) {
+        console.log("Selected to many files");
+        imageSelectorRef.current.value = "";
+        setOverloadImages(true);
+        return;
+      }
+
+      for (let i = 0; i < e.target.files.length; i++) {
+        let file = e.target.files.item(i);
+
+        if (file?.type === "image/gif" && e.target.files.length > 1) {
+          console.log("Only one gif and no other images allowed");
+          imageSelectorRef.current.value = "";
+          setOverloadImages(true);
+          return;
+        }
+
+        const localImageUrl = window.URL.createObjectURL(e.target.files[i]);
+        imageURLList.push(localImageUrl);
+      }
+
+      console.log(imageURLList);
+      dispatch(updateCurrentPostImages(imageURLList));
+    }
+  };
+
   useEffect(() => {
     if (!state.post.currentPost) setPostContent("");
 
@@ -127,6 +161,8 @@ export const FeedPostCreator: React.FC = () => {
           maxLength={256}
         />
 
+        <FeedPostCreatorImages />
+
         {active ? <FeedPostReplyRestrictionDropDown /> : <></>}
 
         <div
@@ -138,7 +174,19 @@ export const FeedPostCreator: React.FC = () => {
         >
           <div className="feed-post-creator-icons-left">
             <div className="feed-post-creator-icon-bg">
-              <MediaSVG height={20} width={20} color={"#1DA1F2"} />
+              <input
+                className="feed-post-creator-file-update"
+                onChange={handleGetImages}
+                type="file"
+                id="images"
+                accept="image/*"
+                multiple={true}
+                ref={imageSelectorRef}
+                hidden
+              />
+              <label htmlFor="images" className="feed-post-creator-icon-bg">
+                <MediaSVG height={20} width={20} color={"#1DA1F2"} />
+              </label>
             </div>
             <div className="feed-post-creator-icon-bg">
               {" "}
