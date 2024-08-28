@@ -3,6 +3,7 @@ import LocksSVG from "../../../components/SVGs/LocksSVG";
 import MentionedSVG from "../../../components/SVGs/MentionedSVG";
 import PeopleYouFollowSVG from "../../../components/SVGs/PeopleYouFollowSVG";
 import { PostSliceState } from "../../../redux/Slices/PostSlice";
+import { FeedPostCreatorImage } from "../components/FeedPostCreatorImage/FeedPostCreatorImage";
 
 export function getReplyDropDownButton(
   state: PostSliceState,
@@ -52,4 +53,36 @@ export function getReplyDropDownButton(
     default:
       return <></>;
   }
+}
+
+export function createImageContainer(images: string[]): JSX.Element {
+  if (images.length % 2 === 0) {
+    return (
+      <div className="feed-post-creator-images-container container-even">
+        {images.map((image) => {
+          return <FeedPostCreatorImage image={image} key={image} />;
+        })}
+      </div>
+    );
+  }
+
+  if (images.length === 3) {
+    let reversed: string[] = JSON.parse(JSON.stringify(images));
+
+    reversed.reverse();
+
+    return (
+      <div className="feed-post-creator-images-container container-odd">
+        {reversed.map((image) => {
+          return <FeedPostCreatorImage image={image} key={image} />;
+        })}
+      </div>
+    );
+  }
+
+  return (
+    <div className="feed-post-creator-images-container container-odd">
+      <FeedPostCreatorImage image={images[0]} />
+    </div>
+  );
 }

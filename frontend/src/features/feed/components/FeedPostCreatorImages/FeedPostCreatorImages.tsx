@@ -6,6 +6,7 @@ import { RootState } from "../../../../redux/Store";
 import TagPeopleSVG from "../../../../components/SVGs/TagPeopleSVG";
 import ListsSVG from "../../../../components/SVGs/ListsSVG";
 import { FeedPostCreatorImage } from "../FeedPostCreatorImage/FeedPostCreatorImage";
+import { createImageContainer } from "../../utils/FeedUtils";
 
 export const FeedPostCreatorImages: React.FC = () => {
   //
@@ -13,9 +14,8 @@ export const FeedPostCreatorImages: React.FC = () => {
 
   return (
     <div className="feed-post-creator-images">
-      {postState.currentPostImages.map((image) => (
-        <FeedPostCreatorImage image={image} />
-      ))}
+      {createImageContainer(postState.currentPostImages)}
+
       <div className="feed-post-creator-images-options">
         <p className="feed-post-creator-images-option">
           <TagPeopleSVG height={16} width={16} color={"#536471"} />
