@@ -5,6 +5,7 @@ import { Close } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { updateCurrentPostImages } from "../../../../redux/Slices/PostSlice";
+import { updateDisplayEditPostImage } from "../../../../redux/Slices/ModalSlice";
 
 interface FeedPostCreatorImageProps {
   image: string;
@@ -27,6 +28,10 @@ export const FeedPostCreatorImage: React.FC<FeedPostCreatorImageProps> = ({
     dispatch(updateCurrentPostImages(imageArrayCoppy));
   };
 
+  const editImage = () => {
+    dispatch(updateDisplayEditPostImage());
+  };
+
   return (
     <div
       className="feed-post-creator-image"
@@ -41,7 +46,7 @@ export const FeedPostCreatorImage: React.FC<FeedPostCreatorImageProps> = ({
         />
       </div>
 
-      <div className="feed-post-creator-image-edit" onClick={() => {}}>
+      <div className="feed-post-creator-image-edit" onClick={editImage}>
         Edit
       </div>
     </div>
