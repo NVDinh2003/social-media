@@ -9,21 +9,24 @@ import { updateDisplayEditPostImage } from "../../../../redux/Slices/ModalSlice"
 
 interface FeedPostCreatorImageProps {
   image: string;
+  name: string;
 }
 
 export const FeedPostCreatorImage: React.FC<FeedPostCreatorImageProps> = ({
   image,
+  name,
 }) => {
   //
   const state = useSelector((state: RootState) => state.post);
   const dispatch: AppDispatch = useDispatch();
 
-  const removeImage = () => {
-    let imageArrayCoppy: string[] = JSON.parse(
-      JSON.stringify(state.currentPostImages)
-    );
+  const removeImage = (e: React.MouseEvent<HTMLDivElement>) => {
+    //
+    e.stopPropagation();
 
-    imageArrayCoppy = imageArrayCoppy.filter((img) => img !== image);
+    let imageArrayCoppy: File[] = state.currentPostImages;
+
+    imageArrayCoppy = imageArrayCoppy.filter((img) => img.name !== name);
 
     dispatch(updateCurrentPostImages(imageArrayCoppy));
   };
@@ -36,6 +39,7 @@ export const FeedPostCreatorImage: React.FC<FeedPostCreatorImageProps> = ({
     <div
       className="feed-post-creator-image"
       style={{ backgroundImage: `url(${image})` }}
+      onClick={editImage}
     >
       <div className="feed-post-creator-image-clear" onClick={removeImage}>
         <Close

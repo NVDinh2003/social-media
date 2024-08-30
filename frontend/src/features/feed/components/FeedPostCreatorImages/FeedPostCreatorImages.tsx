@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import "./FeedPostCreatorImages.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +19,11 @@ export const FeedPostCreatorImages: React.FC = () => {
 
   const dispatch: AppDispatch = useDispatch();
 
+  const imageContainer = useMemo(
+    () => createImageContainer(postState.currentPostImages),
+    [postState.currentPostImages]
+  );
+
   const toggleTagPeople = () => {
     dispatch(updateDisplayTagPeople());
   };
@@ -29,7 +34,7 @@ export const FeedPostCreatorImages: React.FC = () => {
 
   return (
     <div className="feed-post-creator-images">
-      {createImageContainer(postState.currentPostImages)}
+      {imageContainer}
 
       <div className="feed-post-creator-images-options">
         <p
