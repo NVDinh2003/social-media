@@ -24,6 +24,7 @@ import {
 import { FeedPostAudienceDropDown } from "../FeedPostAudienceDropDown/FeedPostAudienceDropDown";
 import { FeedPostReplyRestrictionDropDown } from "../FeedPostReplyRestrictionDropDown/FeedPostReplyRestrictionDropDown";
 import { FeedPostCreatorImages } from "../FeedPostCreatorImages/FeedPostCreatorImages";
+import { updateDisplayGif } from "../../../../redux/Slices/ModalSlice";
 
 export const FeedPostCreator: React.FC = () => {
   //
@@ -167,6 +168,10 @@ export const FeedPostCreator: React.FC = () => {
     return false;
   };
 
+  const displayGif = () => {
+    dispatch(updateDisplayGif());
+  };
+
   useEffect(() => {
     if (!state.post.currentPost) setPostContent("");
 
@@ -244,6 +249,7 @@ export const FeedPostCreator: React.FC = () => {
                   ? "feed-post-creator-icon-bg"
                   : "feed-post-creator-icon-bg icon-active"
               }
+              onClick={displayGif}
             >
               {" "}
               <GIFSVG
