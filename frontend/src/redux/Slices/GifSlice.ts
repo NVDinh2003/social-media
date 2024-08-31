@@ -12,7 +12,7 @@ import axios from "axios";
 import { TENOR_KEY } from "../../config";
 import { TenorCategories } from "../../utils/GlobalInterface";
 
-const CLIENT_KEY = process.env.REACT_APP_CLIENT_KEY; // 'EnVidi-Twitter'
+const CLIENT_KEY = "EnVidi-Twitter";
 const TENOR_URL = "https://tenor.googleapis.com/v2";
 
 interface GifSliceState {
@@ -23,6 +23,11 @@ interface GifSliceState {
   gifCategories: TenorCategories[];
   loading: boolean;
   error: boolean;
+}
+
+export interface NextGifPayload {
+  term: string;
+  next: string;
 }
 
 const initialState: GifSliceState = {
@@ -70,6 +75,21 @@ export const fetchGifByTerm = createAsyncThunk(
         data: res.data,
         term: payload,
       };
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+export const fetchNextGifs = createAsyncThunk(
+  "gif/next",
+  async (payload: NextGifPayload, thunkAPI) => {
+    try {
+      let searchUrl = `${TENOR_URL}/search?q=${payload}&key=${TENOR_KEY}&client_key=${CLIENT_KEY}&limit=32&pos=${payload.next}`;
+
+      let res = await axios.get(searchUrl);
+
+      return res.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
     }
@@ -129,6 +149,25 @@ export const GifSlice = createSlice({
         searchTerm: action.payload.term,
         gifs: gifUrls,
         next: action.payload.data.next,
+        loading: false,
+      };
+
+      return state;
+    });
+
+    builder.addCase(fetchNextGifs.fulfilled, (state, action) => {
+      let results = action.payload.results;
+
+      let gifUrls: string[] = [];
+
+      results.forEach((item: any) => {
+        gifUrls.push(item.media_formats.gif.url);
+      });
+
+      state = {
+        ...state,
+        gifs: [...state.gifs, ...gifUrls],
+        next: action.payload.next,
         loading: false,
       };
 

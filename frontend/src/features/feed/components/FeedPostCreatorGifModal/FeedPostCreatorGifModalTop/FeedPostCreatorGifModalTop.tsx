@@ -8,6 +8,7 @@ import { updateDisplayGif } from "../../../../../redux/Slices/ModalSlice";
 import "./FeedPostCreatorGifModalTop.css";
 import {
   clearGifs,
+  fetchGifByTerm,
   updateSearchTerm,
 } from "../../../../../redux/Slices/GifSlice";
 
@@ -17,7 +18,7 @@ export const FeedPostCreatorGifModalTop: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
 
   const [inputFocused, setInputFocused] = useState<boolean>(false);
-  // const [inputValue, setInputValue] = useState<string>("");
+  const [timer, setTimer] = useState<any>();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -33,6 +34,18 @@ export const FeedPostCreatorGifModalTop: React.FC = () => {
       clearInput();
     } else {
       setInputFocused(false);
+    }
+  };
+
+  const handleKeyUp = () => {
+    clearTimeout(timer);
+    let t = setTimeout(searchForGifs, 1000);
+    setTimer(t);
+  };
+
+  const searchForGifs = () => {
+    if (inputRef && inputRef.current && inputRef.current.value !== "") {
+      dispatch(fetchGifByTerm(inputRef.current.value));
     }
   };
 
@@ -88,6 +101,7 @@ export const FeedPostCreatorGifModalTop: React.FC = () => {
           onFocus={handleFocus}
           onBlur={handleBlur}
           ref={inputRef}
+          onKeyUp={handleKeyUp}
         />
         {searchTerm && inputFocused ? (
           <div className="feed-post-creator-gif-modal-top-clear-border">
