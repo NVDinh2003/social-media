@@ -1,18 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { Close, Search } from "@mui/icons-material";
-import { AppDispatch } from "../../../../../redux/Store";
-import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../../../../redux/Store";
+import { useDispatch, useSelector } from "react-redux";
 import { updateDisplayGif } from "../../../../../redux/Slices/ModalSlice";
 
 import "./FeedPostCreatorGifModalTop.css";
+import {
+  clearGifs,
+  updateSearchTerm,
+} from "../../../../../redux/Slices/GifSlice";
 
 export const FeedPostCreatorGifModalTop: React.FC = () => {
   //
+  const searchTerm = useSelector((state: RootState) => state.gif.searchTerm);
   const dispatch: AppDispatch = useDispatch();
 
   const [inputFocused, setInputFocused] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>("");
+  // const [inputValue, setInputValue] = useState<string>("");
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -33,7 +38,7 @@ export const FeedPostCreatorGifModalTop: React.FC = () => {
 
   const handleChangeValue = (e: React.FocusEvent<HTMLInputElement>) => {
     // Where the logic for searching goes
-    setInputValue(e.target.value);
+    dispatch(updateSearchTerm(e.target.value));
   };
 
   const handleCloseModal = () => {
@@ -41,7 +46,8 @@ export const FeedPostCreatorGifModalTop: React.FC = () => {
   };
 
   const clearInput = () => {
-    setInputValue("");
+    dispatch(updateSearchTerm(""));
+    dispatch(clearGifs());
     setInputFocused(true);
 
     if (inputRef && inputRef.current) inputRef.current.focus();
@@ -71,19 +77,19 @@ export const FeedPostCreatorGifModalTop: React.FC = () => {
         <input
           id="gif-search"
           style={
-            !inputFocused && inputValue.length > 0
-              ? { width: `${inputValue.length + 1}ch` }
+            !inputFocused && searchTerm.length > 0
+              ? { width: `${searchTerm.length + 1}ch` }
               : {}
           }
           className="feed-post-creator-gif-modal-top-input"
           placeholder="Search for GIFs..."
-          value={inputValue}
+          value={searchTerm}
           onChange={handleChangeValue}
           onFocus={handleFocus}
           onBlur={handleBlur}
           ref={inputRef}
         />
-        {inputValue && inputFocused ? (
+        {searchTerm && inputFocused ? (
           <div className="feed-post-creator-gif-modal-top-clear-border">
             <button
               id="clear"

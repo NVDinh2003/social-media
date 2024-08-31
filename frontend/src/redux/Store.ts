@@ -3,7 +3,7 @@ import registerReducer from "../redux/Slices/RegisterSlice";
 import userReducer from "../redux/Slices/UserSlice";
 import postReducer from "../redux/Slices/PostSlice";
 import modalReducer from "../redux/Slices/ModalSlice";
-import { getDefaultHighWaterMark } from "stream";
+import gifReducer from "./Slices/GifSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +11,7 @@ export const store = configureStore({
     user: userReducer,
     post: postReducer,
     modal: modalReducer,
+    gif: gifReducer, // Thêm reducer cho gifs
   },
 
   // middleware để kiểm tra tuần tự hóa nhưng bỏ qua một số hành động và đường dẫn nhất định.
