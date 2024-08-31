@@ -10,6 +10,7 @@ import {
   updateSearchTerm,
 } from "../../../../redux/Slices/GifSlice";
 import { FeedPostCreatorGifModalPreview } from "./FeedPostCreatorGifModalPreview/FeedPostCreatorGifModalPreview";
+import { FeedPostCreatorGifModalDisplay } from "./FeedPostCreatorGifModalDisplay/FeedPostCreatorGifModalDisplay";
 
 export const FeedPostCreatorGifModal: React.FC = () => {
   //
@@ -37,7 +38,7 @@ export const FeedPostCreatorGifModal: React.FC = () => {
         state.preview || state.gifs.length === 0 ? (
           <FeedPostCreatorGifModalPreview categories={state.gifCategories} />
         ) : (
-          <></>
+          <FeedPostCreatorGifModalDisplay gifs={state.gifs} />
         )
       }
     />
