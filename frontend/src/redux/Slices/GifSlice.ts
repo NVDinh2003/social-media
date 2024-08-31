@@ -37,7 +37,7 @@ export const fetchGifCategories = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       let clientKey = "EnVidi-Twitter";
-      let url = `https://tenor.googleapis.com/v2/categories?key=${process.env.TENOR_KEY}&client_key=${clientKey}`;
+      let url = `https://tenor.googleapis.com/v2/categories?key=${TENOR_KEY}&client_key=${clientKey}`;
 
       let res = await axios.get(url);
 

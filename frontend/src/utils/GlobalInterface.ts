@@ -112,5 +112,5 @@ export interface TenorCategories {
   image: string;
   name: string;
   path: string;
-  searchTerm: string;
+  searchterm: string;
 }
