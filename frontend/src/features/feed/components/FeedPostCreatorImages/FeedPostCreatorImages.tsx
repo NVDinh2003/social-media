@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import TagPeopleSVG from "../../../../components/SVGs/TagPeopleSVG";
 import ListsSVG from "../../../../components/SVGs/ListsSVG";
-import { FeedPostCreatorImage } from "../FeedPostCreatorImage/FeedPostCreatorImage";
+import { FeedPostCreatorImage } from "./FeedPostCreatorImage/FeedPostCreatorImage";
 import { createImageContainer, displayTagPeople } from "../../utils/FeedUtils";
 import {
   updateDisplayEditPostImage,

@@ -4,7 +4,7 @@ import LocksSVG from "../../../components/SVGs/LocksSVG";
 import MentionedSVG from "../../../components/SVGs/MentionedSVG";
 import PeopleYouFollowSVG from "../../../components/SVGs/PeopleYouFollowSVG";
 import { PostSliceState } from "../../../redux/Slices/PostSlice";
-import { FeedPostCreatorImage } from "../components/FeedPostCreatorImage/FeedPostCreatorImage";
+import { FeedPostCreatorImage } from "../components/FeedPostCreatorImages/FeedPostCreatorImage/FeedPostCreatorImage";
 import TagPeopleSVG from "../../../components/SVGs/TagPeopleSVG";
 
 export function getReplyDropDownButton(

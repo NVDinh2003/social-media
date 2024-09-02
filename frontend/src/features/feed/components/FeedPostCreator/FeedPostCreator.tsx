@@ -25,6 +25,7 @@ import { FeedPostAudienceDropDown } from "../FeedPostAudienceDropDown/FeedPostAu
 import { FeedPostReplyRestrictionDropDown } from "../FeedPostReplyRestrictionDropDown/FeedPostReplyRestrictionDropDown";
 import { FeedPostCreatorImages } from "../FeedPostCreatorImages/FeedPostCreatorImages";
 import { updateDisplayGif } from "../../../../redux/Slices/ModalSlice";
+import { FeedPostCreatorPoll } from "../FeedPostCreatorPoll/FeedPostCreatorPoll";
 
 export const FeedPostCreator: React.FC = () => {
   //
@@ -38,8 +39,11 @@ export const FeedPostCreator: React.FC = () => {
   const [postContent, setPostContent] = useState<string>("");
   const [overloadImages, setOverloadImages] = useState<boolean>(false);
 
-  const activate = () => {
+  const activate = (e: React.MouseEvent<HTMLDivElement>) => {
+    console.log(e.target);
+
     if (!active) {
+      // console.log("Setting active !");
       setActive(true);
       if (state.user.loggedIn) {
         let p: Post = {
@@ -58,7 +62,12 @@ export const FeedPostCreator: React.FC = () => {
         dispatch(initializeCurrentPost(p));
       }
     }
-    if (textAreaRef && textAreaRef.current) textAreaRef.current.focus();
+
+    let targetElement: any = e.target;
+
+    if (targetElement.id === "post-text") {
+      if (textAreaRef && textAreaRef.current) textAreaRef.current.focus();
+    }
   };
 
   const autoGrow = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -204,6 +213,7 @@ export const FeedPostCreator: React.FC = () => {
           onChange={autoGrow}
           cols={50}
           maxLength={256}
+          id={"post-text"}
         />
 
         {(state.post.currentPostImages.length > 0 ||
@@ -211,6 +221,8 @@ export const FeedPostCreator: React.FC = () => {
             state.post.currentPost.images.length > 0)) && (
           <FeedPostCreatorImages />
         )}
+
+        <FeedPostCreatorPoll />
 
         {active ? <FeedPostReplyRestrictionDropDown /> : <></>}
 

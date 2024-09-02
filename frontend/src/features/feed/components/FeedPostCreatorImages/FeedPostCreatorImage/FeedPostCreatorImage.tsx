@@ -3,12 +3,12 @@ import React from "react";
 import "./FeedPostCreatorImage.css";
 import { Close } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../../redux/Store";
+import { AppDispatch, RootState } from "../../../../../redux/Store";
 import {
   updateCurrentPost,
   updateCurrentPostImages,
-} from "../../../../redux/Slices/PostSlice";
-import { updateDisplayEditPostImage } from "../../../../redux/Slices/ModalSlice";
+} from "../../../../../redux/Slices/PostSlice";
+import { updateDisplayEditPostImage } from "../../../../../redux/Slices/ModalSlice";
 
 interface FeedPostCreatorImageProps {
   image: string;
