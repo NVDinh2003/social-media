@@ -2,6 +2,7 @@ package com.nvd.dto;
 
 import com.nvd.models.ApplicationUser;
 import com.nvd.models.Image;
+import com.nvd.models.Poll;
 import com.nvd.models.Post;
 import com.nvd.models.enums.Audience;
 import com.nvd.models.enums.ReplyRestriction;
@@ -27,6 +28,6 @@ public class CreatePostDTO {
     private Date scheduledDate;
     private Audience audience;
     private ReplyRestriction replyRestriction;
-
+    private Poll poll;
 
 }

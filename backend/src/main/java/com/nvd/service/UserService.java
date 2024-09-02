@@ -68,6 +68,10 @@ public class UserService implements UserDetailsService {
         return name + genarateNumber;
     }
 
+    public ApplicationUser getUserById(Integer userId) {
+        return userRepository.findById(userId).orElseThrow(UserDoesNotExistException::new);
+    }
+
     public ApplicationUser getUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(UserDoesNotExistException::new);
     }

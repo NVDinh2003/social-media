@@ -87,6 +87,9 @@ public class Post {
     @Column(name = "reply_restriction")
     private ReplyRestriction replyRestriction;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "poll_id", referencedColumnName = "poll_id")
+    private Poll poll;
 
     public Post() {
         super();
