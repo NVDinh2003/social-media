@@ -40,7 +40,7 @@ export const FeedPostCreator: React.FC = () => {
   const [overloadImages, setOverloadImages] = useState<boolean>(false);
 
   const activate = (e: React.MouseEvent<HTMLDivElement>) => {
-    console.log(e.target);
+    // console.log(e.target);
 
     if (!active) {
       // console.log("Setting active !");

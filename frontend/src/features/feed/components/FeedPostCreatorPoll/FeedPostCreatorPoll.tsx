@@ -1,34 +1,59 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ValidatedTextInput } from "../../../../components/ValidatedInput/ValidatedTextInput";
 import AddIcon from "@mui/icons-material/Add";
 import { ValidatedDateSelector } from "../../../../components/ValidatedInput/ValidatedDateSelector";
 
+import "./FeedPostCreatorPoll.css";
+
 export const FeedPostCreatorPoll: React.FC = () => {
   //
-  const [numberOfChoices, setNumberOfChoices] = useState<number>(2);
+  const [labels, setLabels] = useState<string[]>(["Choice 1", "Choice 2"]);
 
-  const [choices, setChoices] = useState<string[]>(["Choice 1", "Choice 2"]);
+  const addNewChoice = () => {
+    if (labels.length < 4) {
+      setLabels([...labels, `Choice ${labels.length + 1} (optional)`]);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Addding a new choice");
+  }, [labels.length]);
 
   return (
     <div className="feed-post-creator-poll" style={{ zIndex: 5 }}>
       <div className="feed-post-creator-poll-choices">
-        {choices.map((choice, index) => {
+        {labels.map((label, index) => {
           return (
-            <div
-              className="feed-post-creator-poll-choice"
-              key={choice}
-              id={choice}
-            >
-              <ValidatedTextInput
-                valid={true}
-                name={choice}
-                label={choice}
-                changeValue={() => {}}
-              />
-              {index === choices.length - 1 && (
-                <p className="feed-post-creator-poll-choice-add">
-                  <AddIcon />
-                </p>
+            <div className="feed-post-creator-poll-choice" key={label}>
+              <div
+                className={
+                  labels.length < 4
+                    ? "feed-post-creator-poll-choice-wrapper-min"
+                    : "feed-post-creator-poll-choice-wrapper-max"
+                }
+              >
+                <ValidatedTextInput
+                  valid={true}
+                  name={`choice:${index}`}
+                  label={label}
+                  changeValue={() => {}}
+                  attributes={{ maxLength: 25 }}
+                />
+              </div>
+
+              {index === labels.length - 1 && labels.length < 4 && (
+                <div className="feed-post-creator-poll-choice-add">
+                  <div
+                    className="feed-post-creator-poll-choice-add-hover"
+                    onClick={addNewChoice}
+                  >
+                    <AddIcon
+                      sx={{
+                        color: "rgb(29, 161, 242)",
+                      }}
+                    />
+                  </div>
+                </div>
               )}
             </div>
           );
