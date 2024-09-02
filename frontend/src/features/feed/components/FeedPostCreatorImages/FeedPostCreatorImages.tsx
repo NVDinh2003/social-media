@@ -6,7 +6,7 @@ import { AppDispatch, RootState } from "../../../../redux/Store";
 import TagPeopleSVG from "../../../../components/SVGs/TagPeopleSVG";
 import ListsSVG from "../../../../components/SVGs/ListsSVG";
 import { FeedPostCreatorImage } from "../FeedPostCreatorImage/FeedPostCreatorImage";
-import { createImageContainer } from "../../utils/FeedUtils";
+import { createImageContainer, displayTagPeople } from "../../utils/FeedUtils";
 import {
   updateDisplayEditPostImage,
   updateDisplayTagPeople,
@@ -24,30 +24,34 @@ export const FeedPostCreatorImages: React.FC = () => {
     [postState.currentPostImages]
   );
 
-  const toggleTagPeople = () => {
+  const toggleTagPeopleModal = () => {
     dispatch(updateDisplayTagPeople());
   };
 
-  const toggleEditImage = () => {
+  const toggleDescriptionModal = () => {
     dispatch(updateDisplayEditPostImage());
   };
 
   return (
     <div className="feed-post-creator-images">
-      {imageContainer}
+      {postState.currentPost?.images.length === 0 ? (
+        imageContainer
+      ) : (
+        <div className="feed-post-creator-images-container container-odd">
+          <FeedPostCreatorImage
+            image={postState.currentPost?.images[0].imageUrl || ""}
+            name={postState.currentPost?.images[0].imageName || ""}
+            type={"gif"}
+          />
+        </div>
+      )}
 
       <div className="feed-post-creator-images-options">
-        <p
-          className="feed-post-creator-images-option"
-          onClick={toggleTagPeople}
-        >
-          <TagPeopleSVG height={16} width={16} color={"#536471"} />
-          Tag people
-        </p>
+        {displayTagPeople(postState, toggleTagPeopleModal)}
 
         <p
           className="feed-post-creator-images-option"
-          onClick={toggleEditImage}
+          onClick={toggleDescriptionModal}
         >
           <ListsSVG height={16} width={16} color={"#536471"} />
           Add Description

@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../redux/Store";
 import { fetchNextGifs } from "../../../../../redux/Slices/GifSlice";
 import { FeedPostCreatorFrozenGif } from "../FrozenGifComponent/FeedPostCreatorFrozenGifComponent";
+import { PostImage } from "../../../../../utils/GlobalInterface";
+import { updateCurrentPost } from "../../../../../redux/Slices/PostSlice";
+import { updateDisplayGif } from "../../../../../redux/Slices/ModalSlice";
 
 interface FeedPostCreatorGifModalDisplayProps {
   gifs: string[];
@@ -40,6 +43,25 @@ export const FeedPostCreatorGifModalDisplay: React.FC<
     setAutoPlay(!autoPlay);
   };
 
+  const attachGifToPost = (e: React.MouseEvent<HTMLImageElement>) => {
+    let postImage: PostImage = {
+      imageId: 0,
+      imageName: `${state.searchTerm}-gif`,
+      imageType: "gif",
+      imageUrl: e.currentTarget.id,
+    };
+
+    let imgs = [postImage];
+    dispatch(
+      updateCurrentPost({
+        name: "images",
+        value: imgs,
+      })
+    );
+
+    dispatch(updateDisplayGif());
+  };
+
   useEffect(() => {
     if (hiddenDiv && hiddenDiv.current) {
       const observer = new IntersectionObserver(loadNextGifs, {
@@ -72,6 +94,8 @@ export const FeedPostCreatorGifModalDisplay: React.FC<
                 key={gif}
                 src={gif}
                 className="feed-post-creator-gif-modal-display-gif"
+                id={gif}
+                onClick={attachGifToPost}
               />
             ))
           : gifs.map((gif) => (

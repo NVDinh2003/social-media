@@ -1,9 +1,11 @@
+import { MouseEventHandler } from "react";
 import GlobeSVG from "../../../components/SVGs/GlobeSVG";
 import LocksSVG from "../../../components/SVGs/LocksSVG";
 import MentionedSVG from "../../../components/SVGs/MentionedSVG";
 import PeopleYouFollowSVG from "../../../components/SVGs/PeopleYouFollowSVG";
 import { PostSliceState } from "../../../redux/Slices/PostSlice";
 import { FeedPostCreatorImage } from "../components/FeedPostCreatorImage/FeedPostCreatorImage";
+import TagPeopleSVG from "../../../components/SVGs/TagPeopleSVG";
 
 export function getReplyDropDownButton(
   state: PostSliceState,
@@ -62,7 +64,12 @@ export function createImageContainer(images: File[]): JSX.Element {
         {images.map((image) => {
           const url = window.URL.createObjectURL(image);
           return (
-            <FeedPostCreatorImage image={url} name={image.name} key={url} />
+            <FeedPostCreatorImage
+              image={url}
+              name={image.name}
+              type={image.type}
+              key={url}
+            />
           );
         })}
       </div>
@@ -79,7 +86,12 @@ export function createImageContainer(images: File[]): JSX.Element {
         {reversed.map((image) => {
           const url = window.URL.createObjectURL(image);
           return (
-            <FeedPostCreatorImage image={url} name={image.name} key={url} />
+            <FeedPostCreatorImage
+              image={url}
+              name={image.name}
+              type={image.type}
+              key={url}
+            />
           );
         })}
       </div>
@@ -91,7 +103,31 @@ export function createImageContainer(images: File[]): JSX.Element {
       <FeedPostCreatorImage
         image={window.URL.createObjectURL(images[0])}
         name={images[0].name}
+        type={images[0].type}
       />
     </div>
+  );
+}
+
+export function displayTagPeople(
+  state: PostSliceState,
+  toggleTagPeopleModal: MouseEventHandler<HTMLParagraphElement>
+): JSX.Element {
+  if (state.currentPost && state.currentPost.images.length > 0) {
+    return <div className="feed-post-creator-images-option">via Tenor</div>;
+  }
+
+  if (state.currentPostImages[0].type === "image/gif") {
+    return <></>;
+  }
+
+  return (
+    <p
+      className="feed-post-creator-images-option"
+      onClick={toggleTagPeopleModal}
+    >
+      <TagPeopleSVG height={16} width={16} color={"#536471"} />
+      Tag people
+    </p>
   );
 }

@@ -23,6 +23,10 @@ public class ImageService {
     private static final File DIRECTORY = new File("D:\\WorkSpace\\Spring_Project\\social-media\\backend\\img");
     private static final String URL = "http://localhost:8000/images/";
 
+    public Image saveGifFromPost(Image image) {
+        return imageRepository.save(image);
+    }
+
     public Image uploadImage(MultipartFile file, String prefix) throws UnableToSavePhotoException {
         try {
             // the content type form the request looks something like this img/jpeg

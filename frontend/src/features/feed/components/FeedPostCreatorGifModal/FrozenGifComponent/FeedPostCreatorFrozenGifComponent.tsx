@@ -3,6 +3,9 @@ import React, { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../redux/Store";
 import { fetchGifByTerm } from "../../../../../redux/Slices/GifSlice";
+import { PostImage } from "../../../../../utils/GlobalInterface";
+import { updateCurrentPost } from "../../../../../redux/Slices/PostSlice";
+import { updateDisplayGif } from "../../../../../redux/Slices/ModalSlice";
 
 interface FrozenGifProps {
   image: string;
@@ -53,7 +56,27 @@ export const FeedPostCreatorFrozenGif: React.FC<FrozenGifProps> = ({
 
   const handleCanvasClicked = () => {
     //TODO once we have it setup
-    if (preview) dispatch(fetchGifByTerm(text));
+    if (preview) {
+      dispatch(fetchGifByTerm(text));
+    } else {
+      let postImage: PostImage = {
+        imageId: 0,
+        imageName: `${text}-gif`,
+        imageType: "gif",
+        imageUrl: image,
+      };
+
+      let imgs = [postImage];
+
+      dispatch(
+        updateCurrentPost({
+          name: "images",
+          value: imgs,
+        })
+      );
+
+      dispatch(updateDisplayGif());
+    }
   };
 
   return (
