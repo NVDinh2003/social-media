@@ -187,8 +187,9 @@ export const FeedPostCreator: React.FC = () => {
   const generatePoll = (e: React.MouseEvent<HTMLDivElement>) => {
     if (state.post.currentPost === undefined) {
       activate(e);
+    } else {
+      dispatch(createPoll());
     }
-    dispatch(createPoll());
   };
 
   useEffect(() => {

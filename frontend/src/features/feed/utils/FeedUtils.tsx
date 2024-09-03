@@ -134,19 +134,13 @@ export function displayTagPeople(
 
 export const generatePollDaysSelection = (): JSX.Element[] => {
   let options: JSX.Element[] = [];
-  options.push(
-    <option value={1} key={1}>
-      1
-    </option>
-  );
+
   for (let i = 0; i <= 7; i++) {
-    if (i !== 1) {
-      options.push(
-        <option value={i} key={i}>
-          {i}
-        </option>
-      );
-    }
+    options.push(
+      <option value={i} key={i}>
+        {i}
+      </option>
+    );
   }
 
   return options;

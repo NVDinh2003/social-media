@@ -100,7 +100,7 @@ export interface Post {
   replies?: Post[];
   likes: number;
   images: PostImage[];
-  poll?: Poll[];
+  poll?: Poll;
   reposts: number;
   views: number;
   scheduled: boolean;
@@ -124,6 +124,6 @@ export interface PollChoice {
 
 export interface Poll {
   pollId: number;
-  endTime: Date;
+  endTime: string;
   choices: PollChoice[];
 }

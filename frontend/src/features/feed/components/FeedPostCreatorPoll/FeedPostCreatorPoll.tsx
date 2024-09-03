@@ -9,15 +9,51 @@ import {
   generatePollHoursSelection,
   generatePollMinutesSelection,
 } from "../../utils/FeedUtils";
+import { AppDispatch } from "../../../../redux/Store";
+import { useDispatch } from "react-redux";
+import { removePoll, updatePoll } from "../../../../redux/Slices/PostSlice";
 
 export const FeedPostCreatorPoll: React.FC = () => {
   //
+  const dispatch: AppDispatch = useDispatch();
   const [labels, setLabels] = useState<string[]>(["Choice 1", "Choice 2"]);
+  const [time, setTime] = useState<{
+    days: string;
+    hours: string;
+    minutes: string;
+  }>({
+    days: "1",
+    hours: "0",
+    minutes: "0",
+  });
 
   const addNewChoice = () => {
     if (labels.length < 4) {
       setLabels([...labels, `Choice ${labels.length + 1} (optional)`]);
     }
+  };
+
+  const updateChoiceText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // `choice:${index}`
+    const index = e.target.name.split(":")[1];
+    // console.log("Index that is being changed!", index);
+    dispatch(
+      updatePoll({
+        index: +index,
+        choiceText: e.target.value,
+      })
+    );
+  };
+
+  const updateTime = (name: string, value: string | number | boolean) => {
+    setTime({
+      ...time,
+      [name]: value,
+    });
+  };
+
+  const deletePoll = () => {
+    dispatch(removePoll());
   };
 
   useEffect(() => {
@@ -41,7 +77,7 @@ export const FeedPostCreatorPoll: React.FC = () => {
                   valid={true}
                   name={`choice:${index}`}
                   label={label}
-                  changeValue={() => {}}
+                  changeValue={updateChoiceText}
                   attributes={{ maxLength: 25 }}
                 />
               </div>
@@ -73,7 +109,8 @@ export const FeedPostCreatorPoll: React.FC = () => {
             valid={true}
             name="Days"
             dropDown={generatePollDaysSelection}
-            dispatcher={() => {}}
+            dispatcher={updateTime}
+            data={+time.days}
           />
 
           <ValidatedDateSelector
@@ -81,7 +118,8 @@ export const FeedPostCreatorPoll: React.FC = () => {
             valid={true}
             name="Hours"
             dropDown={generatePollHoursSelection}
-            dispatcher={() => {}}
+            dispatcher={updateTime}
+            data={+time.hours}
           />
 
           <ValidatedDateSelector
@@ -89,12 +127,15 @@ export const FeedPostCreatorPoll: React.FC = () => {
             valid={true}
             name="Minutes"
             dropDown={generatePollMinutesSelection}
-            dispatcher={() => {}}
+            dispatcher={updateTime}
+            data={+time.minutes}
           />
         </div>
       </div>
 
-      <div className="feed-post-creator-poll-button">Remove Poll</div>
+      <div className="feed-post-creator-poll-button" onClick={deletePoll}>
+        Remove poll
+      </div>
     </div>
   );
 };

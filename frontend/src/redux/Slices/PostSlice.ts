@@ -38,6 +38,11 @@ interface CreatePostWithMediaBody extends createPostBody {
   imageFiles: File[];
 }
 
+interface UpdatePollPayload {
+  index: number;
+  choiceText: string;
+}
+
 const initialState: PostSliceState = {
   loading: false,
   error: false,
@@ -164,7 +169,7 @@ export const PostSlice = createSlice({
 
       let poll: Poll = {
         pollId: 0,
-        endTime: new Date(),
+        endTime: "",
         choices,
       };
 
@@ -178,6 +183,72 @@ export const PostSlice = createSlice({
         ...state,
         currentPost: post,
       };
+
+      return state;
+    },
+
+    updatePoll(state, action: PayloadAction<UpdatePollPayload>) {
+      if (state.currentPost && state.currentPost.poll) {
+        let post = JSON.parse(JSON.stringify(state.currentPost));
+        let poll = post.poll;
+        let choices = poll.choices;
+
+        if (choices.length - 1 < action.payload.index) {
+          let choice: PollChoice = {
+            pollChoiceId: 0,
+            choiceText: action.payload.choiceText,
+            votes: [],
+          };
+
+          choices[action.payload.index] = choice;
+        } else {
+          let choice: PollChoice = choices[action.payload.index];
+
+          choice = {
+            ...choice,
+            choiceText: action.payload.choiceText,
+          };
+
+          choices[action.payload.index] = choice;
+        }
+
+        poll = {
+          ...poll,
+          choices,
+        };
+
+        post = {
+          ...post,
+          poll,
+        };
+
+        state = {
+          ...state,
+          currentPost: post,
+        };
+
+        // console.log("Choices: ", choices);
+        // console.log("Poll: ", poll);
+        // console.log("Current Post: ", post);
+        // console.log("State: ", state);
+      }
+
+      return state;
+    },
+
+    removePoll(state) {
+      if (state.currentPost && state.currentPost.poll) {
+        let post = JSON.parse(JSON.stringify(state.currentPost));
+        post = {
+          ...post,
+          poll: undefined,
+        };
+
+        state = {
+          ...state,
+          currentPost: post,
+        };
+      }
 
       return state;
     },
@@ -252,5 +323,7 @@ export const {
   updateCurrentPost,
   updateCurrentPostImages,
   createPoll,
+  updatePoll,
+  removePoll,
 } = PostSlice.actions;
 export default PostSlice.reducer;
