@@ -100,6 +100,7 @@ export interface Post {
   replies?: Post[];
   likes: number;
   images: PostImage[];
+  poll?: Poll[];
   reposts: number;
   views: number;
   scheduled: boolean;
@@ -113,4 +114,16 @@ export interface TenorCategories {
   name: string;
   path: string;
   searchterm: string;
+}
+
+export interface PollChoice {
+  pollChoiceId: number;
+  choiceText: string;
+  votes: User[];
+}
+
+export interface Poll {
+  pollId: number;
+  endTime: Date;
+  choices: PollChoice[];
 }

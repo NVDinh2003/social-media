@@ -38,7 +38,7 @@ export const FeedPostCreatorImage: React.FC<FeedPostCreatorImageProps> = ({
       );
     } else {
       let filteredImages: File[] = state.currentPostImages.filter(
-        (img) => img.name !== name
+        (img: any) => img.name !== name
       );
       dispatch(updateCurrentPostImages(filteredImages));
     }

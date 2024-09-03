@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ValidatedDateSelector } from "../../../../components/ValidatedInput/ValidatedDateSelector";
-import { getMonths, getDays, getYears } from "../../utils/DateUtils";
+import { getMonths, getDays, getYears } from "../../../../utils/DateUtils";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { updateRegister } from "../../../../redux/Slices/RegisterSlice";
 import { validateDob } from "../../../../services/Validator";

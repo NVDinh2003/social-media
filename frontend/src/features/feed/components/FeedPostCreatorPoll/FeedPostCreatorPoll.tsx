@@ -4,6 +4,11 @@ import AddIcon from "@mui/icons-material/Add";
 import { ValidatedDateSelector } from "../../../../components/ValidatedInput/ValidatedDateSelector";
 
 import "./FeedPostCreatorPoll.css";
+import {
+  generatePollDaysSelection,
+  generatePollHoursSelection,
+  generatePollMinutesSelection,
+} from "../../utils/FeedUtils";
 
 export const FeedPostCreatorPoll: React.FC = () => {
   //
@@ -62,35 +67,31 @@ export const FeedPostCreatorPoll: React.FC = () => {
 
       <div className="feed-post-creator-poll-length">
         <p className="feed-post-creator-poll-length-text">Poll length</p>
-        <ValidatedDateSelector
-          style=""
-          valid={true}
-          name="Days"
-          dropDown={() => {
-            return [<>Hello</>];
-          }}
-          dispatcher={() => {}}
-        />
+        <div className="feed-post-creator-poll-length-wrapper">
+          <ValidatedDateSelector
+            style=""
+            valid={true}
+            name="Days"
+            dropDown={generatePollDaysSelection}
+            dispatcher={() => {}}
+          />
 
-        <ValidatedDateSelector
-          style=""
-          valid={true}
-          name="Hours"
-          dropDown={() => {
-            return [<>Hello</>];
-          }}
-          dispatcher={() => {}}
-        />
+          <ValidatedDateSelector
+            style=""
+            valid={true}
+            name="Hours"
+            dropDown={generatePollHoursSelection}
+            dispatcher={() => {}}
+          />
 
-        <ValidatedDateSelector
-          style=""
-          valid={true}
-          name="Minutes"
-          dropDown={() => {
-            return [<>Hello</>];
-          }}
-          dispatcher={() => {}}
-        />
+          <ValidatedDateSelector
+            style=""
+            valid={true}
+            name="Minutes"
+            dropDown={generatePollMinutesSelection}
+            dispatcher={() => {}}
+          />
+        </div>
       </div>
 
       <div className="feed-post-creator-poll-button">Remove Poll</div>

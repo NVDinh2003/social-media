@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { Post } from "../../../../utils/GlobalInterface";
 import {
+  createPoll,
   createPost,
   createPostWithMedia,
   initializeCurrentPost,
@@ -183,11 +184,24 @@ export const FeedPostCreator: React.FC = () => {
     dispatch(updateDisplayGif());
   };
 
+  const generatePoll = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (state.post.currentPost === undefined) {
+      activate(e);
+    }
+    dispatch(createPoll());
+  };
+
   useEffect(() => {
     if (!state.post.currentPost) setPostContent("");
 
-    console.log(postContent);
-  }, [state.post.currentPost, postContent, activate]);
+    // console.log(postContent);
+    console.log(state.post.currentPost?.poll);
+  }, [
+    state.post.currentPost,
+    postContent,
+    activate,
+    state.post.currentPost?.poll,
+  ]);
 
   return (
     <div className="feed-post-creator" onClick={activate}>
@@ -222,7 +236,9 @@ export const FeedPostCreator: React.FC = () => {
           <FeedPostCreatorImages />
         )}
 
-        <FeedPostCreatorPoll />
+        {state.post.currentPost && state.post.currentPost?.poll && (
+          <FeedPostCreatorPoll />
+        )}
 
         {active ? <FeedPostReplyRestrictionDropDown /> : <></>}
 
@@ -286,6 +302,7 @@ export const FeedPostCreator: React.FC = () => {
                   ? "feed-post-creator-icon-bg"
                   : "feed-post-creator-icon-bg icon-active"
               }
+              onClick={generatePoll}
             >
               {" "}
               <PollSVG

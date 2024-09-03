@@ -131,3 +131,49 @@ export function displayTagPeople(
     </p>
   );
 }
+
+export const generatePollDaysSelection = (): JSX.Element[] => {
+  let options: JSX.Element[] = [];
+  options.push(
+    <option value={1} key={1}>
+      1
+    </option>
+  );
+  for (let i = 0; i <= 7; i++) {
+    if (i !== 1) {
+      options.push(
+        <option value={i} key={i}>
+          {i}
+        </option>
+      );
+    }
+  }
+
+  return options;
+};
+
+export const generatePollHoursSelection = (): JSX.Element[] => {
+  let options: JSX.Element[] = [];
+  for (let i = 0; i <= 23; i++) {
+    options.push(
+      <option value={i} key={i}>
+        {i}
+      </option>
+    );
+  }
+
+  return options;
+};
+
+export const generatePollMinutesSelection = (): JSX.Element[] => {
+  let options: JSX.Element[] = [];
+  for (let i = 0; i <= 59; i++) {
+    options.push(
+      <option value={i} key={i}>
+        {i}
+      </option>
+    );
+  }
+
+  return options;
+};

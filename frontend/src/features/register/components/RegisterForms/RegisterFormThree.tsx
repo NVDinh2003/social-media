@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/Store";
 import { ValidatedDisplay } from "../../../../components/ValidatedInput/ValidatedDisplay";
-import { stringifyDate } from "../../utils/DateUtils";
+import { stringifyDate } from "../../../../utils/DateUtils";
 
 import "./RegisterForm.css";
 import "../../../../assets/global.css";

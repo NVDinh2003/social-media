@@ -1,4 +1,4 @@
-import { Dob } from "../../../utils/GlobalInterface";
+import { Dob } from "./GlobalInterface";
 
 const MONTHS: string[] = [
   "",
