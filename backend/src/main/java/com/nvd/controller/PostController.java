@@ -33,7 +33,7 @@ public class PostController {
         return new ResponseEntity<>("Post doesnt exist", HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public List<Post> getAllPosts() {
         return postService.getAllPosts();
     }
@@ -61,9 +61,9 @@ public class PostController {
         return postService.getAllPostsByAuthor(author);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<String> deletePost(@RequestBody Post post) {
-        postService.deletePost(post);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePost(@PathVariable int id) {
+        postService.deletePostById(id);
         return ResponseEntity.ok("Post deleted successfully!");
     }
 

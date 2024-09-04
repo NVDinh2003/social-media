@@ -26,6 +26,7 @@ interface createPostBody {
   content: string;
   author: User;
   images: PostImage[];
+  poll: Poll | undefined;
   replies: Post[];
   scheduled: boolean;
   scheduledDate: Date | undefined;
@@ -59,12 +60,15 @@ export const createPost = createAsyncThunk(
         content: body.content,
         author: body.author,
         images: body.images,
+        poll: body.poll,
         replies: [],
         scheduled: body.scheduled,
         scheduledDate: body.scheduledDate,
         audience: body.audience,
         replyRestriction: body.replyRestriction,
       };
+
+      // console.log("post created", post);
 
       const req = await axios.post(
         `${process.env.REACT_APP_API_URL}/posts`,
@@ -169,7 +173,7 @@ export const PostSlice = createSlice({
 
       let poll: Poll = {
         pollId: 0,
-        endTime: "",
+        endTime: "1:0:0",
         choices,
       };
 
@@ -252,6 +256,31 @@ export const PostSlice = createSlice({
 
       return state;
     },
+
+    setPollDate(state, action: PayloadAction<string>) {
+      if (state.currentPost && state.currentPost.poll) {
+        let post = JSON.parse(JSON.stringify(state.currentPost));
+        let poll = post.poll;
+
+        poll = {
+          ...poll,
+          endTime: action.payload,
+        };
+
+        post = {
+          ...post,
+          poll,
+        };
+
+        state = {
+          ...state,
+          currentPost: post,
+        };
+      }
+
+      return state;
+    },
+    //
   },
 
   extraReducers: (builder) => {
@@ -325,5 +354,6 @@ export const {
   createPoll,
   updatePoll,
   removePoll,
+  setPollDate,
 } = PostSlice.actions;
 export default PostSlice.reducer;

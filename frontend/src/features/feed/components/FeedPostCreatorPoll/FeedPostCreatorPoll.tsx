@@ -11,7 +11,11 @@ import {
 } from "../../utils/FeedUtils";
 import { AppDispatch } from "../../../../redux/Store";
 import { useDispatch } from "react-redux";
-import { removePoll, updatePoll } from "../../../../redux/Slices/PostSlice";
+import {
+  removePoll,
+  setPollDate,
+  updatePoll,
+} from "../../../../redux/Slices/PostSlice";
 
 export const FeedPostCreatorPoll: React.FC = () => {
   //
@@ -50,6 +54,16 @@ export const FeedPostCreatorPoll: React.FC = () => {
       ...time,
       [name]: value,
     });
+
+    let date = JSON.parse(JSON.stringify(time));
+    console.log("date: ", date);
+
+    date = {
+      ...date,
+      [name]: value,
+    };
+
+    dispatch(setPollDate(`${date.days}:${date.hours}:${date.minutes}`));
   };
 
   const deletePoll = () => {

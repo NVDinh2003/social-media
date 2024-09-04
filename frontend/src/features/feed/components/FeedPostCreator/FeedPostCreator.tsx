@@ -90,10 +90,40 @@ export const FeedPostCreator: React.FC = () => {
   const submitPost = () => {
     if (state.post.currentPost && state.user.loggedIn) {
       if (state.post.currentPostImages.length === 0) {
+        //
+        let poll = undefined;
+        if (
+          state.post.currentPost.poll !== undefined &&
+          state.post.currentPost.images.length < 1
+        ) {
+          poll = JSON.parse(JSON.stringify(state.post.currentPost.poll));
+          console.log("There is a poll in post!");
+          let timeString = state.post.currentPost.poll.endTime;
+
+          let days = timeString.split(":")[0];
+          let hours = timeString.split(":")[1];
+          let minutes = timeString.split(":")[2];
+
+          let endTime = new Date();
+          // console.log("Time: ", endTime.toUTCString());
+          endTime.setDate(endTime.getDate() + +days);
+          endTime.setHours(endTime.getHours() + +hours);
+          endTime.setMinutes(endTime.getMinutes() + +minutes);
+
+          // console.log("Time +: ", endTime.toUTCString());
+          // console.log({ days, hours, minutes });
+
+          poll = {
+            ...poll,
+            endTime: `${endTime.getFullYear()}-${endTime.getMonth()}-${endTime.getDate()} ${endTime.getHours()}:${endTime.getMinutes()}`,
+          };
+        }
+
         let body = {
           content: state.post.currentPost.content,
           author: state.post.currentPost.author,
           images: state.post.currentPost.images,
+          poll,
           replies: [],
           audience: state.post.currentPost.audience,
           replyRestriction: state.post.currentPost.replyRestriction,
@@ -114,10 +144,15 @@ export const FeedPostCreator: React.FC = () => {
           scheduledDate: state.post.currentPost.scheduledDate,
           token: state.user.token,
           images: [],
+          poll: undefined,
           imageFiles: state.post.currentPostImages,
         };
 
         dispatch(createPostWithMedia(body));
+
+        if (imageSelectorRef && imageSelectorRef.current) {
+          imageSelectorRef.current.value = "";
+        }
       }
     }
 
@@ -190,6 +225,24 @@ export const FeedPostCreator: React.FC = () => {
     } else {
       dispatch(createPoll());
     }
+  };
+
+  const generateButtonClass = (): string => {
+    return postContent !== "" ||
+      state.post.currentPostImages.length > 0 ||
+      (state.post.currentPost && state.post.currentPost.images.length >= 1) ||
+      (state.post.currentPost && state.post.currentPost.poll !== undefined)
+      ? "feed-post-creator-post-button post-active"
+      : "feed-post-creator-post-button";
+  };
+
+  const activateButton = (): boolean => {
+    return !(
+      postContent !== "" ||
+      state.post.currentPostImages.length > 0 ||
+      (state.post.currentPost && state.post.currentPost.images.length >= 1) ||
+      (state.post.currentPost && state.post.currentPost.poll !== undefined)
+    );
   };
 
   useEffect(() => {
@@ -347,20 +400,8 @@ export const FeedPostCreator: React.FC = () => {
             )}
 
             <button
-              className={
-                postContent === "" &&
-                state.post.currentPostImages.length < 1 &&
-                state.post.currentPost &&
-                state.post.currentPost.images.length < 1
-                  ? "feed-post-creator-post-button"
-                  : "feed-post-creator-post-button post-active"
-              }
-              disabled={
-                postContent === "" &&
-                state.post.currentPostImages.length < 1 &&
-                state.post.currentPost &&
-                state.post.currentPost.images.length < 1
-              }
+              className={generateButtonClass()}
+              disabled={activateButton()}
               onClick={submitPost}
             >
               Post
@@ -371,3 +412,18 @@ export const FeedPostCreator: React.FC = () => {
     </div>
   );
 };
+
+// {
+//   /*                 postContent === "" &&
+//                 state.post.currentPostImages.length < 1 &&
+//                 state.post.currentPost &&
+//                 state.post.currentPost.images.length < 1
+//                   ? "feed-post-creator-post-button"
+//                   : "feed-post-creator-post-button post-active" */
+// }
+// {
+//   /*                 postContent === "" &&
+//                 state.post.currentPostImages.length < 1 &&
+//                 state.post.currentPost &&
+//                 state.post.currentPost.images.length < 1 */
+// }

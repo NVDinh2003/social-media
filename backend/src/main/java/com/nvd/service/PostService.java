@@ -138,7 +138,7 @@ public class PostService {
         return posts;
     }
 
-    public void deletePost(Post p) {
-        postRepository.delete(p);
+    public void deletePostById(int id) {
+        postRepository.deleteById(id);
     }
 }
