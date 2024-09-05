@@ -11,7 +11,7 @@ interface ValidatedDateSelectorProps {
   name: string;
   dropDown(): JSX.Element[];
   dispatcher(name: string, value: string | number | boolean): void;
-  data?: number;
+  data?: number | string | undefined;
 }
 
 export const ValidatedDateSelector: React.FC<ValidatedDateSelectorProps> = ({
