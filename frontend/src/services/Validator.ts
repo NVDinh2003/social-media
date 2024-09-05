@@ -6,22 +6,21 @@ export const validateName = (value: string): boolean => {
 
 export const validateDob = (dob: Dob): boolean => {
   let { month, day, year } = dob;
+
   let leapYears: number[] = [];
+
   for (let i = 2022; i > 1902; i -= 4) {
     leapYears.push(i);
   }
-  if (!month || !day || !year) {
-    return false;
-  } else if (month === 2 && day > 29) {
-    return false;
-  } else if (month === 2 && day === 29 && !leapYears.includes(year)) {
-    return false;
-  } else if (
+
+  if (!month || !day || !year) return false;
+  else if (month === 2 && day > 29) return false;
+  else if (month === 2 && day === 29 && !leapYears.includes(year)) return false;
+  else if (
     (month === 4 || month === 6 || month === 9 || month === 11) &&
     day > 30
-  ) {
+  )
     return false;
-  }
 
   return checkAge(dob);
 };
@@ -61,4 +60,10 @@ export const validateEmail = (value: string): boolean => {
 export const validatePhone = (phone: string): boolean => {
   let stripped = phone.replace(/[^0-9]/gi, "");
   return stripped.length === 10;
+};
+
+export const validateFutureDate = (d: Date): boolean => {
+  let currentDate = new Date();
+
+  return currentDate <= d;
 };

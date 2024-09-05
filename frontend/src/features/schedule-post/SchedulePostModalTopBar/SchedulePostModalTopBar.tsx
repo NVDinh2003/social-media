@@ -33,7 +33,7 @@ export const SchedulePostModalTopBar: React.FC = () => {
       <div className="schedule-post-modal-top-bar-right">
         <button
           className="schedule-post-modal-top-bar-confirm"
-          onClick={() => {}}
+          onClick={closeModal}
         >
           Confirm
         </button>

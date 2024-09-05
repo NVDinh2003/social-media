@@ -280,6 +280,25 @@ export const PostSlice = createSlice({
 
       return state;
     },
+
+    setScheduleDate(state, action: PayloadAction<Date>) {
+      if (state.currentPost) {
+        let post: Post = JSON.parse(JSON.stringify(state.currentPost));
+
+        post = {
+          ...post,
+          scheduledDate: action.payload,
+          scheduled: true,
+        };
+
+        state = {
+          ...state,
+          currentPost: post,
+        };
+      }
+
+      return state;
+    },
     //
   },
 
@@ -355,5 +374,6 @@ export const {
   updatePoll,
   removePoll,
   setPollDate,
+  setScheduleDate,
 } = PostSlice.actions;
 export default PostSlice.reducer;

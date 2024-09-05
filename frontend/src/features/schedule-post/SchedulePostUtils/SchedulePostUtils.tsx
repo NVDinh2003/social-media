@@ -55,12 +55,12 @@ export const getAmPm = (): JSX.Element[] => {
   let options: JSX.Element[] = [];
 
   options.push(
-    <option key="AM" value="AM">
+    <option key="AM" value={0}>
       AM
     </option>
   );
   options.push(
-    <option key="PM" value="PM">
+    <option key="PM" value={1}>
       PM
     </option>
   );

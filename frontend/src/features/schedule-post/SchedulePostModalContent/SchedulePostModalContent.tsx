@@ -12,11 +12,21 @@ import {
   getScheduleMinutes,
   getScheduleYears,
 } from "../SchedulePostUtils/SchedulePostUtils";
+import { AppDispatch } from "../../../redux/Store";
+import { useDispatch } from "react-redux";
+import { setScheduleDate } from "../../../redux/Slices/PostSlice";
+import { updateDisplaySchedule } from "../../../redux/Slices/ModalSlice";
+import { validateFutureDate } from "../../../services/Validator";
 
 export const SchedulePostModalContent: React.FC = () => {
   //
   const dateSelectorRef = useRef<HTMLInputElement>(null);
   const [scheduledDate, setScheduledDate] = useState<Date>(() => new Date());
+  const [amPm, setAmPm] = useState<number>(() =>
+    new Date().getHours() / 12 > 0 ? 1 : 0
+  );
+
+  const dispatch: AppDispatch = useDispatch();
 
   const openDateSelector = () => {
     if (dateSelectorRef && dateSelectorRef.current) {
@@ -40,6 +50,41 @@ export const SchedulePostModalContent: React.FC = () => {
       dateCopy.setDate(value);
       setScheduledDate(dateCopy);
     }
+
+    if (name === "year" && typeof value === "number") {
+      dateCopy.setFullYear(value);
+      setScheduledDate(dateCopy);
+    }
+
+    if (name === "hour" && typeof value === "number") {
+      if (amPm === 0) {
+        let newHours = value % 12;
+        dateCopy.setHours(newHours);
+      } else {
+        let newHours = value === 12 ? 12 : value + 12;
+        dateCopy.setHours(newHours);
+      }
+
+      setScheduledDate(dateCopy);
+    }
+
+    // update to caculate army time/24 hours time
+    if (name === "minute" && typeof value === "number") {
+      dateCopy.setMinutes(value);
+      setScheduledDate(dateCopy);
+    }
+
+    if (name === "am/pm" && typeof value === "number") {
+      if (value === 0) {
+        dateCopy.setHours(dateCopy.getHours() - 12);
+      } else {
+        dateCopy.setHours(dateCopy.getHours() + 12);
+      }
+      setScheduledDate(dateCopy);
+      setAmPm(value);
+    }
+
+    if (validateFutureDate(dateCopy)) dispatch(setScheduleDate(scheduledDate));
   };
 
   const generateDateString = () => {
@@ -51,10 +96,13 @@ export const SchedulePostModalContent: React.FC = () => {
     const day = DAYS[scheduledDate.getDay()];
     const dayOfMonth = scheduledDate.getDate();
     const year = scheduledDate.getFullYear();
-    const hours = scheduledDate.getHours() % 12;
-    const minutes = scheduledDate.getMinutes();
-    const amPm = scheduledDate.getHours() / 12 > 0 ? "PM" : "AM";
-    return `${day}, ${month} ${dayOfMonth}, ${year} at ${hours}:${minutes} ${amPm}`;
+    // const hours = scheduledDate.getHours() % 12;
+    // const minutes = scheduledDate.getMinutes();
+    // const amPm = scheduledDate.getHours() / 12 > 0 ? "PM" : "AM";
+    const time = scheduledDate.toLocaleTimeString();
+    return `${day}, ${month} ${dayOfMonth}, ${year} at ${time.split(":")[0]}:${
+      time.split(":")[1]
+    } ${time.split(" ")[1]}`;
   };
 
   return (
@@ -68,7 +116,7 @@ export const SchedulePostModalContent: React.FC = () => {
         <div className="schedule-post-modal-content-date-group">
           <ValidatedDateSelector
             name={"Month"}
-            valid={true}
+            valid={validateFutureDate(scheduledDate)}
             dropDown={getMonths}
             dispatcher={updateScheduledDate}
             data={
@@ -80,7 +128,7 @@ export const SchedulePostModalContent: React.FC = () => {
 
           <ValidatedDateSelector
             name={"Day"}
-            valid={true}
+            valid={validateFutureDate(scheduledDate)}
             dropDown={getDays}
             dispatcher={updateScheduledDate}
             data={scheduledDate.getDate()}
@@ -88,9 +136,9 @@ export const SchedulePostModalContent: React.FC = () => {
 
           <ValidatedDateSelector
             name={"Year"}
-            valid={true}
+            valid={validateFutureDate(scheduledDate)}
             dropDown={getScheduleYears}
-            dispatcher={() => {}}
+            dispatcher={updateScheduledDate}
             data={scheduledDate.getFullYear()}
           />
 
@@ -108,26 +156,26 @@ export const SchedulePostModalContent: React.FC = () => {
           <p className="schedule-post-modal-content-label">Time</p>
           <ValidatedDateSelector
             name={"Hour"}
-            valid={true}
+            valid={validateFutureDate(scheduledDate)}
             dropDown={getScheduleHours}
-            dispatcher={() => {}}
-            data={scheduledDate.getHours() % 12}
+            dispatcher={updateScheduledDate}
+            data={+scheduledDate.toLocaleTimeString().split(":")[0]}
           />
 
           <ValidatedDateSelector
             name={"Minute"}
-            valid={true}
+            valid={validateFutureDate(scheduledDate)}
             dropDown={getScheduleMinutes}
-            dispatcher={() => {}}
+            dispatcher={updateScheduledDate}
             data={scheduledDate.getMinutes()}
           />
 
           <ValidatedDateSelector
             name={"AM/PM"}
-            valid={true}
+            valid={validateFutureDate(scheduledDate)}
             dropDown={getAmPm}
-            dispatcher={() => {}}
-            data={scheduledDate.getHours() / 12 > 0 ? "PM" : "AM"}
+            dispatcher={updateScheduledDate}
+            data={amPm}
           />
         </div>
         <p className="schedule-post-modal-content-label">Time Zone</p>
