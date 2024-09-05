@@ -13,7 +13,8 @@
 
 .bottomless-modal-box {
   width: 600px;
-  height: 650px;
+  max-height: 650px;
+  height: fit-content;
   border-radius: 20px;
   overflow: hidden;
   position: relative;
@@ -38,6 +39,7 @@
 }
 
 .bottomless-modal-content {
-  height: 600px;
+  max-height: 600px;
+  height: fit-content;
   width: 100%;
 }

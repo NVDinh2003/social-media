@@ -30,6 +30,7 @@ import {
   updateDisplaySchedule,
 } from "../../../../redux/Slices/ModalSlice";
 import { FeedPostCreatorPoll } from "../FeedPostCreatorPoll/FeedPostCreatorPoll";
+import { EmojiDropDown } from "../../../../components/EmojiDropDown/EmojiDropDown";
 
 export const FeedPostCreator: React.FC = () => {
   //
@@ -419,21 +420,8 @@ export const FeedPostCreator: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <EmojiDropDown />
     </div>
   );
 };
-
-// {
-//   /*                 postContent === "" &&
-//                 state.post.currentPostImages.length < 1 &&
-//                 state.post.currentPost &&
-//                 state.post.currentPost.images.length < 1
-//                   ? "feed-post-creator-post-button"
-//                   : "feed-post-creator-post-button post-active" */
-// }
-// {
-//   /*                 postContent === "" &&
-//                 state.post.currentPostImages.length < 1 &&
-//                 state.post.currentPost &&
-//                 state.post.currentPost.images.length < 1 */
-// }
