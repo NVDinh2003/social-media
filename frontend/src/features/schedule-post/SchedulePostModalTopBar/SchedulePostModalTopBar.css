@@ -1,0 +1,64 @@
+.schedule-post-modal-top-bar {
+  width: 100%;
+  height: 50px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.schedule-post-modal-top-bar-left {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 32px;
+  padding-left: 12px;
+}
+
+.schedule-post-modal-top-bar-right {
+  width: 32%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 12px;
+}
+
+.schedule-post-modal-top-bar-close-bg {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.schedule-post-modal-top-bar-close-bg:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.schedule-post-modal-top-bar-text {
+  width: fit-content;
+  height: fit-content;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.schedule-post-modal-top-bar-confirm {
+  width: 90px;
+  height: 30px;
+  border-radius: 15px;
+  border: none;
+  background-color: #000;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+}
+
+.schedule-post-modal-top-bar-confirm:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+}

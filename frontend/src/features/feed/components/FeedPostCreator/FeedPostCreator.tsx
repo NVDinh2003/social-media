@@ -25,7 +25,10 @@ import {
 import { FeedPostAudienceDropDown } from "../FeedPostAudienceDropDown/FeedPostAudienceDropDown";
 import { FeedPostReplyRestrictionDropDown } from "../FeedPostReplyRestrictionDropDown/FeedPostReplyRestrictionDropDown";
 import { FeedPostCreatorImages } from "../FeedPostCreatorImages/FeedPostCreatorImages";
-import { updateDisplayGif } from "../../../../redux/Slices/ModalSlice";
+import {
+  updateDisplayGif,
+  updateDisplaySchedule,
+} from "../../../../redux/Slices/ModalSlice";
 import { FeedPostCreatorPoll } from "../FeedPostCreatorPoll/FeedPostCreatorPoll";
 
 export const FeedPostCreator: React.FC = () => {
@@ -245,6 +248,10 @@ export const FeedPostCreator: React.FC = () => {
     );
   };
 
+  const openScheduleModal = () => {
+    dispatch(updateDisplaySchedule());
+  };
+
   useEffect(() => {
     if (!state.post.currentPost) setPostContent("");
 
@@ -369,11 +376,14 @@ export const FeedPostCreator: React.FC = () => {
                 }
               />
             </div>
-            <div className="feed-post-creator-icon-bg">
+            <div className="feed-post-creator-icon-bg icon-active">
               {" "}
               <EmojiSVG height={20} width={20} color={"#1DA1F2"} />
             </div>
-            <div className="feed-post-creator-icon-bg">
+            <div
+              className="feed-post-creator-icon-bg icon-active"
+              onClick={openScheduleModal}
+            >
               {" "}
               <ScheduleSVG height={20} width={20} color={"#1DA1F2"} />
             </div>

@@ -5,12 +5,14 @@ interface ModalSliceState {
   displayEditPostImage: boolean;
   displayTagPeople: boolean;
   displayGif: boolean;
+  displaySchedule: boolean;
 }
 
 const initialState: ModalSliceState = {
   displayEditPostImage: false,
   displayTagPeople: false,
   displayGif: false,
+  displaySchedule: false,
 };
 
 export const ModalSlice = createSlice({
@@ -41,6 +43,15 @@ export const ModalSlice = createSlice({
 
       return state;
     },
+
+    updateDisplaySchedule(state) {
+      state = {
+        ...state,
+        displaySchedule: !state.displaySchedule,
+      };
+
+      return state;
+    },
   },
 });
 
@@ -48,6 +59,7 @@ export const {
   updateDisplayEditPostImage,
   updateDisplayTagPeople,
   updateDisplayGif,
+  updateDisplaySchedule,
 } = ModalSlice.actions;
 
 export default ModalSlice.reducer;

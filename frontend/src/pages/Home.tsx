@@ -12,6 +12,7 @@ import { Feed } from "../features/feed/components/Feed/Feed";
 import { FeedPostCreatorEditImageModal } from "../features/feed/components/FeedPostCreatorEditImageModal/FeedPostCreatorEditImageModal";
 import { FeedPostCreatorTagPeopleModal } from "../features/feed/components/FeedPostCreatorTagPeopleModal/FeedPostCreatorTagPeopleModal";
 import { FeedPostCreatorGifModal } from "../features/feed/components/FeedPostCreatorGifModal/FeedPostCreatorGifModal";
+import { SchedulePostModal } from "../features/schedule-post/SchedulePostModal/SchedulePostModal";
 
 export const Home: React.FC = () => {
   //
@@ -27,6 +28,10 @@ export const Home: React.FC = () => {
 
   const displayGifModal = useSelector(
     (state: RootState) => state.modal.displayGif
+  );
+
+  const displayScheduleModal = useSelector(
+    (state: RootState) => state.modal.displaySchedule
   );
   //
   const dispatch: AppDispatch = useDispatch();
@@ -64,6 +69,7 @@ export const Home: React.FC = () => {
       {displayEditImageModal && <FeedPostCreatorEditImageModal />}
       {displayTagPeopleModal && <FeedPostCreatorTagPeopleModal />}
       {displayGifModal && <FeedPostCreatorGifModal />}
+      {displayScheduleModal && <SchedulePostModal />}
 
       <div className="home-layout">
         <div className="home-navigation-section">
