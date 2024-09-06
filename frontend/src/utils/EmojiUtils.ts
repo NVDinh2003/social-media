@@ -1,6 +1,8 @@
 import data from "../assets/list.with.modifiers.json";
+import dataWithImg from "../assets/list.with.images.coppy.json";
 
 const EMOJIS = data.emojis;
+const EMOJIS_IMG = dataWithImg.emojis;
 
 let supported =
   window.navigator.platform.toUpperCase().indexOf("MAC") >= 0
@@ -14,7 +16,7 @@ export const generateSmileysAndPeople = (): string[] => {
     let supportedPlatforms: any = emoji.support;
 
     if (
-      emoji.category === "Smiley & Emotion" ||
+      emoji.category === "Smileys & Emotion" ||
       (emoji.category === "People & Body" &&
         supportedPlatforms[supported] === true)
     )
@@ -106,4 +108,29 @@ export const generateFlags = (): string[] => {
   }).map((emoji) => emoji.emoji);
 
   return flags;
+};
+
+export const generateTopRow = () => {
+  const imgs: string[] = [];
+
+  for (let emoji of EMOJIS_IMG) {
+    let value = emoji.name;
+    let images: any = emoji.images;
+
+    if (
+      value === "two o’clock" ||
+      value === "grinning face" ||
+      value === "bear" ||
+      value === "hamburger" ||
+      value === "soccer ball" ||
+      value === "oncoming automobile" ||
+      value === "light bulb" ||
+      value === "input symbols" ||
+      value === "triangular flag"
+    ) {
+      imgs.push(images[supported]);
+    }
+  }
+
+  return imgs;
 };

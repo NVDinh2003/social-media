@@ -1,0 +1,47 @@
+.emoji-drop-down {
+  z-index: 50;
+  position: absolute;
+  width: 320px;
+  height: 400px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
+  background-color: white;
+  top: 28%;
+  left: 36%;
+  border-radius: 16px;
+  border: none;
+}
+
+.emoji-drop-down-categories {
+  width: 100%;
+  height: 32px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.emoji-drop-down-category-active {
+  border-bottom: 1px solid #1da1f2;
+}
+
+.emoji-drop-down-category-inactive {
+  filter: grayscale(100%);
+}
+.emoji-drop-down-selector {
+  width: 100%;
+  height: 255px;
+  overflow-y: scroll;
+}
+
+.emoji-drop-down-selector-section {
+  width: 100%;
+  height: fit-content;
+}
+
+.emoji-drop-down-selector-emoji-wrapper {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+}
