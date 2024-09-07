@@ -9,7 +9,12 @@ let supported =
     ? "apple"
     : "windows";
 
-export const generateSmileysAndPeople = (): string[] => {
+interface EmojiData {
+  emoji: string;
+  name: string;
+}
+
+export const generateSmileysAndPeople = (): EmojiData[] => {
   //
 
   const smileyAndPeople = EMOJIS.filter((emoji) => {
@@ -21,14 +26,16 @@ export const generateSmileysAndPeople = (): string[] => {
         supportedPlatforms[supported] === true)
     )
       return emoji;
-  }).map((emoji) => emoji.emoji);
+  }).map((emoji) => {
+    return { emoji: emoji.emoji, name: emoji.name };
+  });
 
   //   console.log(smileyAndPeople);
 
   return smileyAndPeople;
 };
 
-export const generateAnimalsAndNature = (): string[] => {
+export const generateAnimalsAndNature = (): EmojiData[] => {
   const animalsAndNature = EMOJIS.filter((emoji) => {
     let supportedPlatforms: any = emoji.support;
     if (
@@ -36,12 +43,14 @@ export const generateAnimalsAndNature = (): string[] => {
       supportedPlatforms[supported] === true
     )
       return emoji;
-  }).map((emoji) => emoji.emoji);
+  }).map((emoji) => {
+    return { emoji: emoji.emoji, name: emoji.name };
+  });
 
   return animalsAndNature;
 };
 
-export const generateFoodAndDrink = (): string[] => {
+export const generateFoodAndDrink = (): EmojiData[] => {
   const foodAndDrink = EMOJIS.filter((emoji) => {
     let supportedPlatforms: any = emoji.support;
     if (
@@ -49,12 +58,14 @@ export const generateFoodAndDrink = (): string[] => {
       supportedPlatforms[supported] === true
     )
       return emoji;
-  }).map((emoji) => emoji.emoji);
+  }).map((emoji) => {
+    return { emoji: emoji.emoji, name: emoji.name };
+  });
 
   return foodAndDrink;
 };
 
-export const generateActivities = (): string[] => {
+export const generateActivities = (): EmojiData[] => {
   const activities = EMOJIS.filter((emoji) => {
     let supportedPlatforms: any = emoji.support;
     if (
@@ -62,12 +73,14 @@ export const generateActivities = (): string[] => {
       supportedPlatforms[supported] === true
     )
       return emoji;
-  }).map((emoji) => emoji.emoji);
+  }).map((emoji) => {
+    return { emoji: emoji.emoji, name: emoji.name };
+  });
 
   return activities;
 };
 
-export const generateTravelAndPlaces = (): string[] => {
+export const generateTravelAndPlaces = (): EmojiData[] => {
   const travelAndPlaces = EMOJIS.filter((emoji) => {
     let supportedPlatforms: any = emoji.support;
     if (
@@ -75,62 +88,143 @@ export const generateTravelAndPlaces = (): string[] => {
       supportedPlatforms[supported] === true
     )
       return emoji;
-  }).map((emoji) => emoji.emoji);
+  }).map((emoji) => {
+    return { emoji: emoji.emoji, name: emoji.name };
+  });
 
   return travelAndPlaces;
 };
 
-export const generateObjects = (): string[] => {
+export const generateObjects = (): EmojiData[] => {
   const objects = EMOJIS.filter((emoji) => {
     let supportedPlatforms: any = emoji.support;
     if (emoji.category === "Objects" && supportedPlatforms[supported] === true)
       return emoji;
-  }).map((emoji) => emoji.emoji);
+  }).map((emoji) => {
+    return { emoji: emoji.emoji, name: emoji.name };
+  });
 
   return objects;
 };
 
-export const generateSymbols = (): string[] => {
+export const generateSymbols = (): EmojiData[] => {
   const symbols = EMOJIS.filter((emoji) => {
     let supportedPlatforms: any = emoji.support;
     if (emoji.category === "Symbols" && supportedPlatforms[supported] === true)
       return emoji;
-  }).map((emoji) => emoji.emoji);
+  }).map((emoji) => {
+    return { emoji: emoji.emoji, name: emoji.name };
+  });
 
   return symbols;
 };
 
-export const generateFlags = (): string[] => {
+export const generateFlags = (): EmojiData[] => {
   const flags = EMOJIS.filter((emoji) => {
     let supportedPlatforms: any = emoji.support;
     if (emoji.category === "Flags" && supportedPlatforms[supported] === true)
       return emoji;
-  }).map((emoji) => emoji.emoji);
+  }).map((emoji) => {
+    return { emoji: emoji.emoji, name: emoji.name };
+  });
 
   return flags;
 };
 
 export const generateTopRow = () => {
-  const imgs: string[] = [];
+  interface TopRowData {
+    img: string;
+    id: string;
+  }
+
+  const data: TopRowData[] = [];
 
   for (let emoji of EMOJIS_IMG) {
     let value = emoji.name;
     let images: any = emoji.images;
 
-    if (
-      value === "two o’clock" ||
-      value === "grinning face" ||
-      value === "bear" ||
-      value === "hamburger" ||
-      value === "soccer ball" ||
-      value === "oncoming automobile" ||
-      value === "light bulb" ||
-      value === "input symbols" ||
-      value === "triangular flag"
-    ) {
-      imgs.push(images[supported]);
+    if (value === "two o’clock") {
+      data[0] = {
+        img: images[supported],
+        id: "Recent",
+      };
+    }
+    if (value === "grinning face") {
+      data[1] = {
+        img: images[supported],
+        id: "Smileys & People",
+      };
+    }
+    if (value === "bear") {
+      data[2] = {
+        img: images[supported],
+        id: "Animals & Nature",
+      };
+    }
+    if (value === "hamburger") {
+      data[3] = {
+        img: images[supported],
+        id: "Food & Drink",
+      };
+    }
+    if (value === "soccer ball") {
+      data[4] = {
+        img: images[supported],
+        id: "Activities",
+      };
+    }
+    if (value === "oncoming automobile") {
+      data[7] = {
+        img: images[supported],
+        id: "Travel & Places",
+      };
+    }
+    if (value === "light bulb") {
+      data[6] = {
+        img: images[supported],
+        id: "Objects",
+      };
+    }
+    if (value === "input symbols") {
+      data[7] = {
+        img: images[supported],
+        id: "Symbols",
+      };
+    }
+    if (value === "triangular flag") {
+      data[8] = {
+        img: images[supported],
+        id: "Flags",
+      };
     }
   }
 
-  return imgs;
+  return data;
+};
+
+export const determineSkinToneColor = (currentSkinTone: string): string => {
+  switch (currentSkinTone) {
+    case "light":
+      return "rgb(247,222,206)";
+    case "medium-light":
+      return "rbg(243,210,162)";
+    case "medium":
+      return "rgb(213,171,136)";
+    case "medium-dark":
+      return "rgb(175,126,87)";
+    case "dark":
+      return "rgb(124,83,62)";
+    default:
+      return "rgb(255,220,93)";
+  }
+};
+
+export const getEmojiCharacterByName = (name: string) => {
+  let emoji: EmojiData | undefined;
+
+  for (let e of EMOJIS) {
+    if (e.name === name) emoji = e;
+  }
+
+  return emoji;
 };

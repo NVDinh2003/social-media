@@ -256,8 +256,8 @@ export const FeedPostCreator: React.FC = () => {
   useEffect(() => {
     if (!state.post.currentPost) setPostContent("");
 
-    // console.log(postContent);
-    console.log(state.post.currentPost?.poll);
+    console.log(postContent);
+    // console.log(state.post.currentPost?.poll);
   }, [
     state.post.currentPost,
     postContent,
@@ -290,6 +290,11 @@ export const FeedPostCreator: React.FC = () => {
           cols={50}
           maxLength={256}
           id={"post-text"}
+          value={
+            state.post.currentPost
+              ? state.post.currentPost.content
+              : postContent
+          }
         />
 
         {(state.post.currentPostImages.length > 0 ||
@@ -421,7 +426,7 @@ export const FeedPostCreator: React.FC = () => {
         </div>
       </div>
 
-      <EmojiDropDown />
+      {/* <EmojiDropDown /> */}
     </div>
   );
 };
