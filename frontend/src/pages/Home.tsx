@@ -13,6 +13,7 @@ import { FeedPostCreatorEditImageModal } from "../features/feed/components/FeedP
 import { FeedPostCreatorTagPeopleModal } from "../features/feed/components/FeedPostCreatorTagPeopleModal/FeedPostCreatorTagPeopleModal";
 import { FeedPostCreatorGifModal } from "../features/feed/components/FeedPostCreatorGifModal/FeedPostCreatorGifModal";
 import { SchedulePostModal } from "../features/schedule-post/SchedulePostModal/SchedulePostModal";
+import { Discovery } from "../features/discovery";
 
 export const Home: React.FC = () => {
   //
@@ -80,7 +81,9 @@ export const Home: React.FC = () => {
           <Feed />
         </div>
 
-        <div className="home-info-section"></div>
+        <div className="home-info-section">
+          <Discovery />
+        </div>
       </div>
     </div>
   );

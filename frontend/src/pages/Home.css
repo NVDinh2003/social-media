@@ -26,6 +26,7 @@
     grid-area: two;
     height: 100%;
     width: 600px;
+    margin-right: 32px;
   }
 
   .home-info-section {

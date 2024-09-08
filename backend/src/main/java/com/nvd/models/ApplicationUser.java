@@ -20,7 +20,7 @@ import java.util.Set;
 @Table(name = "users")
 public class ApplicationUser {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
     private Integer userId;
 
