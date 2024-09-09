@@ -3,6 +3,8 @@ import { DiscoveryContextType } from "./Modals";
 import { User } from "../../../utils/GlobalInterface";
 import axios from "axios";
 import { useLocalStorage } from "../../../hooks/useLocalStorage";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/Store";
 
 export const DiscoveryContext = createContext<DiscoveryContextType | null>(
   null
@@ -11,9 +13,12 @@ export const DiscoveryContext = createContext<DiscoveryContextType | null>(
 const DiscoveryProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  //
+
+  const token = useSelector((state: RootState) => state.user.token);
+
   const [searchContent, setSearchContent] = useState<string>("");
   const [searchResultUsers, setSearchResultUsers] = useState<User[]>([]);
-  const [jwt, getJwt, setJwt] = useLocalStorage("token", "");
 
   const searchForUsers = async (searchContent: string) => {
     // search for users, wait a second or two to stop typing
@@ -21,7 +26,7 @@ const DiscoveryProvider: React.FC<{ children: React.ReactNode }> = ({
       `${process.env.REACT_APP_API_URL}/discovery/users`,
       {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${token}`,
         },
 
         params: {

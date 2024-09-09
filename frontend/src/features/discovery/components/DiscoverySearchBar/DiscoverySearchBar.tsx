@@ -47,7 +47,7 @@ export const DiscoverySearchBar: React.FC<DiscoverySearchBarProps> = ({
 
   const handleBlur = () => {
     setActive(false);
-    toggleDropDown(false);
+    if (searchContent === "") toggleDropDown(false);
   };
 
   const clearInput = () => {

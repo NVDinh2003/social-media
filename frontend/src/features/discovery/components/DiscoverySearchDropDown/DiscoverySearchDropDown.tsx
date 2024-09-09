@@ -1,16 +1,27 @@
 import React, { useContext, useEffect } from "react";
 
+import SearchIcon from "@mui/icons-material/Search";
 import "./DiscoverySearchDropDown.css";
 import { User } from "../../../../utils/GlobalInterface";
 import { DiscoveryContext } from "../../context/DiscoveryContext";
 import { DiscoveryContextType } from "../../context/Modals";
 import { DiscoverySearchDropDownResult } from "./DiscoverySearchDropDownResult/DiscoverySearchDropDownResult";
 
-export const DiscoverySearchDropDown: React.FC = () => {
+interface DiscoveryDropDownProps {
+  toggleDropDown: (value: boolean) => void;
+}
+
+export const DiscoverySearchDropDown: React.FC<DiscoveryDropDownProps> = ({
+  toggleDropDown,
+}) => {
   //
   const { searchContent, searchResultUsers } = useContext(
     DiscoveryContext
   ) as DiscoveryContextType;
+
+  const navigateToUserProfile = (e: React.MouseEvent<HTMLDivElement>) => {
+    toggleDropDown(false);
+  };
 
   useEffect(() => {
     console.log("user list changed");
@@ -20,13 +31,26 @@ export const DiscoverySearchDropDown: React.FC = () => {
     <div className="discovery-search-dropdown">
       <div className="discovery-search-dropdown-search-for">
         {searchContent ? (
-          <p className="discovery-search-dropdown-content">
-            Search for "{searchContent}"
-          </p>
+          <div
+            className="discovery-search-dropdown-content-wrapper"
+            onClick={() => {
+              /* navigate to the search page and do the search*/
+            }}
+          >
+            <SearchIcon
+              sx={{
+                height: "30px",
+                width: "30px",
+              }}
+            />
+            <p className="discovery-search-dropdown-content">{searchContent}</p>
+          </div>
         ) : (
-          <p className="discovery-search-dropdown-empty">
-            Try searching for people, lists, or keywords
-          </p>
+          <div className="discovery-search-dropdown-empty-wrapper">
+            <p className="discovery-search-dropdown-empty">
+              Try searching for people, lists, or keywords
+            </p>
+          </div>
         )}
       </div>
 
@@ -34,18 +58,31 @@ export const DiscoverySearchDropDown: React.FC = () => {
         <div className="discovery-search-dropdown-results">
           {/* map through the results */}
 
-          <div className="discovery-search-dropdown-results-list">
+          {/* <div className="discovery-search-dropdown-search-content-box">
+            <SearchIcon />
+            <p className="discovery-search-dropdown-search-content-box-text">
+              {searchContent}
+            </p>
+          </div> */}
+
+          <div>
             {searchResultUsers.slice(0, 8).map((user) => {
               //   return <div>{user.username}</div>;
               return (
-                <DiscoverySearchDropDownResult
-                  pfp={user.profilePicture}
-                  nickname={user.nickname}
-                  verified={false}
-                  privateAccount={false}
-                  organization={""}
-                  username={user.username}
-                />
+                <div
+                  className="discovery-search-dropdown-results-wrapper"
+                  onClick={navigateToUserProfile}
+                >
+                  {" "}
+                  <DiscoverySearchDropDownResult
+                    pfp={user.profilePicture}
+                    nickname={user.nickname}
+                    verified={false}
+                    privateAccount={false}
+                    organization={""}
+                    username={user.username}
+                  />
+                </div>
               );
             })}
           </div>

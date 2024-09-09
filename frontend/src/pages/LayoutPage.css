@@ -1,0 +1,36 @@
+.layout-page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+@media (min-width: 1280px) {
+  .layout {
+    width: 1200px;
+    height: 100%;
+    display: grid;
+    grid-template-areas: "one two three";
+  }
+
+  .layout-navigation-section {
+    grid-area: one;
+    height: 100%;
+    width: 260px;
+  }
+
+  .layout-content-section {
+    grid-area: two;
+    height: 100%;
+    width: 600px;
+    margin-right: 32px;
+  }
+
+  .layout-info-section {
+    grid-area: three;
+    height: 100%;
+    width: 350px;
+  }
+}

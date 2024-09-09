@@ -20,7 +20,9 @@ export const Discovery: React.FC = () => {
         <div className="discovery-sticky">
           <DiscoverySearchBar toggleDropDown={updateShowDropDown} />
 
-          {showDropDown && <DiscoverySearchDropDown />}
+          {showDropDown && (
+            <DiscoverySearchDropDown toggleDropDown={updateShowDropDown} />
+          )}
         </div>
       </div>
     </DiscoveryProvider>

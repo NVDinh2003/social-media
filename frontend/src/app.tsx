@@ -7,6 +7,8 @@ import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { Landing } from "./pages/Landing";
 import { Theme } from "./utils/GlobalInterface";
 import { Home } from "./pages/Home";
+import { LayoutPage } from "./pages/LayoutPage";
+import { Feed } from "./features/feed/components/Feed/Feed";
 
 const theme: Theme = {
   colors: {
@@ -33,7 +35,13 @@ export const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<Landing></Landing>} />
-          <Route path="/home" element={<Home></Home>} />
+
+          <Route path="" element={<LayoutPage />}>
+            <Route path="/home" element={<Feed />} />
+            <Route path="/explore" element={<>Explore</>} />
+          </Route>
+
+          {/* <Route path="/home" element={<Home></Home>} /> */}
         </Routes>
       </Router>
     </ThemeProvider>

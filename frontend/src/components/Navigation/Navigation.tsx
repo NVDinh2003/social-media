@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import blueLogo from "../../assets/fwitter-logo-large-blue.png";
 
 import "./Navigation.css";
@@ -15,8 +15,15 @@ import BookmarksSVG from "../SVGs/BookmarksSVG";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/Store";
 
-export const Navigation: React.FC = () => {
+interface NavigationProps {
+  currentPage: string;
+}
+
+export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
   //
+
+  useEffect(() => {}, [currentPage]);
+
   const state = useSelector((state: RootState) => state.user);
 
   return (
@@ -29,14 +36,30 @@ export const Navigation: React.FC = () => {
         <div className="navigation-item">
           <Link to="/home" className="navigation-link">
             <HomeSVG height={26} width={26} />
-            <p className="navigation-text navigation-active">Home</p>
+            <p
+              className={`navigation-text ${
+                currentPage === "/home"
+                  ? "navigation-active"
+                  : "navigation-inactive"
+              }`}
+            >
+              Home
+            </p>
           </Link>
         </div>
 
         <div className="navigation-item">
-          <Link to="/home" className="navigation-link">
+          <Link to="/explore" className="navigation-link">
             <ExploreSVG height={26} width={26} />
-            <p className="navigation-text navigation-inactive">Explore</p>
+            <p
+              className={`navigation-text ${
+                currentPage === "/explore"
+                  ? "navigation-active"
+                  : "navigation-inactive"
+              }`}
+            >
+              Explore
+            </p>
           </Link>
         </div>
 

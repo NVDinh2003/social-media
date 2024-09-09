@@ -19,10 +19,6 @@ export const FeedTopBar: React.FC = () => {
 
   return (
     <div className="feed-top-bar">
-      <div className="feed-top-bar-top">
-        <h1 className="feed-top-bar-home">Home</h1>
-      </div>
-
       <div className="feed-top-bar-bottom">
         <div
           className="feed-top-bar-choice"

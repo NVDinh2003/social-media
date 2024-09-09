@@ -1,0 +1,55 @@
+.discovery-search-dropdown-result {
+  height: 90%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.discovery-search-dropdown-result:hover {
+  cursor: pointer;
+  background-color: rgba(225, 232, 237, 0.3);
+}
+
+.discovery-search-dropdown-result-pfp {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 100%;
+  border: none;
+}
+
+.discovery-search-dropdown-result-name-section {
+  width: 270px;
+  height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.discovery-search-dropdown-result-nickname-section {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.discovery-search-dropdown-result-nickname {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.discovery-search-dropdown-result-username {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 400;
+}
