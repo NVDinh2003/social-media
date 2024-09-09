@@ -30,15 +30,19 @@ public class DiscoveryService {
         List<ApplicationUser> usersByNickname = userRepository.findByNicknameContainingIgnoreCase(searchTerm);
         List<ApplicationUser> usersByBio = userRepository.findByBioContainingIgnoreCase(searchTerm);
 
+        //Stream.concat(): kết hợp các luồng người dùng từ các tìm kiếm khác nhau thành một luồng duy nhất.
         Set<ApplicationUser> combinedSet = Stream.concat(
                 usersByUsername.stream(),
                 Stream.concat(usersByNickname.stream(), usersByBio.stream())
-        ).collect(Collectors.toSet());
+        ).collect(Collectors.toSet());  // chuyển kết quả thành Set để loại bỏ các phần tử trùng lặp
 
+        // tạo ra một tập hợp có sắp xếp dựa trên bộ so sánh (followers giảm dần)
         Set<ApplicationUser> sortedUsersSet = new TreeSet<>(discoveryUserComparator);
 
+        // thêm tất cả các người dùng từ combinedSet vào sortedUsersSet.
         sortedUsersSet.addAll(combinedSet);
 
         return sortedUsersSet;
+        // => Tập hợp người dùng được sắp xếp theo số lượng followers giảm dần.
     }
 }

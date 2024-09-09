@@ -34,6 +34,21 @@
   align-items: center;
 }
 
+.discovery-search-bar-clear {
+  width: 22px;
+  height: 22px;
+  border-radius: 100%;
+  background-color: #1da1f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.discovery-search-bar-clear:hover {
+  background-color: #1a91da;
+}
+
 .discovery-search-bar-input {
   width: 90%;
   height: 100%;
