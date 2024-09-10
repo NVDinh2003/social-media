@@ -6,6 +6,7 @@ import { User } from "../../../../utils/GlobalInterface";
 import { DiscoveryContext } from "../../context/DiscoveryContext";
 import { DiscoveryContextType } from "../../context/Modals";
 import { DiscoverySearchDropDownResult } from "./DiscoverySearchDropDownResult/DiscoverySearchDropDownResult";
+import { useNavigate } from "react-router-dom";
 
 interface DiscoveryDropDownProps {
   toggleDropDown: (value: boolean) => void;
@@ -15,12 +16,16 @@ export const DiscoverySearchDropDown: React.FC<DiscoveryDropDownProps> = ({
   toggleDropDown,
 }) => {
   //
-  const { searchContent, searchResultUsers } = useContext(
+  const { searchContent, searchResultUsers, updateSearchContent } = useContext(
     DiscoveryContext
   ) as DiscoveryContextType;
+  const navigate = useNavigate();
 
   const navigateToUserProfile = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
     toggleDropDown(false);
+    updateSearchContent("");
+    navigate(`/${e.currentTarget.id}`);
   };
 
   useEffect(() => {
@@ -72,6 +77,8 @@ export const DiscoverySearchDropDown: React.FC<DiscoveryDropDownProps> = ({
                 <div
                   className="discovery-search-dropdown-results-wrapper"
                   onClick={navigateToUserProfile}
+                  key={user.userId}
+                  id={user.username}
                 >
                   {" "}
                   <DiscoverySearchDropDownResult
@@ -88,7 +95,11 @@ export const DiscoverySearchDropDown: React.FC<DiscoveryDropDownProps> = ({
           </div>
 
           <div className="discovery-search-dropdown-go-to">
-            <p className="discovery-search-dropdown-go-to-text">
+            <p
+              className="discovery-search-dropdown-go-to-text"
+              onClick={navigateToUserProfile}
+              id={searchContent}
+            >
               Go to @{searchContent}
             </p>
           </div>

@@ -6,6 +6,7 @@ import com.nvd.exceptions.UnableToCreatePostException;
 import com.nvd.models.ApplicationUser;
 import com.nvd.models.Post;
 import com.nvd.service.PostService;
+import com.nvd.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +23,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final UserService userService;
 
     @ExceptionHandler({UnableToCreatePostException.class})
     public ResponseEntity<String> handleUnableToCreatePost() {
@@ -54,9 +56,8 @@ public class PostController {
     }
 
     @GetMapping("/author/{userId}")
-    public Set<Post> getAllPostsByAuthor(@PathVariable("userId") int userId) {
-        ApplicationUser author = new ApplicationUser();
-        author.setUserId(userId);
+    public Set<Post> getAllPostsByAuthor(@PathVariable("userId") Integer userId) {
+        ApplicationUser author = userService.getUserById(userId);
 
         return postService.getAllPostsByAuthor(author);
     }

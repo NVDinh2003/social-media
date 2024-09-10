@@ -50,7 +50,7 @@ export const getUserByToken = createAsyncThunk(
   async (token: string, thunkAPI) => {
     try {
       const req = await axios.get(
-        `${process.env.REACT_APP_API_URL}/user/verify`,
+        `${process.env.REACT_APP_API_URL}/users/verify`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

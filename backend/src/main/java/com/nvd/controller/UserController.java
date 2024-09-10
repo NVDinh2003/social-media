@@ -3,7 +3,6 @@ package com.nvd.controller;
 import com.google.common.net.HttpHeaders;
 import com.nvd.exceptions.UnableToSavePhotoException;
 import com.nvd.models.ApplicationUser;
-import com.nvd.service.ImageService;
 import com.nvd.service.TokenService;
 import com.nvd.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +14,17 @@ import java.util.Set;
 
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @CrossOrigin("*")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
     private final TokenService tokenService;
-    private final ImageService imageService;
+
+    @GetMapping("/{username}")
+    public ApplicationUser getUserByUsername(@PathVariable String username) {
+        return userService.getUserByUsername(username);
+    }
 
     @GetMapping("/verify")
     public ApplicationUser verifyIdentity(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
