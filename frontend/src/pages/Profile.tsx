@@ -8,6 +8,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 import { ProfileTopBar } from "../features/profile";
 
+import bannerImage from "../assets/pocket-watch-1637396_1280.jpg";
+import { ProfileFollowSection } from "../features/profile/components/ProfileFollowSection/ProfileFollowSection";
+
 export const Profile: React.FC = () => {
   //
   const token = useSelector((state: RootState) => state.user.token);
@@ -29,8 +32,9 @@ export const Profile: React.FC = () => {
       );
 
       user = req.data;
+      //   user.bannerPicture = `${process.env.REACT_APP_DEFAULT_BANNER}`;
 
-      //   console.log(req.data);
+      console.log(user);
       setProfileUser(user);
       //
     } catch (e) {
@@ -71,13 +75,29 @@ export const Profile: React.FC = () => {
           <ProfileTopBar
             nickname={profileUser.nickname}
             isVerified={true}
-            organization={""}
+            organization={
+              process.env.REACT_APP_PFP ? process.env.REACT_APP_PFP : ""
+            }
             numberOfPosts={posts.length}
           />
 
           {/* Profile Banner */}
+          <div
+            className="profile-banner-picture"
+            style={
+              profileUser.bannerPicture
+                ? {
+                    backgroundImage: `url("${profileUser.bannerPicture}")`,
+                  }
+                : { backgroundColor: "#aab8c2" }
+            }
+          />
 
           {/* Profile picture, options, follow */}
+          <ProfileFollowSection
+            profilePicture={profileUser.profilePicture}
+            username={profileUser.username}
+          />
         </>
       ) : (
         <></>

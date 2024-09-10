@@ -1,0 +1,19 @@
+.profile-follow-section {
+  width: 100%;
+  height: 80px;
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 16px;
+}
+
+.profile-follow-section-pfp {
+  position: absolute;
+  height: 134px;
+  width: 134px;
+  border-radius: 100%;
+  border: 4px solid white;
+  top: -67px;
+  left: 16px;
+}

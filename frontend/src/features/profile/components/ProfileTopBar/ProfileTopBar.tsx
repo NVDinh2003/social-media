@@ -3,7 +3,7 @@ import React from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import "./ProfileTopBar.css";
-import VerifiedSVG from "../../../../components/SVGs/VerifiedSVG";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import { convertNumberOfPostsToString } from "../../utils/ProfileUitls";
 
 interface ProfileTopBarProps {
@@ -34,7 +34,13 @@ export const ProfileTopBar: React.FC<ProfileTopBarProps> = ({
         <div className="profile-top-bar-name-section">
           <p className="profile-top-bar-name">{nickname}</p>
           {isVerified && (
-            <VerifiedSVG color={"#1da1f2"} width={20} height={20} />
+            <VerifiedIcon
+              sx={{
+                color: "#1da1f2",
+                width: "20px",
+                height: "20px",
+              }}
+            />
           )}
           {organization && (
             <img
