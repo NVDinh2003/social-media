@@ -17,3 +17,63 @@
   top: -67px;
   left: 16px;
 }
+
+.profile-follow-section-left {
+  width: 50%;
+  height: fit-content;
+  display: flex;
+  justify-content: flex-end;
+  column-gap: 8px;
+  align-items: center;
+}
+
+.profile-follow-section-more {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #e1e8ed;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-follow-section-more:hover {
+  cursor: pointer;
+  background-color: rgba(225, 232, 237, 0.3);
+}
+
+.profile-follow-section-unfollow-button {
+  width: 104px;
+  height: 36px;
+  border: 1px solid #e1e8ed;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 18px;
+  background-color: white;
+}
+
+.profile-follow-section-unfollow-button:hover {
+  border: 1px solid red;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+.profile-follow-section-follow-button {
+  width: 80px;
+  height: 36px;
+  border: none;
+  border-radius: 18px;
+  background-color: #1da1f2;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+}
+
+.profile-follow-section-follow-button:hover {
+  background-color: #1a91da;
+}

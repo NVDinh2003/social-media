@@ -1,11 +1,12 @@
 .discovery {
   width: 350px;
   height: 100%;
+  position: relative;
 }
 
 .discovery-sticky {
   position: sticky;
-  top: 0;
+  top: 4px;
   background-color: white;
   width: 100%;
   height: 50px;

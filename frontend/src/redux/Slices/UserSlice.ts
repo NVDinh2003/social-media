@@ -3,8 +3,12 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../utils/GlobalInterface";
 import axios from "axios";
 
+const baseURL = process.env.REACT_APP_API_URL;
+
 interface UserSliceState {
   loggedIn: User | undefined;
+  following: User[];
+  followers: User[];
   username: string;
   token: string;
   fromRegister: boolean;
@@ -21,23 +25,48 @@ interface VerifyUserBody {
   phone: string;
   username: string;
 }
+interface followUserBody {
+  token: string;
+  followee: string;
+}
 
 const initialState: UserSliceState = {
   loggedIn: undefined,
+  following: [],
+  followers: [],
   username: "",
   token: "",
   fromRegister: false,
   error: false,
 };
 
+async function getFollowers(username: string) {
+  try {
+    const req = await axios.get(`${baseURL}/users/followers/${username}`);
+    console.log("follower", req.data);
+    return req.data;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+}
+
+async function getFollowing(username: string) {
+  try {
+    const req = await axios.get(`${baseURL}/users/following/${username}`);
+    console.log("following: ", req.data);
+    return req.data;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+}
+
 export const verifyUsername = createAsyncThunk(
   "user/username",
   async (body: VerifyUserBody, thunkAPI) => {
     try {
-      const req = await axios.post(
-        `${process.env.REACT_APP_API_URL}/auth/find`,
-        body
-      );
+      const req = await axios.post(`${baseURL}/auth/find`, body);
       return req.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
@@ -49,14 +78,48 @@ export const getUserByToken = createAsyncThunk(
   "user/get",
   async (token: string, thunkAPI) => {
     try {
-      const req = await axios.get(
-        `${process.env.REACT_APP_API_URL}/users/verify`,
+      const req = await axios.get(`${baseURL}/users/verify`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const user = req.data;
+
+      // console.log(user.user);
+
+      const followers = getFollowers(user.username);
+      const following = getFollowing(user.username);
+
+      let followingAndFollowers = await Promise.all([followers, following]);
+
+      return {
+        loggedIn: user,
+        followers: followingAndFollowers[0],
+        following: followingAndFollowers[1],
+      };
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+export const followUser = createAsyncThunk(
+  "user/follow",
+  async (body: followUserBody, thunkAPI) => {
+    try {
+      const req = await axios.put(
+        `${baseURL}/users/follow`,
+        {
+          followedUser: body.followee,
+        },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${body.token}`,
           },
         }
       );
+
       return req.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
@@ -68,12 +131,23 @@ export const loginUser = createAsyncThunk(
   "user/login",
   async (body: LoginBody, thunkAPI) => {
     try {
-      const req = await axios.post(
-        `${process.env.REACT_APP_API_URL}/auth/login`,
-        body
-      );
-      return req.data;
+      const req = await axios.post(`${baseURL}/auth/login`, body);
+      const user = req.data;
+
+      // console.log(user.user);
+
+      const followers = getFollowers(user.user.username);
+      const following = getFollowing(user.user.username);
+
+      let followingAndFollowers = await Promise.all([followers, following]);
+
+      return {
+        loggedIn: user,
+        followers: followingAndFollowers[0],
+        following: followingAndFollowers[1],
+      };
     } catch (e) {
+      console.log("login failed");
       return thunkAPI.rejectWithValue(e);
     }
   }
@@ -112,19 +186,21 @@ export const UserSlice = createSlice({
       state = {
         ...state,
         loggedIn: {
-          userId: action.payload.user.userId,
-          firstName: action.payload.user.firstName,
-          lastName: action.payload.user.lastName,
-          email: action.payload.user.email,
-          phone: action.payload.user.phone,
-          dateOfBirth: action.payload.user.dateOfBirth,
-          username: action.payload.user.username,
-          bio: action.payload.user.bio,
-          nickname: action.payload.user.nickname,
-          profilePicture: action.payload.user.profilePicture,
-          bannerPicture: action.payload.user.bannerPicture,
+          userId: action.payload.loggedIn.user.userId,
+          firstName: action.payload.loggedIn.user.firstName,
+          lastName: action.payload.loggedIn.user.lastName,
+          email: action.payload.loggedIn.user.email,
+          phone: action.payload.loggedIn.user.phone,
+          dateOfBirth: action.payload.loggedIn.user.dateOfBirth,
+          username: action.payload.loggedIn.user.username,
+          bio: action.payload.loggedIn.user.bio,
+          nickname: action.payload.loggedIn.user.nickname,
+          profilePicture: action.payload.loggedIn.user.profilePicture,
+          bannerPicture: action.payload.loggedIn.user.bannerPicture,
         },
-        token: action.payload.token, // JWT token
+        token: action.payload.loggedIn.token, // JWT token
+        followers: action.payload.followers,
+        following: action.payload.following,
       };
       return state;
     });
@@ -172,8 +248,10 @@ export const UserSlice = createSlice({
     builder.addCase(getUserByToken.fulfilled, (state, action) => {
       state = {
         ...state,
-        loggedIn: action.payload,
-        username: action.payload.username,
+        loggedIn: action.payload.loggedIn,
+        username: action.payload.loggedIn.username,
+        followers: action.payload.followers,
+        following: action.payload.following,
       };
 
       return state;
@@ -188,6 +266,31 @@ export const UserSlice = createSlice({
     });
 
     builder.addCase(getUserByToken.rejected, (state, action) => {
+      state = {
+        ...state,
+        error: true,
+      };
+      return state;
+    });
+
+    // follow user
+    builder.addCase(followUser.pending, (state, action) => {
+      state = {
+        ...state,
+        error: false,
+      };
+      return state;
+    });
+
+    builder.addCase(followUser.fulfilled, (state, action) => {
+      state = {
+        ...state,
+        following: action.payload,
+      };
+      return state;
+    });
+
+    builder.addCase(followUser.rejected, (state, action) => {
       state = {
         ...state,
         error: true,

@@ -73,8 +73,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
-                        .requestMatchers("/user/followers/**").permitAll()
-                        .requestMatchers("/user/following/**").permitAll()
+                        .requestMatchers("/users/followers/**").permitAll()
+                        .requestMatchers("/users/following/**").permitAll()
                         .requestMatchers("/posts/id/**").permitAll()
                         .anyRequest().authenticated()
                 )

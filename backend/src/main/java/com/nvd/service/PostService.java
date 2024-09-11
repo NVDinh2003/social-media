@@ -138,6 +138,10 @@ public class PostService {
         return posts;
     }
 
+    public List<Post> getAllPostsByAuthors(Set<ApplicationUser> authors) {
+        return postRepository.findPostsByAuthors(authors);
+    }
+
     public void deletePostById(int id) {
         postRepository.deleteById(id);
     }
