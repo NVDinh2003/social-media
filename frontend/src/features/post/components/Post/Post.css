@@ -172,3 +172,9 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.post-organization {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+}

@@ -47,10 +47,15 @@ public class ApplicationUser {
     @JoinColumn(name = "banner_picture", referencedColumnName = "image_id")
     private Image bannerPicture;
 
-
+    @Column(columnDefinition = "boolean default false")
+    private Boolean verifiedAccount;
     private Boolean enabled;
     @JsonIgnore
     private Long verification;
+
+    @ManyToOne
+    @JoinColumn(name = "organization_id")
+    private Image organization;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

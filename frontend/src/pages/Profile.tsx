@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 import { ProfileTopBar } from "../features/profile";
 
-import bannerImage from "../assets/pocket-watch-1637396_1280.jpg";
 import { ProfileFollowSection } from "../features/profile/components/ProfileFollowSection/ProfileFollowSection";
 
 export const Profile: React.FC = () => {
@@ -74,10 +73,8 @@ export const Profile: React.FC = () => {
           {/* Top Bar  */}
           <ProfileTopBar
             nickname={profileUser.nickname}
-            isVerified={true}
-            organization={
-              process.env.REACT_APP_PFP ? process.env.REACT_APP_PFP : ""
-            }
+            isVerified={profileUser.verifiedAccount}
+            organization={profileUser.organization}
             numberOfPosts={posts.length}
           />
 

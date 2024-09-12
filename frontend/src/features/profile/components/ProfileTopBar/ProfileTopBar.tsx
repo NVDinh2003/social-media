@@ -5,11 +5,12 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import "./ProfileTopBar.css";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import { convertNumberOfPostsToString } from "../../utils/ProfileUitls";
+import { ImageInfo } from "../../../../utils/GlobalInterface";
 
 interface ProfileTopBarProps {
   nickname: string;
   isVerified: boolean;
-  organization: string;
+  organization: ImageInfo | null;
   numberOfPosts: number;
 }
 
@@ -44,7 +45,7 @@ export const ProfileTopBar: React.FC<ProfileTopBarProps> = ({
           )}
           {organization && (
             <img
-              src={organization}
+              src={organization.imageURL}
               alt={`${nickname}'s organization`}
               height={20}
               width={20}

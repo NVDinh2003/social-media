@@ -7,9 +7,10 @@ import "./ProfileFollowSection.css";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import { followUser } from "../../../../redux/Slices/UserSlice";
+import { ImageInfo } from "../../../../utils/GlobalInterface";
 
 interface ProfileFollowSectionProps {
-  profilePicture: string;
+  profilePicture: ImageInfo | null;
   username: string;
 }
 
@@ -34,7 +35,7 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
   return (
     <div className="profile-follow-section">
       <img
-        src={profilePicture ? profilePicture : default_pfp}
+        src={profilePicture ? profilePicture.imageURL : default_pfp}
         alt={`${username}'s pfp`}
         className="profile-follow-section-pfp"
       />

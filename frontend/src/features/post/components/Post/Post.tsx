@@ -3,6 +3,7 @@ import { Post as IPost } from "../../../../utils/GlobalInterface";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CircleIcon from "@mui/icons-material/Circle";
+import VerifiedIcon from "@mui/icons-material/Verified";
 
 import ReplyOutlineSVG from "../../../../components/SVGs/ReplyOutlineSVG";
 import RepostOutlineSVG from "../../../../components/SVGs/RepostOutlineSVG";
@@ -12,6 +13,7 @@ import ShareSVG from "../../../../components/SVGs/ShareSVG";
 import BookmarksSVG from "../../../../components/SVGs/BookmarksSVG";
 
 import "./Post.css";
+import { MONTHS } from "../../../../utils/DateUtils";
 
 interface PostProps {
   post: IPost;
@@ -82,11 +84,27 @@ export const Post: React.FC<PostProps> = ({ post }) => {
 
   const convertPostedDateToString = (): string => {
     const postedDateString = `${postedDate}`;
-    // console.log("postedDate: ", postedDate);
-    // console.log("post date string: ", postedDateString);
-
     let d = new Date(postedDateString);
-    return d.toDateString();
+    let today = new Date();
+
+    let timeDifference = today.getTime() - d.getTime();
+
+    let minutes = Math.round(timeDifference / 60_000);
+    if (minutes < 60) return `${minutes}m ago`;
+
+    let hours = Math.round(timeDifference / (60_000 * 60));
+    if (hours < 24) return `${hours}h ago`;
+
+    let days = Math.round(timeDifference / (1000 * 3600 * 24));
+    if (days < 7) return `${days}d ago`;
+
+    if (d.getFullYear() === today.getFullYear())
+      return `${MONTHS[d.getMonth() + 1].substring(0, 3)} ${d.getDate()}`;
+
+    return `${MONTHS[d.getMonth() + 1].substring(
+      0,
+      3
+    )} ${d.getDate()}, ${d.getFullYear()}`;
   };
 
   return (
@@ -94,7 +112,9 @@ export const Post: React.FC<PostProps> = ({ post }) => {
       <div className="post-left">
         <img
           className="post-pfp"
-          src={author.profilePicture ? author.profilePicture : defaultPfp}
+          src={
+            author.profilePicture ? author.profilePicture.imageURL : defaultPfp
+          }
           alt={`${author.nickname}'s pfp`}
         />
       </div>
@@ -104,7 +124,25 @@ export const Post: React.FC<PostProps> = ({ post }) => {
           <div className="post-user-info">
             <p className="post-nickname">{author.nickname}</p>
             {/* Add in verified once i add verified to the user on the backend */}
+            {author.verifiedAccount && (
+              <VerifiedIcon
+                sx={{
+                  color: "#1da1f2",
+                  width: "20px",
+                  height: "20px",
+                }}
+              />
+            )}
+
             {/* Add in ord image once i add orgs to the user on the backend */}
+            {author.organization && (
+              <img
+                className="post-organization"
+                src={author.organization.imageURL}
+                alt={`${author.username}'s organization`}
+              />
+            )}
+
             <p className="post-username">@{author.username}</p>
             {/* <div className="post-dot-section">
               <p className="post-dot">.</p>
@@ -116,6 +154,7 @@ export const Post: React.FC<PostProps> = ({ post }) => {
                 color: "#657786",
               }}
             />
+            {/* Update convert posted date to string to say hours up to 24, days up to 7, then mon day if this year, mon day, year after */}
             {postedDate && (
               <p className="post-posted-at">{convertPostedDateToString()}</p>
             )}

@@ -41,6 +41,7 @@ public class BackendApplication {
                     .phone("0386264423")
                     .password(encoder.encode("dinhhtvq123"))
                     .enabled(true)
+                    .verifiedAccount(true)
                     .build();
 
             ApplicationUser user2 = ApplicationUser.builder()
@@ -52,6 +53,7 @@ public class BackendApplication {
                     .phone("0357794217")
                     .password(encoder.encode("dinhhtvq123"))
                     .enabled(true)
+                    .verifiedAccount(true)
                     .build();
 
             userRepository.save(user);

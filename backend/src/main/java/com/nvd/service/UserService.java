@@ -19,6 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -149,6 +152,31 @@ public class UserService implements UserDetailsService {
         }
 
         return userRepository.save(user);
+    }
+
+    public byte[] setUserOrganization(String username, MultipartFile file, String organizationName)
+            throws UnableToResolvePhotoException {
+        ApplicationUser user = userRepository.findByUsername(username).orElseThrow(UserDoesNotExistException::new);
+
+        Image orgImg = imageService.getImageByImageName(organizationName).orElseGet(() -> {
+            try {
+                return imageService.createOrganization(file, organizationName);
+            } catch (UnableToSavePhotoException e) {
+                throw null;
+            }
+        });
+
+        if (orgImg != null) {
+            user.setOrganization(orgImg);
+            userRepository.save(user);
+            try {
+                return Files.readAllBytes(new File(orgImg.getImagePath()).toPath());
+            } catch (IOException e) {
+                throw new UnableToResolvePhotoException();
+            }
+        } else {
+            throw new UnableToResolvePhotoException("We were unable to find or save the photo. Please try again.");
+        }
     }
 
     public Set<ApplicationUser> followUser(String user, String followee) {

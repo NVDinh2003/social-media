@@ -1,11 +1,13 @@
 package com.nvd.controller;
 
 import com.google.common.net.HttpHeaders;
+import com.nvd.exceptions.UnableToResolvePhotoException;
 import com.nvd.exceptions.UnableToSavePhotoException;
 import com.nvd.models.ApplicationUser;
 import com.nvd.service.TokenService;
 import com.nvd.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,6 +50,15 @@ public class UserController {
             throws UnableToSavePhotoException {
         String username = tokenService.getUsernameFromToken(token);
         return userService.setProfileOrBannerPicture(username, file, "bnr");
+    }
+
+    @PostMapping("/organization")
+    public ResponseEntity<byte[]> setUserOrganization(@RequestPart("username") String username,
+                                                      @RequestPart("file") MultipartFile file,
+                                                      @RequestPart("organization") String organization)
+            throws UnableToResolvePhotoException {
+        byte[] org = userService.setUserOrganization(username, file, organization);
+        return ResponseEntity.ok(org);
     }
 
     @PutMapping("/")

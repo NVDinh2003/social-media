@@ -3,13 +3,14 @@ import React from "react";
 import "./DiscoverySearchDropDownResult.css";
 import VerifiedSVG from "../../../../../components/SVGs/VerifiedSVG";
 import LocksSVG from "../../../../../components/SVGs/LocksSVG";
+import { ImageInfo } from "../../../../../utils/GlobalInterface";
 
 interface DiscoverySearchDropDownResultProps {
-  pfp: string;
+  pfp: ImageInfo | null;
   nickname: string;
   verified: boolean;
   privateAccount: boolean;
-  organization: string;
+  organization: ImageInfo | null;
   username: string;
 }
 
@@ -21,7 +22,7 @@ export const DiscoverySearchDropDownResult: React.FC<
   return (
     <div className="discovery-search-dropdown-result">
       <img
-        src={pfp ? pfp : DefaultPfp}
+        src={pfp ? pfp.imageURL : DefaultPfp}
         alt={`${username}'s profile picture`}
         className="discovery-search-dropdown-result-pfp"
       />
@@ -35,7 +36,7 @@ export const DiscoverySearchDropDownResult: React.FC<
           {organization && (
             <img
               className="discovery-search-dropdown-organization"
-              src={organization}
+              src={organization.imageURL}
               alt={`${username}'s organization`}
             />
           )}

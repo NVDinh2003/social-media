@@ -46,6 +46,13 @@ export interface StyledCheckboxProps {
   theme: Theme;
 }
 
+export interface ImageInfo {
+  imageId: number;
+  imageName: string;
+  imageType: string;
+  imageURL: string;
+}
+
 export interface User {
   userId: number;
   firstName: string;
@@ -56,8 +63,10 @@ export interface User {
   dateOfBirth: Dob;
   bio: string;
   nickname: string;
-  profilePicture: string;
-  bannerPicture: string;
+  profilePicture: ImageInfo | null;
+  bannerPicture: ImageInfo | null;
+  verifiedAccount: boolean;
+  organization: ImageInfo | null;
 }
 
 interface RGBA {

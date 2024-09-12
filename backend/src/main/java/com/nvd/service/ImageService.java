@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -22,6 +23,10 @@ public class ImageService {
 
     private static final File DIRECTORY = new File("D:\\WorkSpace\\Spring_Project\\social-media\\backend\\img");
     private static final String URL = "http://localhost:8000/images/";
+
+    public Optional<Image> getImageByImageName(String name) {
+        return imageRepository.findByImageName(name);
+    }
 
     public Image saveGifFromPost(Image image) {
         return imageRepository.save(image);
@@ -47,6 +52,25 @@ public class ImageService {
         } catch (IOException e) {
             throw new UnableToSavePhotoException();
 
+        }
+    }
+
+    public Image createOrganization(MultipartFile file, String organizationName) throws UnableToSavePhotoException {
+        try {
+            String extention = "." + file.getContentType().split("/")[1];
+
+            File orgImg = new File(DIRECTORY + "\\" + organizationName + extention);
+            orgImg.createNewFile();
+            file.transferTo(orgImg);
+
+            String imageURL = URL + orgImg.getName();
+
+            Image i = new Image(orgImg.getName(), file.getContentType(), orgImg.getPath(), imageURL);
+            return imageRepository.save(i);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new UnableToSavePhotoException();
         }
     }
 

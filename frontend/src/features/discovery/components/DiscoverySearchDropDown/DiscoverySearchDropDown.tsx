@@ -84,9 +84,9 @@ export const DiscoverySearchDropDown: React.FC<DiscoveryDropDownProps> = ({
                   <DiscoverySearchDropDownResult
                     pfp={user.profilePicture}
                     nickname={user.nickname}
-                    verified={false}
+                    verified={user.verifiedAccount}
                     privateAccount={false}
-                    organization={""}
+                    organization={user.organization}
                     username={user.username}
                   />
                 </div>

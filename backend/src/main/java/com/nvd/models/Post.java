@@ -40,7 +40,8 @@ public class Post implements Comparable<Post> {
     private Set<ApplicationUser> likes;
 
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "post_id")
     private List<Image> images;
 
     //TODO: Figure out video upload

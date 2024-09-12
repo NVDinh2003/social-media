@@ -53,3 +53,9 @@
   font-size: 15px;
   font-weight: 400;
 }
+
+.discovery-search-dropdown-organization {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+}
