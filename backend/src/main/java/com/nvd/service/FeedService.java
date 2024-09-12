@@ -5,6 +5,7 @@ import com.nvd.models.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +20,13 @@ public class FeedService {
 
         Set<ApplicationUser> following = currentUser.getFollowing();
 
-        return postService.getAllPostsByAuthors(following);
+        Set<Post> currentUserPosts = postService.getAllPostsByAuthor(currentUser);
+        List<Post> followingPosts = postService.getAllPostsByAuthors(following);
+
+        List<Post> allPosts = new ArrayList<>();
+        allPosts.addAll(currentUserPosts);
+        allPosts.addAll(followingPosts);
+
+        return allPosts;
     }
 }

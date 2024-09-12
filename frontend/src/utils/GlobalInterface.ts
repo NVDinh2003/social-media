@@ -95,7 +95,7 @@ export interface PostImage {
 export interface Post {
   postId: number;
   content: string;
-  postDate?: Date;
+  postedDate?: Date;
   author: User;
   replies?: Post[];
   likes: number;

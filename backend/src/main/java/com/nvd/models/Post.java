@@ -13,7 +13,9 @@ import java.util.*;
 @Data
 @AllArgsConstructor
 @Table(name = "posts")
-public class Post {
+//           implements interface Comparable kiểu Post. Cho phép các obj Post có thể so sánh với nhau.
+public class Post implements Comparable<Post> {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
@@ -99,5 +101,11 @@ public class Post {
         this.reposts = new HashSet<>();
         this.bookmarks = new HashSet<>();
         this.views = new HashSet<>();
+    }
+
+    @Override   // so sánh 2 obj Post dựa vào postedDate,
+    //    sắp xếp theo thứ tự giảm dần của postedDate (mới nhất lên đầu).
+    public int compareTo(Post o) {
+        return -this.postedDate.compareTo(o.postedDate);
     }
 }
