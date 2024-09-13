@@ -198,6 +198,7 @@ export const UserSlice = createSlice({
           profilePicture: action.payload.loggedIn.user.profilePicture,
           bannerPicture: action.payload.loggedIn.user.bannerPicture,
           verifiedAccount: action.payload.loggedIn.user.verifiedAccount,
+          privateAccount: action.payload.loggedIn.user.privateAccount,
           organization: action.payload.loggedIn.user.organization,
         },
         token: action.payload.loggedIn.token, // JWT token
@@ -207,98 +208,95 @@ export const UserSlice = createSlice({
       return state;
     });
 
-    builder.addCase(verifyUsername.fulfilled, (state, action) => {
-      state = {
-        ...state,
-        username: action.payload,
-      };
-      return state;
-    });
+    builder
+      .addCase(verifyUsername.fulfilled, (state, action) => {
+        state = {
+          ...state,
+          username: action.payload,
+        };
+        return state;
+      })
+      .addCase(verifyUsername.pending, (state, action) => {
+        state = {
+          ...state,
+          error: false,
+        };
+        return state;
+      })
+      .addCase(verifyUsername.rejected, (state, action) => {
+        state = {
+          ...state,
+          error: true,
+        };
+        return state;
+      });
 
-    builder.addCase(verifyUsername.pending, (state, action) => {
-      state = {
-        ...state,
-        error: false,
-      };
-      return state;
-    });
+    builder
+      .addCase(loginUser.pending, (state, action) => {
+        state = {
+          ...state,
+          error: false,
+        };
+        return state;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state = {
+          ...state,
+          error: true,
+        };
+        return state;
+      });
 
-    builder.addCase(verifyUsername.rejected, (state, action) => {
-      state = {
-        ...state,
-        error: true,
-      };
-      return state;
-    });
+    builder
+      .addCase(getUserByToken.fulfilled, (state, action) => {
+        state = {
+          ...state,
+          loggedIn: action.payload.loggedIn,
+          username: action.payload.loggedIn.username,
+          followers: action.payload.followers,
+          following: action.payload.following,
+        };
 
-    builder.addCase(loginUser.pending, (state, action) => {
-      state = {
-        ...state,
-        error: false,
-      };
-      return state;
-    });
-
-    builder.addCase(loginUser.rejected, (state, action) => {
-      state = {
-        ...state,
-        error: true,
-      };
-      return state;
-    });
-
-    builder.addCase(getUserByToken.fulfilled, (state, action) => {
-      state = {
-        ...state,
-        loggedIn: action.payload.loggedIn,
-        username: action.payload.loggedIn.username,
-        followers: action.payload.followers,
-        following: action.payload.following,
-      };
-
-      return state;
-    });
-
-    builder.addCase(getUserByToken.pending, (state, action) => {
-      state = {
-        ...state,
-        error: false,
-      };
-      return state;
-    });
-
-    builder.addCase(getUserByToken.rejected, (state, action) => {
-      state = {
-        ...state,
-        error: true,
-      };
-      return state;
-    });
+        return state;
+      })
+      .addCase(getUserByToken.pending, (state, action) => {
+        state = {
+          ...state,
+          error: false,
+        };
+        return state;
+      })
+      .addCase(getUserByToken.rejected, (state, action) => {
+        state = {
+          ...state,
+          error: true,
+        };
+        return state;
+      });
 
     // follow user
-    builder.addCase(followUser.pending, (state, action) => {
-      state = {
-        ...state,
-        error: false,
-      };
-      return state;
-    });
-
-    builder.addCase(followUser.fulfilled, (state, action) => {
-      state = {
-        ...state,
-        following: action.payload,
-      };
-      return state;
-    });
-
-    builder.addCase(followUser.rejected, (state, action) => {
-      state = {
-        ...state,
-        error: true,
-      };
-      return state;
-    });
+    builder
+      .addCase(followUser.pending, (state, action) => {
+        state = {
+          ...state,
+          error: false,
+        };
+        return state;
+      })
+      .addCase(followUser.fulfilled, (state, action) => {
+        state = {
+          ...state,
+          following: action.payload,
+        };
+        return state;
+      })
+      .addCase(followUser.rejected, (state, action) => {
+        state = {
+          ...state,
+          error: true,
+        };
+        return state;
+      });
     //
   },
 });

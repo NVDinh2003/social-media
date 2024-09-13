@@ -32,7 +32,9 @@ export const DiscoverySearchDropDownResult: React.FC<
             {nickname}
           </p>
           {verified && <VerifiedSVG color={"#1da1f2"} width={12} height={12} />}
-          {privateAccount && <LocksSVG color={"#fff"} width={12} height={12} />}
+          {privateAccount && (
+            <LocksSVG color={"#1da1f2"} width={12} height={12} />
+          )}
           {organization && (
             <img
               className="discovery-search-dropdown-organization"

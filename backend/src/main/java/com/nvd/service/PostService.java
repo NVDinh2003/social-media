@@ -2,9 +2,12 @@ package com.nvd.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nvd.dto.CreatePostDTO;
+import com.nvd.dto.CreateReplyDTO;
 import com.nvd.exceptions.PostDoesNotExistException;
 import com.nvd.exceptions.UnableToCreatePostException;
 import com.nvd.models.*;
+import com.nvd.models.enums.Audience;
+import com.nvd.models.enums.ReplyRestriction;
 import com.nvd.repositories.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -67,7 +74,7 @@ public class PostService {
         if (dto.getScheduled())
             post.setPostedDate(dto.getScheduledDate());
         else
-            post.setPostedDate(new Date());
+            post.setPostedDate(LocalDateTime.now());
 
         post.setAuthor(dto.getAuthor());
         post.setReplies(dto.getReplies());
@@ -99,7 +106,7 @@ public class PostService {
             if (dto.getScheduled())
                 p.setPostedDate(dto.getScheduledDate());
             else
-                p.setPostedDate(new Date());
+                p.setPostedDate(LocalDateTime.now());
 
             p.setAuthor(dto.getAuthor());
             p.setReplies(dto.getReplies());
@@ -144,5 +151,31 @@ public class PostService {
 
     public void deletePostById(int id) {
         postRepository.deleteById(id);
+    }
+
+    public Post replyToPost(CreateReplyDTO replyDTO) {
+        CreatePostDTO postDTO = CreatePostDTO.builder()
+                .content(replyDTO.getReplyContent())
+                .author(replyDTO.getAuthor())
+                .replies(new HashSet<>())
+                .images(replyDTO.getImages())
+                .scheduled(replyDTO.getScheduled())
+                .scheduledDate(replyDTO.getScheduledDate())
+                .audience(Audience.EVERYONE)
+                .replyRestriction(ReplyRestriction.EVERYONE)
+                .poll(replyDTO.getPoll())
+                .build();
+
+        Post reply = createPost(postDTO);
+        reply.setReply(true);
+
+        Post original = postRepository.findById(replyDTO.getOriginalPost()).orElseThrow(UnableToCreatePostException::new);
+        Set<Post> originalPostReplies = original.getReplies();
+        originalPostReplies.add(reply);
+        
+        original.setReplies(originalPostReplies);
+
+        postRepository.save(original);
+        return postRepository.save(reply);
     }
 }

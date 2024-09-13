@@ -16,5 +16,5 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     Optional<Set<Post>> findByAuthor(ApplicationUser author);
 
     @Query("Select p from Post p where p.author IN (:authors)")
-    public List<Post> findPostsByAuthors(@Param("authors") Set<ApplicationUser> authors);
+    List<Post> findPostsByAuthors(@Param("authors") Set<ApplicationUser> authors);
 }

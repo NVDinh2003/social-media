@@ -7,7 +7,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -25,13 +29,13 @@ public class Post implements Comparable<Post> {
     private String content;
 
     @Column(name = "posted_date")
-    private Date postedDate;
+    private LocalDateTime postedDate;
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private ApplicationUser author;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "post_likes_junction",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -46,7 +50,10 @@ public class Post implements Comparable<Post> {
 
     //TODO: Figure out video upload
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @Column(name = "is_reply", columnDefinition = "boolean default false")
+    private Boolean reply;
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "post_reply_juntion",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -55,7 +62,7 @@ public class Post implements Comparable<Post> {
     @JsonIgnore
     private Set<Post> replies;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "post_repost_juntion",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -63,7 +70,7 @@ public class Post implements Comparable<Post> {
     )
     private Set<ApplicationUser> reposts;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "post_bookmark_juntion",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -71,7 +78,7 @@ public class Post implements Comparable<Post> {
     )
     private Set<ApplicationUser> bookmarks;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "post_view_juntion",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -81,7 +88,7 @@ public class Post implements Comparable<Post> {
 
     private boolean scheduled;
     @Column(name = "scheduled_date")
-    private Date scheduledDate;
+    private LocalDateTime scheduledDate;
 
     @Enumerated(EnumType.ORDINAL)   // lưu dạng số nguyên, thứ tự (ordinal) của enum đó trong định nghĩa
     private Audience audience;

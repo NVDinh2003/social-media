@@ -50,6 +50,8 @@ public class ApplicationUser {
     @Column(columnDefinition = "boolean default false")
     private Boolean verifiedAccount;
     private Boolean enabled;
+    @Column(columnDefinition = "boolean default false")
+    private Boolean privateAccount;
     @JsonIgnore
     private Long verification;
 

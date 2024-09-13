@@ -3,29 +3,23 @@ package com.nvd.dto;
 import com.nvd.models.ApplicationUser;
 import com.nvd.models.Image;
 import com.nvd.models.Poll;
-import com.nvd.models.Post;
-import com.nvd.models.enums.Audience;
-import com.nvd.models.enums.ReplyRestriction;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class CreatePostDTO {
-    private String content;
+public class CreateReplyDTO {
     private ApplicationUser author;
-    Set<Post> replies;
+    private Integer originalPost;
+    private String replyContent;
     private List<Image> images;
     private Boolean scheduled;
     private LocalDateTime scheduledDate;
-    private Audience audience;
-    private ReplyRestriction replyRestriction;
     private Poll poll;
 
 }

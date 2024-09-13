@@ -1,6 +1,7 @@
 package com.nvd.controller;
 
 import com.nvd.dto.CreatePostDTO;
+import com.nvd.dto.CreateReplyDTO;
 import com.nvd.exceptions.PostDoesNotExistException;
 import com.nvd.exceptions.UnableToCreatePostException;
 import com.nvd.models.ApplicationUser;
@@ -43,6 +44,11 @@ public class PostController {
     @PostMapping
     public Post createPost(@RequestBody CreatePostDTO postDTO) {
         return postService.createPost(postDTO);
+    }
+
+    @PostMapping("/reply")
+    public Post replyToPost(@RequestBody CreateReplyDTO replyDTO) {
+        return postService.replyToPost(replyDTO);
     }
 
     @PostMapping(value = "/media", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})

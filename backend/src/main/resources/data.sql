@@ -1,3 +1,22 @@
+insert into roles
+values (1, 'USER'),
+       (2, 'ADMIN');
+
+insert into users(email, enabled, first_name, last_name, nickname, password, username, bio, verified_account,
+                  private_account)
+values ('iamdinhhtvq@gmail.com', true, 'Định', 'Nguyễn Văn', 'Leon',
+        '$2a$10$RgKj7kNuA6TNvGdrF0.Kt.h0BQF7IR66naQw6YBU3h/2YSzt2OG6C',
+        'dinhhtvq123', 'Software Engineer', true, true);
+
+insert into user_roles_junction
+values (1, 1);
+
+insert into posts (audience, content, posted_date, reply_restriction, scheduled, author_id)
+values (0,
+        'This is a post by Dinh Nguyen',
+        '2024-06-12 01:19:09', 0, false, 1);
+
+
 insert into users(email, enabled, first_name, last_name, nickname, password, username, bio)
 values ('rick@gmail.com', true, 'Rick', 'Sanchez', 'rick',
         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
@@ -297,9 +316,9 @@ values ('Multi-lateral tertiary collaboration', 'mpaley22@cmu.edu', true, 'Merwi
 insert into users (bio, email, enabled, first_name, last_name, nickname, password, phone, username)
 values ('Virtual even-keeled emulation', 'bwoodruff23@slate.com', true, 'Bettye', 'Woodruff', 'bwoodruff23',
         '$2a$04$pJGP2P14M1p12Tivkcp6geCf8O7.riN.FFUde8bmKy/vaHUWStQR.', '860-888-1118', 'bwoodruff23');
-insert into users (bio, email, enabled, first_name, last_name, nickname, password, phone, username)
-values ('Decentralized national model', 'vbeevens24@sun.com', true, 'Valeda', 'Beevens', 'vbeevens24',
-        '$2a$04$v/fA3g2CXgTFmjMZAsWqBOpSVtzyhpu2Fmh/LgBR6mi2L.AMvUJsW', '962-418-1920', 'vbeevens24');
+-- insert into users (bio, email, enabled, first_name, last_name, nickname, password, phone, username)
+-- values ('Decentralized national model', 'vbeevens24@sun.com', true, 'Valeda', 'Beevens', 'vbeevens24',
+--         '$2a$04$v/fA3g2CXgTFmjMZAsWqBOpSVtzyhpu2Fmh/LgBR6mi2L.AMvUJsW', '962-418-1920', 'vbeevens24');
 insert into users (bio, email, enabled, first_name, last_name, nickname, password, phone, username)
 values ('Devolved attitude-oriented groupware', 'hhumberstone25@squidoo.com', true, 'Herta', 'Humberstone',
         'hhumberstone25', '$2a$04$uY3ZBlpAIOyPzuc2RFlvgOvxidsdW.Mbf9CkKmuy.2Tt0CETcznTK', '901-230-3867',
