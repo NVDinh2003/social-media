@@ -11,6 +11,7 @@ import { FeedPostCreatorEditImageModal } from "../FeedPostCreatorEditImageModal/
 import { FeedPostCreatorTagPeopleModal } from "../FeedPostCreatorTagPeopleModal/FeedPostCreatorTagPeopleModal";
 import { FeedPostCreatorGifModal } from "../FeedPostCreatorGifModal/FeedPostCreatorGifModal";
 import { SchedulePostModal } from "../../../schedule-post/SchedulePostModal/SchedulePostModal";
+import { CreateReply } from "../../../post/components/CreateReply/CreateReply";
 
 export const Feed: React.FC = () => {
   //
@@ -34,6 +35,10 @@ export const Feed: React.FC = () => {
     (state: RootState) => state.modal.displaySchedule
   );
 
+  const displayCreateReplyModal = useSelector(
+    (state: RootState) => state.modal.displayCreateReply
+  );
+
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
@@ -55,6 +60,7 @@ export const Feed: React.FC = () => {
       {displayTagPeopleModal && <FeedPostCreatorTagPeopleModal />}
       {displayGifModal && <FeedPostCreatorGifModal />}
       {displayScheduleModal && <SchedulePostModal />}
+      {displayCreateReplyModal && <CreateReply />}
 
       <FeedPostCreator />
       {!feedState.loading && (

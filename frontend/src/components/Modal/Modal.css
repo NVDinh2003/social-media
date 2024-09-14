@@ -14,6 +14,9 @@
 .modal-box {
   width: 600px;
   height: 650px;
+  height: fit-content;
+  overflow: hidden;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-content: space-between;

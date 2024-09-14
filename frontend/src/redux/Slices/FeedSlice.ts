@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { Post } from "../../utils/GlobalInterface";
 
@@ -6,6 +6,7 @@ const baseUrl = process.env.REACT_APP_API_URL;
 
 interface FeedSliceState {
   posts: Post[];
+  currentPost: Post | undefined;
   loading: boolean;
   error: boolean;
 }
@@ -17,6 +18,7 @@ interface LoadFeedPagePayload {
 
 const initialState: FeedSliceState = {
   posts: [],
+  currentPost: undefined,
   loading: false,
   error: false,
 };
@@ -46,7 +48,16 @@ export const loadFeedPage = createAsyncThunk(
 export const FeedSlice = createSlice({
   name: "feed",
   initialState,
-  reducers: {},
+  reducers: {
+    setCurrentPost(state, action: PayloadAction<Post | undefined>) {
+      state = {
+        ...state,
+        currentPost: action.payload,
+      };
+
+      return state;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loadFeedPage.pending, (state, payload) => {
@@ -79,5 +90,5 @@ export const FeedSlice = createSlice({
   },
 });
 
-export const {} = FeedSlice.actions;
+export const { setCurrentPost } = FeedSlice.actions;
 export default FeedSlice.reducer;

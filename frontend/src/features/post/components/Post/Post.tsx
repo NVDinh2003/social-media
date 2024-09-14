@@ -14,6 +14,11 @@ import BookmarksSVG from "../../../../components/SVGs/BookmarksSVG";
 
 import "./Post.css";
 import { MONTHS } from "../../../../utils/DateUtils";
+import { AppDispatch } from "../../../../redux/Store";
+import { useDispatch } from "react-redux";
+import { updateDisplayCreateReply } from "../../../../redux/Slices/ModalSlice";
+import { setCurrentPost } from "../../../../redux/Slices/FeedSlice";
+import { convertPostedDateToString } from "../../utils/PostUtils";
 
 interface PostProps {
   post: IPost;
@@ -32,6 +37,7 @@ export const Post: React.FC<PostProps> = ({ post }) => {
   //
   const defaultPfp = process.env.REACT_APP_PFP;
   const { author, content, postedDate } = post;
+  const dispatch: AppDispatch = useDispatch();
 
   const [colors, setColors] = useState<HoverColor>({
     reply: "#aab8c2",
@@ -82,29 +88,9 @@ export const Post: React.FC<PostProps> = ({ post }) => {
 
   // console.log("postedDate: ", post);
 
-  const convertPostedDateToString = (): string => {
-    const postedDateString = `${postedDate}`;
-    let d = new Date(postedDateString);
-    let today = new Date();
-
-    let timeDifference = today.getTime() - d.getTime();
-
-    let minutes = Math.round(timeDifference / 60_000);
-    if (minutes < 60) return `${minutes}m ago`;
-
-    let hours = Math.round(timeDifference / (60_000 * 60));
-    if (hours < 24) return `${hours}h ago`;
-
-    let days = Math.round(timeDifference / (1000 * 3600 * 24));
-    if (days < 7) return `${days}d ago`;
-
-    if (d.getFullYear() === today.getFullYear())
-      return `${MONTHS[d.getMonth() + 1].substring(0, 3)} ${d.getDate()}`;
-
-    return `${MONTHS[d.getMonth() + 1].substring(
-      0,
-      3
-    )} ${d.getDate()}, ${d.getFullYear()}`;
+  const toggleReply = () => {
+    dispatch(setCurrentPost(post));
+    dispatch(updateDisplayCreateReply());
   };
 
   return (
@@ -156,7 +142,9 @@ export const Post: React.FC<PostProps> = ({ post }) => {
             />
             {/* Update convert posted date to string to say hours up to 24, days up to 7, then mon day if this year, mon day, year after */}
             {postedDate && (
-              <p className="post-posted-at">{convertPostedDateToString()}</p>
+              <p className="post-posted-at">
+                {convertPostedDateToString(postedDate)}
+              </p>
             )}
           </div>
 
@@ -179,6 +167,7 @@ export const Post: React.FC<PostProps> = ({ post }) => {
               id="reply"
               onMouseOver={updateHoverColor}
               onMouseLeave={resetColors}
+              onClick={toggleReply}
             >
               <ReplyOutlineSVG height={20} width={20} color={"#aab8c2"} />
             </div>

@@ -6,6 +6,7 @@ interface ModalSliceState {
   displayTagPeople: boolean;
   displayGif: boolean;
   displaySchedule: boolean;
+  displayCreateReply: boolean;
 }
 
 const initialState: ModalSliceState = {
@@ -13,6 +14,7 @@ const initialState: ModalSliceState = {
   displayTagPeople: false,
   displayGif: false,
   displaySchedule: false,
+  displayCreateReply: false,
 };
 
 export const ModalSlice = createSlice({
@@ -52,6 +54,14 @@ export const ModalSlice = createSlice({
 
       return state;
     },
+
+    updateDisplayCreateReply(state) {
+      state = {
+        ...state,
+        displayCreateReply: !state.displayCreateReply,
+      };
+      return state;
+    },
   },
 });
 
@@ -60,6 +70,7 @@ export const {
   updateDisplayTagPeople,
   updateDisplayGif,
   updateDisplaySchedule,
+  updateDisplayCreateReply,
 } = ModalSlice.actions;
 
 export default ModalSlice.reducer;

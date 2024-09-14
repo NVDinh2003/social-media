@@ -1,0 +1,119 @@
+.create-reply-body {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 12px;
+}
+
+.create-reply-body-post {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.create-reply-body-post-left {
+  width: 12%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.create-reply-body-post-pfp {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 100%;
+  margin-bottom: 4px;
+}
+
+.create-reply-body-post-divider {
+  width: 2px;
+  height: 90%;
+  background-color: #e1e8ed;
+  border-radius: 1px;
+}
+
+.create-reply-body-post-right {
+  width: 88%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.create-reply-body-post-top-right {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 4px;
+  margin-bottom: 4px;
+}
+
+.create-reply-body-post-nickname {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.create-reply-body-post-username {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 400;
+  color: #657786;
+}
+
+.create-reply-body-posted-date {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 400;
+  color: #657786;
+}
+
+.create-reply-body-post-bottom-right {
+  width: 100%;
+  height: fit-content;
+  margin: 0;
+  padding: 0;
+}
+
+.create-reply-body-post-content {
+  width: 100%;
+  height: fit-content;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 8px;
+}
+
+.create-reply-body-post-replying-to {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 400;
+  color: #657786;
+}
+
+.create-reply-body-post-replying-to-user {
+  color: #1da1f2;
+}
+
+.post-content-span {
+  width: fit-content;
+  height: fit-content;
+  font-size: 15px;
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+}

@@ -1,0 +1,43 @@
+.create-reply-top {
+  width: 100%;
+  height: 50px;
+  padding-top: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.create-reply-top-bottom-bg {
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.create-reply-top-bottom-bg:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.create-reply-top-drafts-bg {
+  width: 75px;
+  height: 32px;
+  border: none;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1da1f2;
+  cursor: pointer;
+}
+
+.create-reply-top-drafts-bg:hover {
+  background-color: rgba(29, 161, 242, 0.2);
+}
