@@ -1,0 +1,30 @@
+.create-post-button-cluster {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0;
+}
+
+.create-post-button-cluster-icon-bg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 100%;
+}
+
+.icon-active:hover {
+  cursor: pointer;
+  background-color: rgba(29, 161, 241, 0.1);
+}
+
+.create-post-button-cluster-location {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 34px;
+  height: 34px;
+}

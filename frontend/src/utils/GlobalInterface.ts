@@ -119,6 +119,16 @@ export interface Post {
   replyRestriction: "EVERYONE" | "FOLLOW" | "CIRCLE" | "MENTION";
 }
 
+export interface Reply {
+  author: User;
+  originalPost: Post;
+  replyContent: string;
+  images: PostImage[];
+  scheduled: boolean;
+  scheduledDate?: Date;
+  poll?: Poll;
+}
+
 export interface TenorCategories {
   image: string;
   name: string;

@@ -4,6 +4,7 @@
   display: flex;
   padding: 4px;
   border-bottom: 1px solid #e1e8ed;
+  position: relative;
 }
 
 .feed-post-creator-pfp {
@@ -52,6 +53,11 @@
 .input-active {
   margin-top: 15px;
   margin-bottom: 10px;
+}
+
+.feed-post-creator-input::selection {
+  background: rgba(51, 153, 255, 0.4);
+  color: transparent;
 }
 
 .feed-post-creator-input:focus {
@@ -107,28 +113,6 @@
 
 .icons-border {
   border-top: 1px solid #e1e8ed;
-}
-
-.feed-post-creator-icon-bg {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 100%;
-}
-
-.feed-post-creator-location {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 34px;
-  height: 34px;
-}
-
-.icon-active:hover {
-  cursor: pointer;
-  background-color: rgba(29, 161, 241, 0.1);
 }
 
 .feed-post-creator-post-button {

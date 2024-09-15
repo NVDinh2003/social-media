@@ -4,6 +4,7 @@ import {
   PollChoice,
   Post,
   PostImage,
+  Reply,
   User,
 } from "../../utils/GlobalInterface";
 import axios from "axios";
@@ -15,11 +16,17 @@ export interface PostSliceState {
   currentPost: Post | undefined;
   posts: Post[];
   currentPostImages: File[];
+  currentReply: Reply | undefined;
 }
 
 interface updatePostPayload {
   name: string;
   value: string | number | boolean | PostImage[];
+}
+
+interface GenerateReplyPayload {
+  post: Post;
+  user: User;
 }
 
 interface createPostBody {
@@ -50,6 +57,7 @@ const initialState: PostSliceState = {
   currentPost: undefined,
   posts: [],
   currentPostImages: [],
+  currentReply: undefined,
 };
 
 export const createPost = createAsyncThunk(
@@ -138,12 +146,38 @@ export const PostSlice = createSlice({
       return state;
     },
 
+    initializeCurrentReply(state, action: PayloadAction<GenerateReplyPayload>) {
+      state = {
+        ...state,
+        currentReply: {
+          author: action.payload.user,
+          originalPost: action.payload.post,
+          replyContent: "",
+          images: [],
+          scheduled: false,
+        },
+      };
+
+      return state;
+    },
+
     updateCurrentPost(state, action: PayloadAction<updatePostPayload>) {
       if (state.currentPost)
         state.currentPost = {
           ...state.currentPost,
           [action.payload.name]: action.payload.value,
         };
+
+      return state;
+    },
+
+    updateCurrentReply(state, action: PayloadAction<updatePostPayload>) {
+      if (state.currentReply) {
+        state.currentReply = {
+          ...state.currentReply,
+          [action.payload.name]: action.payload.value,
+        };
+      }
 
       return state;
     },
@@ -375,5 +409,7 @@ export const {
   removePoll,
   setPollDate,
   setScheduleDate,
+  initializeCurrentReply,
+  updateCurrentReply,
 } = PostSlice.actions;
 export default PostSlice.reducer;

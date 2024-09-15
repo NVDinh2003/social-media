@@ -1,15 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import "./CreateReplyBody.css";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../redux/Store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../../redux/Store";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import CircleIcon from "@mui/icons-material/Circle";
 import { convertPostedDateToString } from "../../../utils/PostUtils";
+import { CreatePostTextArea } from "../../CreatePostTextArea/CreatePostTextArea";
+import { initializeCurrentReply } from "../../../../../redux/Slices/PostSlice";
 
 export const CreateReplyBody: React.FC = () => {
   const defaultPfp = process.env.REACT_APP_PFP;
   const post = useSelector((state: RootState) => state.feed.currentPost);
+  const user = useSelector((state: RootState) => state.user.loggedIn);
+
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    if (post && user) {
+      dispatch(
+        initializeCurrentReply({
+          post,
+          user,
+        })
+      );
+    }
+  }, [post?.postId, user?.userId]);
 
   return (
     <div className="create-reply-body">
@@ -88,6 +104,16 @@ export const CreateReplyBody: React.FC = () => {
 
       <div className="create-reply-body-reply">
         {/* Refactor the feed post creator to reuse in here */}
+        <img
+          src={
+            user && user.profilePicture
+              ? user.profilePicture.imageURL
+              : defaultPfp
+          }
+          alt="User's avatar"
+        />
+
+        <CreatePostTextArea location="reply" />
       </div>
     </div>
   );
