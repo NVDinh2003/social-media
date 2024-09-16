@@ -3,7 +3,6 @@ import React, { useMemo } from "react";
 import "./FeedPostCreatorImages.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
-import TagPeopleSVG from "../../../../components/SVGs/TagPeopleSVG";
 import ListsSVG from "../../../../components/SVGs/ListsSVG";
 import { FeedPostCreatorImage } from "./FeedPostCreatorImage/FeedPostCreatorImage";
 import { createImageContainer, displayTagPeople } from "../../utils/FeedUtils";
@@ -19,9 +18,14 @@ export const FeedPostCreatorImages: React.FC = () => {
 
   const dispatch: AppDispatch = useDispatch();
 
-  const imageContainer = useMemo(
+  const postImageContainer = useMemo(
     () => createImageContainer(postState.currentPostImages),
     [postState.currentPostImages]
+  );
+
+  const replyImageContainer = useMemo(
+    () => createImageContainer(postState.currentReplyImages),
+    [postState.currentReplyImages]
   );
 
   const toggleTagPeopleModal = () => {
@@ -34,17 +38,36 @@ export const FeedPostCreatorImages: React.FC = () => {
 
   return (
     <div className="feed-post-creator-images">
-      {postState.currentPost?.images.length === 0 ? (
-        imageContainer
-      ) : (
-        <div className="feed-post-creator-images-container container-odd">
-          <FeedPostCreatorImage
-            image={postState.currentPost?.images[0].imageUrl || ""}
-            name={postState.currentPost?.images[0].imageName || ""}
-            type={"gif"}
-          />
-        </div>
-      )}
+      {postState.currentPost &&
+        postState.currentPost.images.length === 0 &&
+        postImageContainer}
+
+      {postState.currentReply &&
+        postState.currentReply.images.length === 0 &&
+        replyImageContainer}
+
+      {postState.currentPost?.images.length !== 0 &&
+        postState.currentReply?.images.length !== 0 && (
+          <div className="feed-post-creator-images-container container-odd">
+            <FeedPostCreatorImage
+              image={
+                postState.currentPost?.images[0].imageUrl
+                  ? postState.currentPost.images[0].imageUrl
+                  : postState.currentReply?.images
+                  ? postState.currentReply.images[0].imageUrl
+                  : ""
+              }
+              name={
+                postState.currentPost?.images[0].imageUrl
+                  ? postState.currentPost.images[0].imageUrl
+                  : postState.currentReply?.images
+                  ? postState.currentReply.images[0].imageUrl
+                  : ""
+              }
+              type={"gif"}
+            />
+          </div>
+        )}
 
       <div className="feed-post-creator-images-options">
         {displayTagPeople(postState, toggleTagPeopleModal)}

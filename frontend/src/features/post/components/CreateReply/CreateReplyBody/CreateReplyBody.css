@@ -2,11 +2,13 @@
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   padding: 12px;
+  position: relative;
 }
 
 .create-reply-body-post {
@@ -116,4 +118,24 @@
   margin: 0;
   padding: 0;
   font-weight: 400;
+}
+
+.create-reply-body-reply {
+  width: 100%;
+  height: fit-content;
+  padding-left: 14px;
+}
+
+.create-reply-body-reply-content-group {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+}
+
+.create-reply-body-post-reply {
+  width: 88%;
+  height: fit-content;
+  padding-left: 12px;
 }

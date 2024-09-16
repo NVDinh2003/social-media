@@ -29,7 +29,10 @@ export const FeedPostCreatorImage: React.FC<FeedPostCreatorImageProps> = ({
     //
     e.stopPropagation();
 
-    if (state.currentPost && state.currentPost.images.length > 0) {
+    if (
+      (state.currentPost && state.currentPost.images.length > 0) ||
+      (state.currentReply && state.currentReply.images.length > 0)
+    ) {
       dispatch(
         updateCurrentPost({
           name: "images",

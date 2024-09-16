@@ -16,6 +16,7 @@ export interface PostSliceState {
   currentPost: Post | undefined;
   posts: Post[];
   currentPostImages: File[];
+  currentReplyImages: File[];
   currentReply: Reply | undefined;
 }
 
@@ -42,6 +43,11 @@ interface createPostBody {
   token: string;
 }
 
+interface CreateReplyBody {
+  reply: Reply;
+  token: string;
+}
+
 interface CreatePostWithMediaBody extends createPostBody {
   imageFiles: File[];
 }
@@ -57,6 +63,7 @@ const initialState: PostSliceState = {
   currentPost: undefined,
   posts: [],
   currentPostImages: [],
+  currentReplyImages: [],
   currentReply: undefined,
 };
 
@@ -83,6 +90,35 @@ export const createPost = createAsyncThunk(
         post,
         { headers: { Authorization: `Bearer ${body.token}` } }
       );
+      return req.data;
+    } catch (e) {
+      thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+export const createReply = createAsyncThunk(
+  "post/reply",
+  async (body: CreateReplyBody, thunkAPI) => {
+    console.log("post created", body);
+    let reply = {
+      author: body.reply.author,
+      originalPost: body.reply.originalPost.postId,
+      replyContent: body.reply.replyContent,
+      images: body.reply.images,
+      scheduled: body.reply.scheduled,
+      scheduledDate: body.reply.scheduledDate,
+      poll: body.reply.poll,
+    };
+    try {
+      const req = await axios.post(
+        `${process.env.REACT_APP_API_URL}/posts/reply`,
+        reply,
+        {
+          headers: { Authorization: `Bearer ${body.token}` },
+        }
+      );
+
       return req.data;
     } catch (e) {
       thunkAPI.rejectWithValue(e);
@@ -162,17 +198,12 @@ export const PostSlice = createSlice({
     },
 
     updateCurrentPost(state, action: PayloadAction<updatePostPayload>) {
-      if (state.currentPost)
+      if (state.currentPost) {
         state.currentPost = {
           ...state.currentPost,
           [action.payload.name]: action.payload.value,
         };
-
-      return state;
-    },
-
-    updateCurrentReply(state, action: PayloadAction<updatePostPayload>) {
-      if (state.currentReply) {
+      } else if (state.currentReply) {
         state.currentReply = {
           ...state.currentReply,
           [action.payload.name]: action.payload.value,
@@ -182,11 +213,29 @@ export const PostSlice = createSlice({
       return state;
     },
 
+    // updateCurrentReply(state, action: PayloadAction<updatePostPayload>) {
+    //   if (state.currentReply) {
+    //     state.currentReply = {
+    //       ...state.currentReply,
+    //       [action.payload.name]: action.payload.value,
+    //     };
+    //   }
+
+    //   return state;
+    // },
+
     updateCurrentPostImages(state, action: PayloadAction<File[]>) {
-      state = {
-        ...state,
-        currentPostImages: action.payload,
-      };
+      if (state.currentPost) {
+        state = {
+          ...state,
+          currentPostImages: action.payload,
+        };
+      } else if (state.currentReply) {
+        state = {
+          ...state,
+          currentReplyImages: action.payload,
+        };
+      }
 
       return state;
     },
@@ -211,16 +260,24 @@ export const PostSlice = createSlice({
         choices,
       };
 
-      let post = JSON.parse(JSON.stringify(state.currentPost));
-      post = {
-        ...post,
-        poll,
-      };
+      if (state.currentPost) {
+        let post = JSON.parse(JSON.stringify(state.currentPost));
+        post = {
+          ...post,
+          poll,
+        };
 
-      state = {
-        ...state,
-        currentPost: post,
-      };
+        state = {
+          ...state,
+          currentPost: post,
+        };
+      } else if (state.currentReply) {
+        let reply = JSON.parse(JSON.stringify(state.currentReply));
+        reply = {
+          ...reply,
+          poll,
+        };
+      }
 
       return state;
     },
@@ -310,6 +367,24 @@ export const PostSlice = createSlice({
           ...state,
           currentPost: post,
         };
+      } else if (state.currentReply && state.currentReply.poll) {
+        let reply = JSON.parse(JSON.stringify(state.currentReply));
+        let poll = reply.poll;
+
+        poll = {
+          ...poll,
+          endTime: action.payload,
+        };
+
+        reply = {
+          ...reply,
+          poll,
+        };
+
+        state = {
+          ...state,
+          currentReply: reply,
+        };
       }
 
       return state;
@@ -329,6 +404,19 @@ export const PostSlice = createSlice({
           ...state,
           currentPost: post,
         };
+      } else if (state.currentReply) {
+        let reply = JSON.parse(JSON.stringify(state.currentReply));
+
+        reply = {
+          ...reply,
+          scheduledDate: action.payload,
+          scheduled: true,
+        };
+
+        state = {
+          ...state,
+          currentReply: reply,
+        };
       }
 
       return state;
@@ -337,64 +425,75 @@ export const PostSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    builder.addCase(createPost.pending, (state, action) => {
-      state = {
-        ...state,
-        loading: true,
-        // error: false,
-      };
-      return state;
-    });
+    builder
+      .addCase(createPost.pending, (state, action) => {
+        state = {
+          ...state,
+          loading: true,
+          // error: false,
+        };
+        return state;
+      })
+      .addCase(createPost.fulfilled, (state, action) => {
+        let post: Post = action.payload;
 
-    builder.addCase(createPost.fulfilled, (state, action) => {
-      let post: Post = action.payload;
-
-      state = {
-        ...state,
-        posts: [post, ...state.posts],
-        loading: false,
-        error: false,
-        currentPost: undefined,
-      };
-      return state;
-    });
-
-    builder.addCase(createPost.rejected, (state, action) => {
-      state = {
-        ...state,
-        error: true,
-      };
-      return state;
-    });
+        state = {
+          ...state,
+          posts: [post, ...state.posts],
+          loading: false,
+          error: false,
+          currentPost: undefined,
+        };
+        return state;
+      })
+      .addCase(createPost.rejected, (state, action) => {
+        state = {
+          ...state,
+          error: true,
+        };
+        return state;
+      });
 
     // create post with media
-    builder.addCase(createPostWithMedia.pending, (state, action) => {
+    builder
+      .addCase(createPostWithMedia.pending, (state, action) => {
+        state = {
+          ...state,
+          loading: true,
+        };
+        return state;
+      })
+      .addCase(createPostWithMedia.fulfilled, (state, action) => {
+        let post: Post = action.payload;
+
+        state = {
+          ...state,
+          posts: [post, ...state.posts],
+          loading: false,
+          error: false,
+          currentPost: undefined,
+          currentPostImages: [],
+        };
+        return state;
+      })
+      .addCase(createPostWithMedia.rejected, (state, action) => {
+        state = {
+          ...state,
+          error: true,
+        };
+        return state;
+      });
+
+    // create reply in post
+    builder.addCase(createReply.fulfilled, (state, action) => {
       state = {
         ...state,
-        loading: true,
-      };
-      return state;
-    });
-
-    builder.addCase(createPostWithMedia.fulfilled, (state, action) => {
-      let post: Post = action.payload;
-
-      state = {
-        ...state,
-        posts: [post, ...state.posts],
+        currentReply: undefined,
         loading: false,
         error: false,
-        currentPost: undefined,
-        currentPostImages: [],
+        currentReplyImages: [],
       };
-      return state;
-    });
 
-    builder.addCase(createPostWithMedia.rejected, (state, action) => {
-      state = {
-        ...state,
-        error: true,
-      };
       return state;
     });
   },
@@ -410,6 +509,6 @@ export const {
   setPollDate,
   setScheduleDate,
   initializeCurrentReply,
-  updateCurrentReply,
+  // updateCurrentReply,
 } = PostSlice.actions;
 export default PostSlice.reducer;

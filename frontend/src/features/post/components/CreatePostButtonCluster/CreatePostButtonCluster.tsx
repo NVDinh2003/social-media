@@ -76,7 +76,7 @@ export const CreatePostButtonCluster = () => {
   };
 
   const generatePoll = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (state.post.currentPost) {
+    if (state.post.currentPost || state.post.currentReply) {
       dispatch(createPoll());
     }
   };

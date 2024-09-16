@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import {
   updateCurrentPost,
-  updateCurrentReply,
+  // updateCurrentReply,
 } from "../../../../redux/Slices/PostSlice";
 
 interface CreatePostTextAreaProps {
@@ -41,7 +41,7 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
 
     if (location === "reply") {
       dispatch(
-        updateCurrentReply({
+        updateCurrentPost({
           name: "replyContent",
           value: e.target.value,
         })

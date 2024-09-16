@@ -21,6 +21,7 @@
   flex-direction: column;
   align-content: space-between;
   border-radius: 20px;
+  z-index: 2;
 }
 
 .modal-top {

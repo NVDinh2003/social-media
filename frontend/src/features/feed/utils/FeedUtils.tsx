@@ -59,6 +59,7 @@ export function getReplyDropDownButton(
 
 export function createImageContainer(images: File[]): JSX.Element {
   if (images.length % 2 === 0) {
+    // console.log(images.length);
     return (
       <div className="feed-post-creator-images-container container-even">
         {images.map((image) => {
@@ -113,11 +114,19 @@ export function displayTagPeople(
   state: PostSliceState,
   toggleTagPeopleModal: MouseEventHandler<HTMLParagraphElement>
 ): JSX.Element {
-  if (state.currentPost && state.currentPost.images.length > 0) {
+  if (
+    (state.currentPost && state.currentPost.images.length > 0) ||
+    (state.currentReply && state.currentReply?.images.length > 0)
+  ) {
     return <div className="feed-post-creator-images-option">via Tenor</div>;
   }
 
-  if (state.currentPostImages[0].type === "image/gif") {
+  if (
+    (state.currentPostImages.length > 0 &&
+      state.currentPostImages[0].type === "image/gif") ||
+    (state.currentReplyImages.length > 0 &&
+      state.currentReplyImages[0].type === "image/gif")
+  ) {
     return <></>;
   }
 

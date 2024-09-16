@@ -125,14 +125,6 @@ export const FeedPostCreator: React.FC = () => {
         (state.post.currentPost && state.post.currentPost.poll !== undefined)
         ? "feed-post-creator-post-button post-active"
         : "feed-post-creator-post-button";
-
-      // return (state.post.currentPost && state.post.currentPost.content) !==
-      //   "" ||
-      //   state.post.currentPostImages.length > 0 ||
-      //   (state.post.currentPost && state.post.currentPost.images.length >= 1) ||
-      //   (state.post.currentPost && state.post.currentPost.poll !== undefined)
-      //   ? "feed-post-creator-post-button post-active"
-      //   : "feed-post-creator-post-button";
     }
     return "feed-post-creator-post-button";
   };
