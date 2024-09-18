@@ -11,15 +11,16 @@ import com.nvd.models.enums.ReplyRestriction;
 import com.nvd.repositories.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
@@ -147,8 +148,17 @@ public class PostService {
         return posts;
     }
 
-    public List<Post> getAllPostsByAuthors(Set<ApplicationUser> authors) {
-        return postRepository.findPostsByAuthors(authors);
+//    public Page<Post> getAllPostsByAuthors(Set<ApplicationUser> authors, LocalDateTime sessionStart, Integer page) {
+//        // get the next 100 posts starting on specified in the request
+//        Pageable pageable = PageRequest.of(page, 100, Sort.by("postedDate").descending());
+//
+//        return postRepository.findPostsByAuthors(authors, sessionStart, pageable);
+//    }
+
+    public Page<Post> getFeedPage(Integer userId, Date sessionStart, Integer page) {
+        Pageable pageable = PageRequest.of(page, 100, Sort.by("postedDate").descending());
+
+        return postRepository.findFeedPosts(userId, sessionStart, pageable);
     }
 
     public void deletePostById(int id) {
