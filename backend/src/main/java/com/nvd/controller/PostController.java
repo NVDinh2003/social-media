@@ -51,8 +51,13 @@ public class PostController {
         return postService.replyToPost(replyDTO);
     }
 
+    @PostMapping(value = "/reply/media", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Post createReplyWithMedia(@RequestPart("reply") String reply, @RequestPart("files") List<MultipartFile> files) {
+        return postService.createReplyWithMedia(reply, files);
+    }
+
     @PostMapping(value = "/media", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Post createMediaPost(@RequestPart("post") String post, @RequestPart("media") List<MultipartFile> files) {
+    public Post createMediaPost(@RequestPart("post") String post, @RequestPart("files") List<MultipartFile> files) {
         return postService.createMediaPost(post, files);
     }
 
@@ -73,5 +78,21 @@ public class PostController {
         postService.deletePostById(id);
         return ResponseEntity.ok("Post deleted successfully!");
     }
+
+    @PutMapping("/repost/{id}")
+    public Post repostPost(@PathVariable int id, @RequestHeader(value = "Authorization") String token) {
+        return postService.repostPost(id, token);
+    }
+
+    @PutMapping("/like/{id}")
+    public Post likePost(@PathVariable int id, @RequestHeader(value = "Authorization") String token) {
+        return postService.likePost(id, token);
+    }
+
+    @PutMapping("/bookmark/{id}")
+    public Post bookmarkPost(@PathVariable int id, @RequestHeader(value = "Authorization") String token) {
+        return postService.bookmarkPost(id, token);
+    }
+
 
 }

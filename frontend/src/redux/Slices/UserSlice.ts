@@ -43,7 +43,7 @@ const initialState: UserSliceState = {
 async function getFollowers(username: string) {
   try {
     const req = await axios.get(`${baseURL}/users/followers/${username}`);
-    console.log("follower", req.data);
+    // console.log("follower", req.data);
     return req.data;
   } catch (e) {
     console.log(e);
@@ -54,7 +54,7 @@ async function getFollowers(username: string) {
 async function getFollowing(username: string) {
   try {
     const req = await axios.get(`${baseURL}/users/following/${username}`);
-    console.log("following: ", req.data);
+    // console.log("following: ", req.data);
     return req.data;
   } catch (e) {
     console.log(e);

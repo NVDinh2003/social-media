@@ -93,6 +93,15 @@ export const Post: React.FC<PostProps> = ({ post }) => {
     dispatch(updateDisplayCreateReply());
   };
 
+  const convertCount = (count: number) => {
+    if (count >= 1000 && count < 10_000) return `${(count / 1000).toFixed(2)}K`;
+    else if (count >= 10_000 && count < 100_000)
+      return `${(count / 1000).toFixed(1)}K`;
+    else if (count >= 100_000 && count < 1_000_000)
+      return `${Math.floor(count / 1000)}K`;
+    return `${count}`;
+  };
+
   return (
     <div className="post">
       <div className="post-left">
@@ -172,6 +181,14 @@ export const Post: React.FC<PostProps> = ({ post }) => {
               <ReplyOutlineSVG height={20} width={20} color={"#aab8c2"} />
             </div>
             {/* Number of replies beside it */}
+            <p
+              className="post-action-bar-count"
+              style={{
+                color: colors.reply,
+              }}
+            >
+              {convertCount(post.replies.length)}
+            </p>
           </div>
 
           <div className="post-action-bar-group">
@@ -184,6 +201,14 @@ export const Post: React.FC<PostProps> = ({ post }) => {
               <RepostOutlineSVG height={20} width={20} color={colors.repost} />
             </div>
             {/* Number of repost beside it */}
+            <p
+              className="post-action-bar-count"
+              style={{
+                color: colors.repost,
+              }}
+            >
+              {convertCount(post.reposts.length)}
+            </p>
           </div>
 
           <div className="post-action-bar-group">
@@ -196,6 +221,14 @@ export const Post: React.FC<PostProps> = ({ post }) => {
               <LikeOutlineSVG height={20} width={20} color={colors.like} />
             </div>
             {/* Number of likes beside it */}
+            <p
+              className="post-action-bar-count"
+              style={{
+                color: colors.like,
+              }}
+            >
+              {convertCount(post.likes.length)}
+            </p>
           </div>
 
           <div className="post-action-bar-group">
@@ -208,6 +241,14 @@ export const Post: React.FC<PostProps> = ({ post }) => {
               <ViewsSVG height={20} width={20} color={colors.views} />
             </div>
             {/* Number of views beside it */}
+            <p
+              className="post-action-bar-count"
+              style={{
+                color: colors.views,
+              }}
+            >
+              {convertCount(post.views.length)}
+            </p>
           </div>
 
           <div className="post-action-bar-right">
@@ -220,6 +261,14 @@ export const Post: React.FC<PostProps> = ({ post }) => {
               <BookmarksSVG height={20} width={20} color={colors.bookmark} />
             </div>
             {/* Number of bookmarks beside it */}
+            <p
+              className="post-action-bar-count"
+              style={{
+                color: colors.bookmark,
+              }}
+            >
+              {convertCount(post.bookmarks.length)}
+            </p>
 
             <div
               className="post-action-bar-blue-wrapper"

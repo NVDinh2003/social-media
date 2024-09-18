@@ -1,6 +1,5 @@
 package com.nvd.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nvd.models.enums.Audience;
 import com.nvd.models.enums.ReplyRestriction;
 import jakarta.persistence.*;
@@ -59,7 +58,7 @@ public class Post implements Comparable<Post> {
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "reply_id")
     )
-    @JsonIgnore
+//    @JsonIgnore
     private Set<Post> replies;
 
     @ManyToMany(fetch = FetchType.LAZY)

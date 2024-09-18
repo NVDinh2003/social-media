@@ -107,12 +107,13 @@ export interface Post {
   content: string;
   postedDate?: Date;
   author: User;
-  replies?: Post[];
-  likes: number;
+  replies: Post[];
+  likes: User[];
   images: PostImage[];
   poll?: Poll;
-  reposts: number;
-  views: number;
+  reposts: User[];
+  views: User[];
+  bookmarks: User[];
   scheduled: boolean;
   scheduledDate?: Date;
   audience: "EVERYONE" | "CIRCLE";

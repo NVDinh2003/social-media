@@ -29,6 +29,8 @@ public class PostService {
     private final PostRepository postRepository;
     private final ImageService imageService;
     private final PollService pollService;
+    private final TokenService tokenService;
+    private final UserService userService;
 
     public Post createPost(CreatePostDTO dto) {
 
@@ -172,10 +174,89 @@ public class PostService {
         Post original = postRepository.findById(replyDTO.getOriginalPost()).orElseThrow(UnableToCreatePostException::new);
         Set<Post> originalPostReplies = original.getReplies();
         originalPostReplies.add(reply);
-        
+
         original.setReplies(originalPostReplies);
 
         postRepository.save(original);
         return postRepository.save(reply);
+    }
+
+    public Post createReplyWithMedia(String reply, List<MultipartFile> files) {
+        CreateReplyDTO dto = new CreateReplyDTO();
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            dto = mapper.readValue(reply, CreateReplyDTO.class);
+
+            CreatePostDTO postDTO = CreatePostDTO.builder()
+                    .content(dto.getReplyContent())
+                    .author(dto.getAuthor())
+                    .replies(new HashSet<>())
+                    .images(dto.getImages())
+                    .scheduled(dto.getScheduled())
+                    .scheduledDate(dto.getScheduledDate())
+                    .audience(Audience.EVERYONE)
+                    .replyRestriction(ReplyRestriction.EVERYONE)
+                    .poll(dto.getPoll())
+                    .build();
+
+            Post replyPost = createPost(postDTO);
+            replyPost.setReply(true);
+
+            Post original = postRepository.findById(dto.getOriginalPost()).orElseThrow(UnableToCreatePostException::new);
+            Set<Post> originalPostReplies = original.getReplies();
+            originalPostReplies.add(replyPost);
+            original.setReplies(originalPostReplies);
+            postRepository.save(original);
+
+            //upload the images that got passed
+            List<Image> postImages = new ArrayList<>();
+            for (int i = 0; i < files.size(); i++) {
+                Image postImage = imageService.uploadImage(files.get(i), "reply-post");
+                postImages.add(postImage);
+            }
+            replyPost.setImages(postImages);
+
+            return postRepository.save(replyPost);
+        } catch (Exception e) {
+            throw new UnableToCreatePostException();
+        }
+    }
+
+    public Post repostPost(Integer postId, String token) {
+        Post post = postRepository.findById(postId).orElseThrow(PostDoesNotExistException::new);
+        String username = tokenService.getUsernameFromToken(token);
+        ApplicationUser user = userService.getUserByUsername(username);
+
+        Set<ApplicationUser> reposts = post.getReposts();
+        reposts.add(user);
+        post.setReposts(reposts);
+
+
+        return postRepository.save(post);
+    }
+
+    public Post likePost(Integer postId, String token) {
+        Post post = postRepository.findById(postId).orElseThrow(PostDoesNotExistException::new);
+        String username = tokenService.getUsernameFromToken(token);
+        ApplicationUser user = userService.getUserByUsername(username);
+
+        Set<ApplicationUser> likes = post.getLikes();
+        likes.add(user);
+        post.setLikes(likes);
+
+        return postRepository.save(post);
+    }
+
+    public Post bookmarkPost(Integer postId, String token) {
+        Post post = postRepository.findById(postId).orElseThrow(PostDoesNotExistException::new);
+        String username = tokenService.getUsernameFromToken(token);
+        ApplicationUser user = userService.getUserByUsername(username);
+
+        Set<ApplicationUser> bookmarks = post.getBookmarks();
+        bookmarks.add(user);
+        post.setBookmarks(bookmarks);
+
+        return postRepository.save(post);
     }
 }
