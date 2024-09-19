@@ -120,6 +120,13 @@ export interface Post {
   replyRestriction: "EVERYONE" | "FOLLOW" | "CIRCLE" | "MENTION";
 }
 
+export interface FeedPost {
+  post: Post;
+  replyTo: Post;
+  repost: boolean;
+  repostUser: User;
+}
+
 export interface Reply {
   author: User;
   originalPost: Post;

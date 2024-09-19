@@ -48,6 +48,12 @@ interface CreateReplyBody {
   token: string;
 }
 
+// repost, like, bookmarks,..
+interface PostActionBody {
+  postId: number;
+  token: string;
+}
+
 interface CreatePostWithMediaBody extends createPostBody {
   imageFiles: File[];
 }
@@ -162,6 +168,68 @@ export const createPostWithMedia = createAsyncThunk(
       return res.data;
     } catch (e) {
       thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+export const repostPost = createAsyncThunk(
+  "post/repost",
+  async (body: PostActionBody, thunkAPI) => {
+    try {
+      let req = await axios.put(
+        `${process.env.REACT_APP_API_URL}/posts/repost/${body.postId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${body.token}`,
+          },
+        }
+      );
+
+      return req.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+export const likePost = createAsyncThunk(
+  "post/like",
+  async (body: PostActionBody, thunkAPI) => {
+    try {
+      let req = await axios.put(
+        `${process.env.REACT_APP_API_URL}/posts/like/${body.postId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${body.token}`,
+          },
+        }
+      );
+
+      return req.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+export const bookmarkPost = createAsyncThunk(
+  "post/bookmark",
+  async (body: PostActionBody, thunkAPI) => {
+    try {
+      let req = await axios.put(
+        `${process.env.REACT_APP_API_URL}/posts/bookmark/${body.postId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${body.token}`,
+          },
+        }
+      );
+      return req.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
     }
   }
 );
@@ -496,6 +564,21 @@ export const PostSlice = createSlice({
 
       return state;
     });
+
+    // action with post (repost, like, bookmark,...)
+    builder
+      .addCase(repostPost.fulfilled, (state, action) => {
+        //TODO: setup so that it modifies the current feed in place
+        return state;
+      })
+      .addCase(likePost.fulfilled, (state, action) => {
+        //TODO: setup so that it modifies the current feed in place
+        return state;
+      })
+      .addCase(bookmarkPost.fulfilled, (state, action) => {
+        //TODO: setup so that it modifies the current feed in place
+        return state;
+      });
   },
 });
 

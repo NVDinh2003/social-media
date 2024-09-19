@@ -49,8 +49,12 @@ public class Post implements Comparable<Post> {
 
     //TODO: Figure out video upload
 
-    @Column(name = "is_reply", columnDefinition = "boolean default false")
+    @Column(name = "is_reply")
     private Boolean reply;
+
+    @Column(name = "reply_to")
+    private Integer replyTo;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -108,6 +112,12 @@ public class Post implements Comparable<Post> {
         this.reposts = new HashSet<>();
         this.bookmarks = new HashSet<>();
         this.views = new HashSet<>();
+    }
+
+    public Boolean getReply() {
+        if (reply == null)
+            return false;
+        return reply;
     }
 
     @Override   // so sánh 2 obj Post dựa vào postedDate,

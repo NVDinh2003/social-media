@@ -47,10 +47,9 @@ public class ApplicationUser {
     @JoinColumn(name = "banner_picture", referencedColumnName = "image_id")
     private Image bannerPicture;
 
-    @Column(columnDefinition = "boolean default false")
+    @Column(name = "verified_account")
     private Boolean verifiedAccount;
     private Boolean enabled;
-    @Column(columnDefinition = "boolean default false")
     private Boolean privateAccount;
     @JsonIgnore
     private Long verification;
@@ -91,5 +90,26 @@ public class ApplicationUser {
         this.following = new HashSet<>();
         this.followers = new HashSet<>();
         this.enabled = false;
+    }
+
+    public Boolean getVerifiedAccount() {
+        if (verifiedAccount == null) {
+            return false;
+        }
+        return verifiedAccount;
+    }
+
+    public Boolean getEnabled() {
+        if (enabled == null) {
+            return false;
+        }
+        return enabled;
+    }
+
+    public Boolean getPrivateAccount() {
+        if (privateAccount == null) {
+            return false;
+        }
+        return privateAccount;
     }
 }

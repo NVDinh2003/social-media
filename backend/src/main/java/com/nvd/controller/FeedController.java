@@ -1,7 +1,7 @@
 package com.nvd.controller;
 
 import com.nvd.dto.FeedRequestDTO;
-import com.nvd.models.Post;
+import com.nvd.dto.response.FeedPostDTO;
 import com.nvd.service.FeedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +19,9 @@ public class FeedController {
     private final FeedService feedService;
 
     @PostMapping()
-    public List<Post> getPostsForFeed(@RequestBody FeedRequestDTO feedRequestDTO) {
-        List<Post> feedPosts = feedService.getFeedForUser
+    public List<FeedPostDTO> getPostsForFeed(@RequestBody FeedRequestDTO feedRequestDTO) {
+
+        List<FeedPostDTO> feedPosts = feedService.getFeedForUser
                 (feedRequestDTO.getUserId(),
                         feedRequestDTO.getSessionStart(),
                         feedRequestDTO.getPage());

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./Feed.css";
 import { FeedTopBar } from "../FeedTopBar/FeedTopBar";
@@ -39,6 +39,11 @@ export const Feed: React.FC = () => {
     (state: RootState) => state.modal.displayCreateReply
   );
 
+  const [currentPageNumber, setCurrentPageNumber] = useState<number>(0);
+  const [sessionStart, setSesstionStart] = useState<Date>(() => {
+    return new Date();
+  });
+
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
@@ -47,6 +52,8 @@ export const Feed: React.FC = () => {
         loadFeedPage({
           token: userState.token,
           userId: userState.loggedIn.userId,
+          page: currentPageNumber,
+          sessionStart,
         })
       );
     }
@@ -66,7 +73,7 @@ export const Feed: React.FC = () => {
       {!feedState.loading && (
         <div className="feed-posts">
           {feedState.posts.map((post) => (
-            <Post post={post} />
+            <Post feedPost={post} />
           ))}
         </div>
       )}

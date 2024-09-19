@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Post as IPost } from "../../../../utils/GlobalInterface";
+import { FeedPost, Post as IPost } from "../../../../utils/GlobalInterface";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CircleIcon from "@mui/icons-material/Circle";
@@ -14,14 +14,20 @@ import BookmarksSVG from "../../../../components/SVGs/BookmarksSVG";
 
 import "./Post.css";
 import { MONTHS } from "../../../../utils/DateUtils";
-import { AppDispatch } from "../../../../redux/Store";
-import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../../../redux/Store";
+import { useDispatch, useSelector } from "react-redux";
 import { updateDisplayCreateReply } from "../../../../redux/Slices/ModalSlice";
 import { setCurrentPost } from "../../../../redux/Slices/FeedSlice";
 import { convertPostedDateToString } from "../../utils/PostUtils";
+import { Reply } from "../Reply/Reply";
+import {
+  bookmarkPost,
+  likePost,
+  repostPost,
+} from "../../../../redux/Slices/PostSlice";
 
 interface PostProps {
-  post: IPost;
+  feedPost: FeedPost;
 }
 
 interface HoverColor {
@@ -33,10 +39,11 @@ interface HoverColor {
   share: string;
 }
 
-export const Post: React.FC<PostProps> = ({ post }) => {
+export const Post: React.FC<PostProps> = ({ feedPost }) => {
   //
   const defaultPfp = process.env.REACT_APP_PFP;
-  const { author, content, postedDate } = post;
+  const { post, replyTo, repost, repostUser } = feedPost;
+  const token = useSelector((state: RootState) => state.user.token);
   const dispatch: AppDispatch = useDispatch();
 
   const [colors, setColors] = useState<HoverColor>({
@@ -102,24 +109,53 @@ export const Post: React.FC<PostProps> = ({ post }) => {
     return `${count}`;
   };
 
+  const createRepost = () => {
+    dispatch(
+      repostPost({
+        postId: post.postId,
+        token,
+      })
+    );
+  };
+
+  const createLike = () => {
+    dispatch(
+      likePost({
+        postId: post.postId,
+        token,
+      })
+    );
+  };
+
+  const createBookmark = () => {
+    dispatch(
+      bookmarkPost({
+        postId: post.postId,
+        token,
+      })
+    );
+  };
+
   return (
     <div className="post">
       <div className="post-left">
         <img
           className="post-pfp"
           src={
-            author.profilePicture ? author.profilePicture.imageURL : defaultPfp
+            post.author.profilePicture
+              ? post.author.profilePicture.imageURL
+              : defaultPfp
           }
-          alt={`${author.nickname}'s pfp`}
+          alt={`${post.author.nickname}'s pfp`}
         />
       </div>
 
       <div className="post-right">
         <div className="post-right-top">
           <div className="post-user-info">
-            <p className="post-nickname">{author.nickname}</p>
+            <p className="post-nickname">{post.author.nickname}</p>
             {/* Add in verified once i add verified to the user on the backend */}
-            {author.verifiedAccount && (
+            {post.author.verifiedAccount && (
               <VerifiedIcon
                 sx={{
                   color: "#1da1f2",
@@ -130,15 +166,15 @@ export const Post: React.FC<PostProps> = ({ post }) => {
             )}
 
             {/* Add in ord image once i add orgs to the user on the backend */}
-            {author.organization && (
+            {post.author.organization && (
               <img
                 className="post-organization"
-                src={author.organization.imageURL}
-                alt={`${author.username}'s organization`}
+                src={post.author.organization.imageURL}
+                alt={`${post.author.username}'s organization`}
               />
             )}
 
-            <p className="post-username">@{author.username}</p>
+            <p className="post-username">@{post.author.username}</p>
             {/* <div className="post-dot-section">
               <p className="post-dot">.</p>
             </div> */}
@@ -150,9 +186,9 @@ export const Post: React.FC<PostProps> = ({ post }) => {
               }}
             />
             {/* Update convert posted date to string to say hours up to 24, days up to 7, then mon day if this year, mon day, year after */}
-            {postedDate && (
+            {post.postedDate && (
               <p className="post-posted-at">
-                {convertPostedDateToString(postedDate)}
+                {convertPostedDateToString(post.postedDate)}
               </p>
             )}
           </div>
@@ -167,7 +203,9 @@ export const Post: React.FC<PostProps> = ({ post }) => {
           </div>
         </div>
 
-        <div className="post-content">{content}</div>
+        <div className="post-content">{post.content}</div>
+
+        {replyTo && <Reply reply={replyTo}></Reply>}
 
         <div className="post-action-bar">
           <div className="post-action-bar-group">
@@ -197,6 +235,7 @@ export const Post: React.FC<PostProps> = ({ post }) => {
               id="repost"
               onMouseOver={updateHoverColor}
               onMouseLeave={resetColors}
+              onClick={createRepost}
             >
               <RepostOutlineSVG height={20} width={20} color={colors.repost} />
             </div>
@@ -217,6 +256,7 @@ export const Post: React.FC<PostProps> = ({ post }) => {
               id="like"
               onMouseOver={updateHoverColor}
               onMouseLeave={resetColors}
+              onClick={createLike}
             >
               <LikeOutlineSVG height={20} width={20} color={colors.like} />
             </div>
@@ -252,24 +292,26 @@ export const Post: React.FC<PostProps> = ({ post }) => {
           </div>
 
           <div className="post-action-bar-right">
-            <div
-              className="post-action-bar-blue-wrapper"
-              id="bookmark"
-              onMouseOver={updateHoverColor}
-              onMouseLeave={resetColors}
-            >
-              <BookmarksSVG height={20} width={20} color={colors.bookmark} />
+            <div className="post-action-bar-group">
+              <div
+                className="post-action-bar-blue-wrapper"
+                id="bookmark"
+                onMouseOver={updateHoverColor}
+                onMouseLeave={resetColors}
+                onClick={createBookmark}
+              >
+                <BookmarksSVG height={20} width={20} color={colors.bookmark} />
+              </div>
+              {/* Number of bookmarks beside it */}
+              <p
+                className="post-action-bar-count"
+                style={{
+                  color: colors.bookmark,
+                }}
+              >
+                {convertCount(post.bookmarks.length)}
+              </p>
             </div>
-            {/* Number of bookmarks beside it */}
-            <p
-              className="post-action-bar-count"
-              style={{
-                color: colors.bookmark,
-              }}
-            >
-              {convertCount(post.bookmarks.length)}
-            </p>
-
             <div
               className="post-action-bar-blue-wrapper"
               id="share"

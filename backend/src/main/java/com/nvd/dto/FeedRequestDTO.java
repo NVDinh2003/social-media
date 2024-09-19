@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class FeedRequestDTO {
     private Integer userId;
-    private Date sessionStart;
+    private LocalDateTime sessionStart;
     private Integer page;
 }

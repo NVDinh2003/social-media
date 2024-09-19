@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { Post } from "../../utils/GlobalInterface";
+import { FeedPost, Post } from "../../utils/GlobalInterface";
+import dayjs from "dayjs";
 
 const baseUrl = process.env.REACT_APP_API_URL;
 
 interface FeedSliceState {
-  posts: Post[];
+  posts: FeedPost[];
   currentPost: Post | undefined;
   loading: boolean;
   error: boolean;
@@ -14,6 +15,8 @@ interface FeedSliceState {
 interface LoadFeedPagePayload {
   token: string;
   userId: number;
+  sessionStart: Date;
+  page: number;
 }
 
 const initialState: FeedSliceState = {
@@ -28,11 +31,26 @@ export const loadFeedPage = createAsyncThunk(
   async (payload: LoadFeedPagePayload, thunkAPI) => {
     try {
       //
-      let req = await axios.get(`${baseUrl}/feeds/${payload.userId}`, {
-        headers: {
-          Authorization: `Bearer ${payload.token}`,
+
+      // Chuyển đổi `sessionStart` thành chuỗi ISO không bao gồm múi giờ
+      const formattedSessionStart = dayjs(payload.sessionStart).format(
+        "YYYY-MM-DDTHH:mm:ss"
+      );
+      console.log("sessions start: " + formattedSessionStart);
+
+      let req = await axios.post(
+        `${baseUrl}/feeds`,
+        {
+          userId: payload.userId,
+          page: payload.page,
+          sessionStart: formattedSessionStart,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${payload.token}`,
+          },
+        }
+      );
 
       let posts = req.data;
       console.log(posts);

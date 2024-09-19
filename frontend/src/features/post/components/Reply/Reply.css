@@ -1,0 +1,11 @@
+.reply {
+  width: 100%;
+  height: fit-content;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0;
+  margin: 0;
+}
