@@ -6,6 +6,7 @@ import PeopleYouFollowSVG from "../../../components/SVGs/PeopleYouFollowSVG";
 import { PostSliceState } from "../../../redux/Slices/PostSlice";
 import { FeedPostCreatorImage } from "../components/FeedPostCreatorImages/FeedPostCreatorImage/FeedPostCreatorImage";
 import TagPeopleSVG from "../../../components/SVGs/TagPeopleSVG";
+import { PostImage } from "../../../utils/GlobalInterface";
 
 export function getReplyDropDownButton(
   state: PostSliceState,
@@ -105,6 +106,57 @@ export function createImageContainer(images: File[]): JSX.Element {
         image={window.URL.createObjectURL(images[0])}
         name={images[0].name}
         type={images[0].type}
+      />
+    </div>
+  );
+}
+
+export function createImagePostContainer(images: PostImage[]): JSX.Element {
+  if (images.length % 2 === 0) {
+    // console.log(images.length);
+    return (
+      <div className="feed-post-creator-images-container container-even">
+        {images.map((image) => {
+          return (
+            <FeedPostCreatorImage
+              image={image.imageURL}
+              name={image.imageName}
+              type={image.imageType}
+              key={image.imageId}
+            />
+          );
+        })}
+      </div>
+    );
+  }
+
+  if (images.length === 3) {
+    let reversed: PostImage[] = structuredClone(images);
+
+    reversed.reverse();
+
+    return (
+      <div className="feed-post-creator-images-container container-odd">
+        {reversed.map((image) => {
+          return (
+            <FeedPostCreatorImage
+              image={image.imageURL}
+              name={image.imageName}
+              type={image.imageType}
+              key={image.imageId}
+            />
+          );
+        })}
+      </div>
+    );
+  }
+
+  return (
+    <div className="feed-post-creator-images-container container-odd">
+      <FeedPostCreatorImage
+        image={images[0].imageURL}
+        name={images[0].imageName}
+        type={images[0].imageType}
       />
     </div>
   );

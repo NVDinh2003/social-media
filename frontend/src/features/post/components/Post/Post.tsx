@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { FeedPost, Post as IPost } from "../../../../utils/GlobalInterface";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -18,13 +18,20 @@ import { AppDispatch, RootState } from "../../../../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import { updateDisplayCreateReply } from "../../../../redux/Slices/ModalSlice";
 import { setCurrentPost } from "../../../../redux/Slices/FeedSlice";
-import { convertPostedDateToString } from "../../utils/PostUtils";
+import {
+  convertPostedDateToString,
+  formatTextContent,
+} from "../../utils/PostUtils";
 import { Reply } from "../Reply/Reply";
 import {
   bookmarkPost,
   likePost,
   repostPost,
 } from "../../../../redux/Slices/PostSlice";
+import {
+  createImageContainer,
+  createImagePostContainer,
+} from "../../../feed/utils/FeedUtils";
 
 interface PostProps {
   feedPost: FeedPost;
@@ -45,6 +52,11 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
   const { post, replyTo, repost, repostUser } = feedPost;
   const token = useSelector((state: RootState) => state.user.token);
   const dispatch: AppDispatch = useDispatch();
+
+  const postImageContainer = useMemo(
+    () => createImagePostContainer(feedPost.post.images),
+    [feedPost.post.postId]
+  );
 
   const [colors, setColors] = useState<HoverColor>({
     reply: "#aab8c2",
@@ -203,7 +215,22 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
           </div>
         </div>
 
-        <div className="post-content">{post.content}</div>
+        {/* <div className="post-content">
+          {" "}
+          {post.content.split("\n").map((line, index) => (
+            <span key={index}>
+              {line}
+              <br />
+            </span>
+          ))}
+        </div> */}
+
+        <div
+          className="post-content"
+          dangerouslySetInnerHTML={formatTextContent(post.content)}
+        />
+
+        {feedPost.post.images.length > 0 && postImageContainer}
 
         {replyTo && <Reply reply={replyTo}></Reply>}
 

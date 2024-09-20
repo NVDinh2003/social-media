@@ -51,17 +51,17 @@ export const FeedPostCreatorImages: React.FC = () => {
           <div className="feed-post-creator-images-container container-odd">
             <FeedPostCreatorImage
               image={
-                postState.currentPost?.images[0].imageUrl
-                  ? postState.currentPost.images[0].imageUrl
+                postState.currentPost?.images[0].imageURL
+                  ? postState.currentPost.images[0].imageURL
                   : postState.currentReply?.images
-                  ? postState.currentReply.images[0].imageUrl
+                  ? postState.currentReply.images[0].imageURL
                   : ""
               }
               name={
-                postState.currentPost?.images[0].imageUrl
-                  ? postState.currentPost.images[0].imageUrl
+                postState.currentPost?.images[0].imageURL
+                  ? postState.currentPost.images[0].imageURL
                   : postState.currentReply?.images
-                  ? postState.currentReply.images[0].imageUrl
+                  ? postState.currentReply.images[0].imageURL
                   : ""
               }
               type={"gif"}

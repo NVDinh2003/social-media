@@ -24,3 +24,7 @@ export const convertPostedDateToString = (postedDate: Date): string => {
     3
   )} ${d.getDate()}, ${d.getFullYear()}`;
 };
+
+export const formatTextContent = (text: any) => {
+  return { __html: text.replace(/\n/g, "<br />") };
+};

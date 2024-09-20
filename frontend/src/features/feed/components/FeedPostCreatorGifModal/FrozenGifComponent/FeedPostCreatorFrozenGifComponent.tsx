@@ -63,7 +63,7 @@ export const FeedPostCreatorFrozenGif: React.FC<FrozenGifProps> = ({
         imageId: 0,
         imageName: `${text}-gif`,
         imageType: "gif",
-        imageUrl: image,
+        imageURL: image,
       };
 
       let imgs = [postImage];

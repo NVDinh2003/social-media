@@ -48,7 +48,7 @@ export const FeedPostCreatorGifModalDisplay: React.FC<
       imageId: 0,
       imageName: `${state.searchTerm}-gif`,
       imageType: "gif",
-      imageUrl: e.currentTarget.id,
+      imageURL: e.currentTarget.id,
     };
 
     let imgs = [postImage];

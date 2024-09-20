@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import "./Reply.css";
 import { Post } from "../../../../utils/GlobalInterface";
@@ -6,7 +6,11 @@ import CircleIcon from "@mui/icons-material/Circle";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import VerifiedIcon from "@mui/icons-material/Verified";
 
-import { convertPostedDateToString } from "../../utils/PostUtils";
+import {
+  convertPostedDateToString,
+  formatTextContent,
+} from "../../utils/PostUtils";
+import { createImagePostContainer } from "../../../feed/utils/FeedUtils";
 
 interface ReplyProps {
   reply: Post;
@@ -15,12 +19,26 @@ interface ReplyProps {
 export const Reply: React.FC<ReplyProps> = ({ reply }) => {
   //
   const defaultPfp = process.env.REACT_APP_PFP;
+  const overflowRef = useRef<HTMLDivElement>(null);
+  const [overflowing, setOverflowing] = useState<boolean>(false);
+
+  const postImageContainer = useMemo(
+    () => createImagePostContainer(reply.images),
+    [reply.postId]
+  );
+
+  useEffect(() => {
+    if (reply.content && overflowRef && overflowRef.current) {
+      if (overflowRef.current.clientHeight < overflowRef.current.scrollHeight)
+        setOverflowing(true);
+    }
+  }, [reply.content]);
 
   return (
     <div className="reply">
-      <div className="post-left">
+      <div className="reply-left">
         <img
-          className="post-pfp"
+          className="reply-pfp"
           src={
             reply.author.profilePicture
               ? reply.author.profilePicture.imageURL
@@ -30,7 +48,7 @@ export const Reply: React.FC<ReplyProps> = ({ reply }) => {
         />
       </div>
 
-      <div className="post-right">
+      <div className="reply-right">
         <div className="post-right-top">
           <div className="post-user-info">
             <p className="post-nickname">{reply.author.nickname}</p>
@@ -74,9 +92,16 @@ export const Reply: React.FC<ReplyProps> = ({ reply }) => {
           </div>
         </div>
 
-        <div className="post-content">{reply.content}</div>
+        {/* <div className="reply-content">{reply.content}</div> */}
+        <div
+          className="reply-content"
+          ref={overflowRef}
+          dangerouslySetInnerHTML={formatTextContent(reply.content)}
+        />
 
-        {<p className="reply-show-more">Show more</p>}
+        {reply.images.length > 0 && postImageContainer}
+
+        {overflowing && <p className="reply-show-more">Show more</p>}
       </div>
     </div>
   );

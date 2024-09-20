@@ -48,6 +48,17 @@ interface CreateReplyBody {
   token: string;
 }
 
+interface CreatereplyWithMediaBody {
+  author: User;
+  originalPost: number;
+  replyContent: string;
+  images: File[];
+  scheduled: boolean;
+  scheduledDate: Date | undefined;
+  poll: Poll | undefined;
+  token: string;
+}
+
 // repost, like, bookmarks,..
 interface PostActionBody {
   postId: number;
@@ -151,7 +162,7 @@ export const createPostWithMedia = createAsyncThunk(
       };
 
       data.append("post", JSON.stringify(post));
-      images.forEach((image) => data.append("media", image));
+      images.forEach((image) => data.append("files", image));
 
       let config = {
         method: "post",
@@ -168,6 +179,47 @@ export const createPostWithMedia = createAsyncThunk(
       return res.data;
     } catch (e) {
       thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+export const createReplyWithMedia = createAsyncThunk(
+  "post/mediareply",
+  async (body: CreatereplyWithMediaBody, thunkAPI) => {
+    const images = body.images;
+
+    let data = new FormData();
+
+    let reply = {
+      author: body.author,
+      originalPost: body.originalPost,
+      replyContent: body.replyContent,
+      images: [],
+      scheduled: body.scheduled,
+      scheduledDate: body.scheduledDate,
+      poll: body.poll,
+    };
+
+    data.append("reply", JSON.stringify(reply));
+
+    images.forEach((image) => data.append("files", image));
+
+    let config = {
+      method: "post",
+      url: `${process.env.REACT_APP_API_URL}/posts/reply/media`,
+      headers: {
+        Authorization: `Bearer ${body.token}`,
+        "Content-Type": "multipart/form-data",
+      },
+      data,
+    };
+
+    try {
+      let req = await axios(config);
+
+      return req.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
     }
   }
 );
@@ -553,17 +605,28 @@ export const PostSlice = createSlice({
       });
 
     // create reply in post
-    builder.addCase(createReply.fulfilled, (state, action) => {
-      state = {
-        ...state,
-        currentReply: undefined,
-        loading: false,
-        error: false,
-        currentReplyImages: [],
-      };
+    builder
+      .addCase(createReply.fulfilled, (state, action) => {
+        state = {
+          ...state,
+          currentReply: undefined,
+          loading: false,
+          error: false,
+          currentReplyImages: [],
+        };
 
-      return state;
-    });
+        return state;
+      })
+      .addCase(createReplyWithMedia.fulfilled, (state, action) => {
+        state = {
+          ...state,
+          currentReply: undefined,
+          loading: false,
+          error: false,
+          currentReplyImages: [],
+        };
+        return state;
+      });
 
     // action with post (repost, like, bookmark,...)
     builder

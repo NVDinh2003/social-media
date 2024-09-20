@@ -5,7 +5,10 @@ import { CreatePostButtonCluster } from "../../CreatePostButtonCluster/CreatePos
 import { FeedPostCreatorProgress } from "../../../../feed/components/FeedPostCreatorProgress/FeedPostCreatorProgress";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../redux/Store";
-import { createReply } from "../../../../../redux/Slices/PostSlice";
+import {
+  createReply,
+  createReplyWithMedia,
+} from "../../../../../redux/Slices/PostSlice";
 import { updateDisplayCreateReply } from "../../../../../redux/Slices/ModalSlice";
 
 export const CreateReplyBottom = () => {
@@ -42,7 +45,7 @@ export const CreateReplyBottom = () => {
 
   const postReply = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (postState.currentReply) {
+    if (postState.currentReply && postState.currentReplyImages.length === 0) {
       dispatch(
         createReply({
           reply: postState.currentReply,
@@ -50,6 +53,23 @@ export const CreateReplyBottom = () => {
         })
       );
 
+      dispatch(updateDisplayCreateReply());
+    } else if (
+      postState.currentReply &&
+      postState.currentReplyImages.length > 0
+    ) {
+      dispatch(
+        createReplyWithMedia({
+          author: postState.currentReply?.author,
+          originalPost: postState.currentReply.originalPost.postId,
+          replyContent: postState.currentReply.replyContent,
+          images: postState.currentReplyImages,
+          scheduled: postState.currentReply.scheduled,
+          scheduledDate: postState.currentReply.scheduledDate,
+          poll: postState.currentReply.poll,
+          token,
+        })
+      );
       dispatch(updateDisplayCreateReply());
     }
   };
