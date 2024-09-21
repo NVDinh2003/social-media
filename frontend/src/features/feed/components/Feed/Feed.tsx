@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "./Feed.css";
 import { FeedTopBar } from "../FeedTopBar/FeedTopBar";
@@ -46,6 +46,26 @@ export const Feed: React.FC = () => {
 
   const dispatch: AppDispatch = useDispatch();
 
+  const hiddenDiv = useRef<HTMLDivElement>(null);
+
+  const fetchNextPosts = (entries: any) => {
+    entries.forEach((entry: any) => {
+      if (entry.isIntersecting && userState.loggedIn && userState.token) {
+        // console.log("get the next set of gifs", state.next);
+        dispatch(
+          loadFeedPage({
+            token: userState.token,
+            userId: userState.loggedIn.userId,
+            page: currentPageNumber + 1,
+            sessionStart,
+          })
+        );
+        setCurrentPageNumber(currentPageNumber + 1);
+        console.log("Set current count to: ", currentPageNumber + 1);
+      }
+    });
+  };
+
   useEffect(() => {
     if (userState.loggedIn && userState.token) {
       dispatch(
@@ -56,6 +76,17 @@ export const Feed: React.FC = () => {
           sessionStart,
         })
       );
+    }
+
+    if (hiddenDiv && hiddenDiv.current) {
+      const observer = new IntersectionObserver(fetchNextPosts, {
+        root: null,
+        threshold: 1,
+      });
+
+      const target = hiddenDiv.current;
+
+      observer.observe(target);
     }
   }, [userState.token, userState.loggedIn]);
 
@@ -70,13 +101,19 @@ export const Feed: React.FC = () => {
       {displayCreateReplyModal && <CreateReply />}
 
       <FeedPostCreator />
-      {!feedState.loading && (
+      {feedState.posts.length > 0 && (
         <div className="feed-posts">
           {feedState.posts.map((post) => (
             <Post feedPost={post} />
           ))}
         </div>
       )}
+
+      <div
+        id="autoload"
+        ref={hiddenDiv}
+        hidden={feedState.posts.length === 0}
+      ></div>
     </div>
   );
 };

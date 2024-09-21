@@ -71,6 +71,7 @@ export function createImageContainer(images: File[]): JSX.Element {
               name={image.name}
               type={image.type}
               key={url}
+              displayCloseIcon={true}
             />
           );
         })}
@@ -93,6 +94,7 @@ export function createImageContainer(images: File[]): JSX.Element {
               name={image.name}
               type={image.type}
               key={url}
+              displayCloseIcon={true}
             />
           );
         })}
@@ -106,6 +108,7 @@ export function createImageContainer(images: File[]): JSX.Element {
         image={window.URL.createObjectURL(images[0])}
         name={images[0].name}
         type={images[0].type}
+        displayCloseIcon={true}
       />
     </div>
   );
@@ -123,6 +126,7 @@ export function createImagePostContainer(images: PostImage[]): JSX.Element {
               name={image.imageName}
               type={image.imageType}
               key={image.imageId}
+              displayCloseIcon={false}
             />
           );
         })}
@@ -144,6 +148,7 @@ export function createImagePostContainer(images: PostImage[]): JSX.Element {
               name={image.imageName}
               type={image.imageType}
               key={image.imageId}
+              displayCloseIcon={false}
             />
           );
         })}
@@ -157,6 +162,7 @@ export function createImagePostContainer(images: PostImage[]): JSX.Element {
         image={images[0].imageURL}
         name={images[0].imageName}
         type={images[0].imageType}
+        displayCloseIcon={false}
       />
     </div>
   );

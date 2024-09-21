@@ -59,6 +59,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "    WHERE p.posted_date <= :session_start \n" +
             "    ORDER BY p.posted_date DESC";
 
-    @Query(nativeQuery = true, value = FEED_QUERY)
+    @Query(nativeQuery = true, value = FEED_QUERY,
+            countQuery = "SELECT COUNT(*) FROM (" + FEED_QUERY + ") AS feed_count"
+    )
     Page<Post> findFeedPosts(@Param("id") Integer id, @Param("session_start") LocalDateTime sessionDate, Pageable pageable);
 }

@@ -53,7 +53,7 @@ export const loadFeedPage = createAsyncThunk(
       );
 
       let posts = req.data;
-      console.log(posts);
+      console.log("posts: ", posts);
 
       return posts;
       //
@@ -90,7 +90,7 @@ export const FeedSlice = createSlice({
       .addCase(loadFeedPage.fulfilled, (state, action) => {
         state = {
           ...state,
-          posts: action.payload,
+          posts: [...state.posts, ...action.payload],
           loading: false,
         };
 

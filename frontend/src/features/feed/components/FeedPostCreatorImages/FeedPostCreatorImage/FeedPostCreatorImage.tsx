@@ -14,12 +14,14 @@ interface FeedPostCreatorImageProps {
   image: string;
   name: string;
   type: string;
+  displayCloseIcon: boolean;
 }
 
 export const FeedPostCreatorImage: React.FC<FeedPostCreatorImageProps> = ({
   image,
   name,
   type,
+  displayCloseIcon,
 }) => {
   //
   const state = useSelector((state: RootState) => state.post);
@@ -58,14 +60,16 @@ export const FeedPostCreatorImage: React.FC<FeedPostCreatorImageProps> = ({
       style={{ backgroundImage: `url(${image})` }}
       onClick={editImage}
     >
-      <div className="feed-post-creator-image-clear" onClick={removeImage}>
-        <Close
-          sx={{
-            fontSize: "18px",
-            color: "white",
-          }}
-        />
-      </div>
+      {displayCloseIcon && (
+        <div className="feed-post-creator-image-clear" onClick={removeImage}>
+          <Close
+            sx={{
+              fontSize: "18px",
+              color: "white",
+            }}
+          />
+        </div>
+      )}
 
       {type === "image/gif" || "gif" ? (
         <></>

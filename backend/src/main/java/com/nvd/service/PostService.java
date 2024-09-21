@@ -159,7 +159,7 @@ public class PostService {
 //    }
 
     public Page<Post> getFeedPage(Integer userId, LocalDateTime sessionStart, Integer page) {
-        Pageable pageable = PageRequest.of(page, 100);
+        Pageable pageable = PageRequest.of(page, 10);
 
         return postRepository.findFeedPosts(userId, sessionStart, pageable);
     }

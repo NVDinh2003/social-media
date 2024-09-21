@@ -32,6 +32,7 @@ import {
   createImageContainer,
   createImagePostContainer,
 } from "../../../feed/utils/FeedUtils";
+import { useNavigate } from "react-router-dom";
 
 interface PostProps {
   feedPost: FeedPost;
@@ -52,6 +53,7 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
   const { post, replyTo, repost, repostUser } = feedPost;
   const token = useSelector((state: RootState) => state.user.token);
   const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
 
   const postImageContainer = useMemo(
     () => createImagePostContainer(feedPost.post.images),
@@ -150,72 +152,91 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
 
   return (
     <div className="post">
-      <div className="post-left">
-        <img
-          className="post-pfp"
-          src={
-            post.author.profilePicture
-              ? post.author.profilePicture.imageURL
-              : defaultPfp
-          }
-          alt={`${post.author.nickname}'s pfp`}
-        />
-      </div>
+      {feedPost.repost && (
+        <p
+          className="post-repost-info"
+          onMouseOver={() => {
+            /* popup a modal with the user information on mouse over */
+          }}
+        >
+          <RepostOutlineSVG height={18} width={18} color={"#657786"} />
+          <span
+            className="post-repost-user"
+            onClick={() => navigate(`/${feedPost.repostUser.username}`)}
+          >
+            {feedPost.repostUser.nickname ?? feedPost.repostUser.username}{" "}
+            reposted
+          </span>
+        </p>
+      )}
 
-      <div className="post-right">
-        <div className="post-right-top">
-          <div className="post-user-info">
-            <p className="post-nickname">{post.author.nickname}</p>
-            {/* Add in verified once i add verified to the user on the backend */}
-            {post.author.verifiedAccount && (
-              <VerifiedIcon
-                sx={{
-                  color: "#1da1f2",
-                  width: "20px",
-                  height: "20px",
-                }}
-              />
-            )}
-
-            {/* Add in ord image once i add orgs to the user on the backend */}
-            {post.author.organization && (
-              <img
-                className="post-organization"
-                src={post.author.organization.imageURL}
-                alt={`${post.author.username}'s organization`}
-              />
-            )}
-
-            <p className="post-username">@{post.author.username}</p>
-            {/* <div className="post-dot-section">
-              <p className="post-dot">.</p>
-            </div> */}
-            <CircleIcon
-              sx={{
-                height: "4px",
-                width: "4px",
-                color: "#657786",
-              }}
-            />
-            {/* Update convert posted date to string to say hours up to 24, days up to 7, then mon day if this year, mon day, year after */}
-            {post.postedDate && (
-              <p className="post-posted-at">
-                {convertPostedDateToString(post.postedDate)}
-              </p>
-            )}
-          </div>
-
-          <div className="post-more">
-            <MoreHorizIcon
-              sx={{
-                height: "20px",
-                width: "20px",
-              }}
-            />
-          </div>
+      <div className="post-body-wrapper">
+        <div className="post-left">
+          <img
+            className="post-pfp"
+            src={
+              post.author.profilePicture
+                ? post.author.profilePicture.imageURL
+                : defaultPfp
+            }
+            alt={`${post.author.nickname}'s pfp`}
+          />
         </div>
 
-        {/* <div className="post-content">
+        <div className="post-right">
+          <div className="post-right-top">
+            <div className="post-user-info">
+              <p className="post-nickname">{post.author.nickname}</p>
+              {/* Add in verified once i add verified to the user on the backend */}
+              {post.author.verifiedAccount && (
+                <VerifiedIcon
+                  sx={{
+                    color: "#1da1f2",
+                    width: "20px",
+                    height: "20px",
+                  }}
+                />
+              )}
+
+              {/* Add in ord image once i add orgs to the user on the backend */}
+              {post.author.organization && (
+                <img
+                  className="post-organization"
+                  src={post.author.organization.imageURL}
+                  alt={`${post.author.username}'s organization`}
+                />
+              )}
+
+              <p className="post-username">@{post.author.username}</p>
+              {/* <div className="post-dot-section">
+              <p className="post-dot">.</p>
+            </div> */}
+              <CircleIcon
+                sx={{
+                  height: "4px",
+                  width: "4px",
+                  color: "#657786",
+                }}
+              />
+              {/* Update convert posted date to string to say hours up to 24, days up to 7, then mon day if this year, mon day, year after */}
+              {post.postedDate && (
+                <p className="post-posted-at">
+                  {convertPostedDateToString(post.postedDate)}
+                </p>
+              )}
+            </div>
+
+            <div className="post-more">
+              <MoreHorizIcon
+                sx={{
+                  height: "20px",
+                  width: "20px",
+                }}
+              />
+            </div>
+          </div>
+
+          {/* <div className="post-content">
           {" "}
           {post.content.split("\n").map((line, index) => (
             <span key={index}>
@@ -225,129 +246,138 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
           ))}
         </div> */}
 
-        <div
-          className="post-content"
-          dangerouslySetInnerHTML={formatTextContent(post.content)}
-        />
+          <div
+            className="post-content"
+            dangerouslySetInnerHTML={formatTextContent(post.content)}
+          />
 
-        {feedPost.post.images.length > 0 && postImageContainer}
+          {feedPost.post.images.length > 0 && postImageContainer}
 
-        {replyTo && <Reply reply={replyTo}></Reply>}
+          {replyTo && <Reply reply={replyTo}></Reply>}
 
-        <div className="post-action-bar">
-          <div className="post-action-bar-group">
-            <div
-              className="post-action-bar-blue-wrapper"
-              id="reply"
-              onMouseOver={updateHoverColor}
-              onMouseLeave={resetColors}
-              onClick={toggleReply}
-            >
-              <ReplyOutlineSVG height={20} width={20} color={"#aab8c2"} />
-            </div>
-            {/* Number of replies beside it */}
-            <p
-              className="post-action-bar-count"
-              style={{
-                color: colors.reply,
-              }}
-            >
-              {convertCount(post.replies.length)}
-            </p>
-          </div>
-
-          <div className="post-action-bar-group">
-            <div
-              className="post-action-bar-repost-wrapper"
-              id="repost"
-              onMouseOver={updateHoverColor}
-              onMouseLeave={resetColors}
-              onClick={createRepost}
-            >
-              <RepostOutlineSVG height={20} width={20} color={colors.repost} />
-            </div>
-            {/* Number of repost beside it */}
-            <p
-              className="post-action-bar-count"
-              style={{
-                color: colors.repost,
-              }}
-            >
-              {convertCount(post.reposts.length)}
-            </p>
-          </div>
-
-          <div className="post-action-bar-group">
-            <div
-              className="post-action-bar-like-wrapper"
-              id="like"
-              onMouseOver={updateHoverColor}
-              onMouseLeave={resetColors}
-              onClick={createLike}
-            >
-              <LikeOutlineSVG height={20} width={20} color={colors.like} />
-            </div>
-            {/* Number of likes beside it */}
-            <p
-              className="post-action-bar-count"
-              style={{
-                color: colors.like,
-              }}
-            >
-              {convertCount(post.likes.length)}
-            </p>
-          </div>
-
-          <div className="post-action-bar-group">
-            <div
-              className="post-action-bar-blue-wrapper"
-              id="views"
-              onMouseOver={updateHoverColor}
-              onMouseLeave={resetColors}
-            >
-              <ViewsSVG height={20} width={20} color={colors.views} />
-            </div>
-            {/* Number of views beside it */}
-            <p
-              className="post-action-bar-count"
-              style={{
-                color: colors.views,
-              }}
-            >
-              {convertCount(post.views.length)}
-            </p>
-          </div>
-
-          <div className="post-action-bar-right">
+          <div className="post-action-bar">
             <div className="post-action-bar-group">
               <div
                 className="post-action-bar-blue-wrapper"
-                id="bookmark"
+                id="reply"
                 onMouseOver={updateHoverColor}
                 onMouseLeave={resetColors}
-                onClick={createBookmark}
+                onClick={toggleReply}
               >
-                <BookmarksSVG height={20} width={20} color={colors.bookmark} />
+                <ReplyOutlineSVG height={20} width={20} color={"#aab8c2"} />
               </div>
-              {/* Number of bookmarks beside it */}
+              {/* Number of replies beside it */}
               <p
                 className="post-action-bar-count"
                 style={{
-                  color: colors.bookmark,
+                  color: colors.reply,
                 }}
               >
-                {convertCount(post.bookmarks.length)}
+                {convertCount(post.replies.length)}
               </p>
             </div>
-            <div
-              className="post-action-bar-blue-wrapper"
-              id="share"
-              onMouseOver={updateHoverColor}
-              onMouseLeave={resetColors}
-            >
-              <ShareSVG height={20} width={20} color={colors.share} />
+
+            <div className="post-action-bar-group">
+              <div
+                className="post-action-bar-repost-wrapper"
+                id="repost"
+                onMouseOver={updateHoverColor}
+                onMouseLeave={resetColors}
+                onClick={createRepost}
+              >
+                <RepostOutlineSVG
+                  height={20}
+                  width={20}
+                  color={colors.repost}
+                />
+              </div>
+              {/* Number of repost beside it */}
+              <p
+                className="post-action-bar-count"
+                style={{
+                  color: colors.repost,
+                }}
+              >
+                {convertCount(post.reposts.length)}
+              </p>
             </div>
-            {/* Number of share beside it */}
+
+            <div className="post-action-bar-group">
+              <div
+                className="post-action-bar-like-wrapper"
+                id="like"
+                onMouseOver={updateHoverColor}
+                onMouseLeave={resetColors}
+                onClick={createLike}
+              >
+                <LikeOutlineSVG height={20} width={20} color={colors.like} />
+              </div>
+              {/* Number of likes beside it */}
+              <p
+                className="post-action-bar-count"
+                style={{
+                  color: colors.like,
+                }}
+              >
+                {convertCount(post.likes.length)}
+              </p>
+            </div>
+
+            <div className="post-action-bar-group">
+              <div
+                className="post-action-bar-blue-wrapper"
+                id="views"
+                onMouseOver={updateHoverColor}
+                onMouseLeave={resetColors}
+              >
+                <ViewsSVG height={20} width={20} color={colors.views} />
+              </div>
+              {/* Number of views beside it */}
+              <p
+                className="post-action-bar-count"
+                style={{
+                  color: colors.views,
+                }}
+              >
+                {convertCount(post.views.length)}
+              </p>
+            </div>
+
+            <div className="post-action-bar-right">
+              <div className="post-action-bar-group">
+                <div
+                  className="post-action-bar-blue-wrapper"
+                  id="bookmark"
+                  onMouseOver={updateHoverColor}
+                  onMouseLeave={resetColors}
+                  onClick={createBookmark}
+                >
+                  <BookmarksSVG
+                    height={20}
+                    width={20}
+                    color={colors.bookmark}
+                  />
+                </div>
+                {/* Number of bookmarks beside it */}
+                <p
+                  className="post-action-bar-count"
+                  style={{
+                    color: colors.bookmark,
+                  }}
+                >
+                  {convertCount(post.bookmarks.length)}
+                </p>
+              </div>
+              <div
+                className="post-action-bar-blue-wrapper"
+                id="share"
+                onMouseOver={updateHoverColor}
+                onMouseLeave={resetColors}
+              >
+                <ShareSVG height={20} width={20} color={colors.share} />
+              </div>
+              {/* Number of share beside it */}
+            </div>
           </div>
         </div>
       </div>

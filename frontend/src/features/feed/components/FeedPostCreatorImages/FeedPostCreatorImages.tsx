@@ -65,6 +65,7 @@ export const FeedPostCreatorImages: React.FC = () => {
                   : ""
               }
               type={"gif"}
+              displayCloseIcon={true}
             />
           </div>
         )}

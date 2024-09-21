@@ -30,6 +30,7 @@ public class FeedService {
             FeedPostDTO feedPostDTO = new FeedPostDTO();
             feedPostDTO.setPost(post);
             feedPostDTO.setReplyTo(post.getReply() ? postService.getPostById(post.getReplyTo()) : null);
+
             feedPostDTO.setRepost(!post.getAuthor().getFollowers().contains(userService.getUserById(userId))
                     && !post.getAuthor().equals(userService.getUserById(userId)));
             feedPostDTO.setRepostUser(
