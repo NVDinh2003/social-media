@@ -8,6 +8,8 @@ import { AppDispatch, RootState } from "../../../../redux/Store";
 import {
   fetchNextFeedPage,
   loadFeedPage,
+  setCurrentPageNumber,
+  setSessionTime,
 } from "../../../../redux/Slices/FeedSlice";
 import { Post } from "../../../post/components/Post/Post";
 import { FeedPostCreatorEditImageModal } from "../FeedPostCreatorEditImageModal/FeedPostCreatorEditImageModal";
@@ -43,14 +45,14 @@ export const Feed: React.FC = () => {
     (state: RootState) => state.modal.displayCreateReply
   );
 
-  // const currentPageNumber = useSelector((state: RootState) => state.feed.currentPageNumber);
-  // const sessionStart = useSelector((state: RootState) => state.feed.sessionStart);
+  const currentPageNumber = useSelector(
+    (state: RootState) => state.feed.currentPageNumber
+  );
+  const sessionStart = useSelector(
+    (state: RootState) => state.feed.sessionStart
+  );
 
-  const [sessionStart, setSessionStart] = useState<Date>(() => {
-    return new Date();
-  });
-
-  const [currentPageNumber, setCurrentPageNumber] = useState<number>(0);
+  // const [currentPageNumber, setCurrentPageNumber] = useState<number>(0);
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -58,27 +60,32 @@ export const Feed: React.FC = () => {
 
   const fetchNextPosts = (entries: any) => {
     entries.forEach((entry: any) => {
-      if (entry.isIntersecting && userState.loggedIn && userState.token) {
-        dispatch(
-          fetchNextFeedPage({
-            token: userState.token,
-            userId: userState.loggedIn.userId,
-            page: currentPageNumber + 1,
-            sessionStart,
-          })
-        );
-        console.log("Try fetch post !");
-        setCurrentPageNumber(currentPageNumber + 1);
+      if (
+        entry.isIntersecting &&
+        userState.loggedIn &&
+        userState.token &&
+        sessionStart
+      ) {
+        dispatch(setCurrentPageNumber());
       }
     });
   };
 
   useEffect(() => {
-    if (userState.loggedIn && userState.token && postState.loading === false) {
+    if (sessionStart === undefined) {
+      dispatch(setSessionTime(new Date()));
+    }
+    if (
+      userState.loggedIn &&
+      userState.token &&
+      postState.loading === false &&
+      sessionStart
+    ) {
       dispatch(
         loadFeedPage({
           token: userState.token,
           userId: userState.loggedIn.userId,
+          sessionStart,
         })
       );
     }
@@ -93,16 +100,20 @@ export const Feed: React.FC = () => {
 
       observer.observe(target);
     }
-  }, [userState.token, userState.loggedIn, postState.loading]);
+  }, [userState.token, userState.loggedIn, postState.loading, sessionStart]);
 
   useEffect(() => {
-    console.log(
-      "Session start: ",
-      sessionStart,
-      "current page: ",
-      currentPageNumber
-    );
-  }, [sessionStart, currentPageNumber]);
+    if (currentPageNumber !== 0 && userState.loggedIn && sessionStart) {
+      dispatch(
+        fetchNextFeedPage({
+          token: userState.token,
+          userId: userState.loggedIn.userId,
+          page: currentPageNumber,
+          sessionStart,
+        })
+      );
+    }
+  }, [currentPageNumber, sessionStart]);
 
   return (
     <div className="feed">
@@ -118,7 +129,7 @@ export const Feed: React.FC = () => {
       {feedState.posts.length > 0 && (
         <div className="feed-posts">
           {feedState.posts.map((post) => (
-            <Post feedPost={post} />
+            <Post feedPost={post} key={post.post.postId} />
           ))}
         </div>
       )}

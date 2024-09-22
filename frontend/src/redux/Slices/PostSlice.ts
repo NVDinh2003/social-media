@@ -9,7 +9,7 @@ import {
 } from "../../utils/GlobalInterface";
 import axios from "axios";
 import FormData from "form-data";
-import { loadFeedPage } from "./FeedSlice";
+import { loadFeedPage, setSessionTime, updatePost } from "./FeedSlice";
 
 export interface PostSliceState {
   loading: boolean;
@@ -111,12 +111,14 @@ export const createPost = createAsyncThunk(
 
       // console.log("postedd: ", data.postedDate);
 
-      thunkAPI.dispatch(
-        loadFeedPage({
-          token: body.token,
-          userId: body.author.userId,
-        })
-      );
+      // thunkAPI.dispatch(
+      //   loadFeedPage({
+      //     token: body.token,
+      //     userId: body.author.userId,
+      //   })
+      // );
+
+      thunkAPI.dispatch(setSessionTime(new Date()));
 
       return data;
     } catch (e) {
@@ -146,6 +148,8 @@ export const createReply = createAsyncThunk(
           headers: { Authorization: `Bearer ${body.token}` },
         }
       );
+
+      thunkAPI.dispatch(setSessionTime(new Date()));
 
       return req.data;
     } catch (e) {
@@ -249,7 +253,11 @@ export const repostPost = createAsyncThunk(
         }
       );
 
-      return req.data;
+      let post = req.data;
+
+      // thunkAPI.dispatch(updatePost(post));
+
+      return post;
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
     }

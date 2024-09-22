@@ -1,5 +1,9 @@
 import React, { useMemo, useState } from "react";
-import { FeedPost, Post as IPost } from "../../../../utils/GlobalInterface";
+import {
+  FeedPost,
+  Post as IPost,
+  User,
+} from "../../../../utils/GlobalInterface";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CircleIcon from "@mui/icons-material/Circle";
@@ -13,11 +17,10 @@ import ShareSVG from "../../../../components/SVGs/ShareSVG";
 import BookmarksSVG from "../../../../components/SVGs/BookmarksSVG";
 
 import "./Post.css";
-import { MONTHS } from "../../../../utils/DateUtils";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import { updateDisplayCreateReply } from "../../../../redux/Slices/ModalSlice";
-import { setCurrentPost } from "../../../../redux/Slices/FeedSlice";
+import { setCurrentPost, updatePost } from "../../../../redux/Slices/FeedSlice";
 import {
   convertPostedDateToString,
   formatTextContent,
@@ -28,10 +31,7 @@ import {
   likePost,
   repostPost,
 } from "../../../../redux/Slices/PostSlice";
-import {
-  createImageContainer,
-  createImagePostContainer,
-} from "../../../feed/utils/FeedUtils";
+import { createImagePostContainer } from "../../../feed/utils/FeedUtils";
 import { useNavigate } from "react-router-dom";
 
 interface PostProps {
@@ -52,6 +52,7 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
   const defaultPfp = process.env.REACT_APP_PFP;
   const { post, replyTo, repost, repostUser } = feedPost;
   const token = useSelector((state: RootState) => state.user.token);
+  const loggedIn = useSelector((state: RootState) => state.user.loggedIn);
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -124,6 +125,36 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
   };
 
   const createRepost = () => {
+    let updatedPost = JSON.parse(JSON.stringify(post));
+
+    if (
+      loggedIn &&
+      !post.reposts.some((user) => user.userId === loggedIn.userId)
+    ) {
+      // console.log("adding repost user");
+      let reposts = [...post.reposts, loggedIn];
+      updatedPost = {
+        ...updatedPost,
+        reposts,
+      };
+      dispatch(updatePost(updatedPost));
+    }
+    if (
+      loggedIn &&
+      post.reposts.some((user) => user.userId === loggedIn.userId)
+    ) {
+      // console.log("removed");
+      let reposts = updatedPost.reposts.filter(
+        (user: User) => user.userId !== loggedIn.userId
+      );
+      updatedPost = {
+        ...updatedPost,
+        reposts,
+      };
+
+      dispatch(updatePost(updatedPost));
+    }
+
     dispatch(
       repostPost({
         postId: post.postId,
@@ -133,6 +164,33 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
   };
 
   const createLike = () => {
+    let updatedPost = JSON.parse(JSON.stringify(post));
+    if (
+      loggedIn &&
+      !post.likes.some((user) => user.userId === loggedIn.userId)
+    ) {
+      let likes = [...post.likes, loggedIn];
+      updatedPost = {
+        ...updatedPost,
+        likes,
+      };
+      dispatch(updatePost(updatedPost));
+    }
+    if (
+      loggedIn &&
+      post.likes.some((user) => user.userId === loggedIn.userId)
+    ) {
+      let likes = updatedPost.likes.filter(
+        (user: User) => user.userId !== loggedIn.userId
+      );
+      updatedPost = {
+        ...updatedPost,
+        likes,
+      };
+
+      dispatch(updatePost(updatedPost));
+    }
+
     dispatch(
       likePost({
         postId: post.postId,
@@ -142,6 +200,33 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
   };
 
   const createBookmark = () => {
+    let updatedPost = JSON.parse(JSON.stringify(post));
+    if (
+      loggedIn &&
+      !post.bookmarks.some((user) => user.userId === loggedIn.userId)
+    ) {
+      let bookmarks = [...post.bookmarks, loggedIn];
+      updatedPost = {
+        ...updatedPost,
+        bookmarks,
+      };
+      dispatch(updatePost(updatedPost));
+    }
+    if (
+      loggedIn &&
+      post.bookmarks.some((user) => user.userId === loggedIn.userId)
+    ) {
+      let bookmarks = updatedPost.bookmarks.filter(
+        (user: User) => user.userId !== loggedIn.userId
+      );
+      updatedPost = {
+        ...updatedPost,
+        bookmarks,
+      };
+
+      dispatch(updatePost(updatedPost));
+    }
+
     dispatch(
       bookmarkPost({
         postId: post.postId,

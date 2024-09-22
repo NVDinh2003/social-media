@@ -17,6 +17,7 @@ interface FeedSliceState {
 interface LoadFeedPagePayload {
   token: string;
   userId: number;
+  sessionStart: Date;
 }
 
 interface FetchNextPagePayload {
@@ -40,7 +41,7 @@ export const loadFeedPage = createAsyncThunk(
   async (payload: LoadFeedPagePayload, thunkAPI) => {
     try {
       // Chuyển đổi `sessionStart` thành chuỗi ISO không bao gồm múi giờ
-      const formattedSessionStart = dayjs().format(
+      const formattedSessionStart = dayjs(payload.sessionStart).format(
         "YYYY-MM-DDTHH:mm:ss.SSSSSS"
       );
       // console.log("sessions start: " + formattedSessionStart);
@@ -74,10 +75,10 @@ export const fetchNextFeedPage = createAsyncThunk(
   "feed/nextPage",
   async (payload: FetchNextPagePayload, thunkAPI) => {
     try {
-      const formattedSessionStart = dayjs().format(
+      const formattedSessionStart = dayjs(payload.sessionStart).format(
         "YYYY-MM-DDTHH:mm:ss.SSSSSS"
       );
-      // console.log("(fetch) sessions start: " + formattedSessionStart);
+      console.log("(fetch) sessions start: " + formattedSessionStart);
 
       let req = await axios.post(
         `${baseUrl}/feeds`,
@@ -116,6 +117,42 @@ export const FeedSlice = createSlice({
 
       return state;
     },
+
+    setSessionTime(state, action: PayloadAction<Date | undefined>) {
+      state = {
+        ...state,
+        sessionStart: action.payload,
+      };
+
+      return state;
+    },
+    setCurrentPageNumber(state /*action: PayloadAction<number>*/) {
+      state = {
+        ...state,
+        currentPageNumber: state.posts.length / 10,
+      };
+      return state;
+    },
+    updatePost(state, action: PayloadAction<Post>) {
+      let updatedPosts: FeedPost[] = state.posts.map((post) => {
+        if (action.payload.postId === post.post.postId) {
+          return {
+            post: action.payload,
+            replyTo: post.replyTo,
+            repost: post.repost,
+            repostUser: post.repostUser,
+          };
+        }
+        return post;
+      });
+
+      state = {
+        ...state,
+        posts: updatedPosts,
+      };
+
+      return state;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -134,7 +171,6 @@ export const FeedSlice = createSlice({
           ...state,
           posts: action.payload.posts,
           sessionStart: action.payload.sessionStart,
-          currentPageNumber: 1,
           loading: false,
           error: false,
         };
@@ -153,11 +189,16 @@ export const FeedSlice = createSlice({
 
     // fetch feed page
     builder.addCase(fetchNextFeedPage.fulfilled, (state, action) => {
+      if (
+        state.posts.length > 0 &&
+        state.posts[0].post.postId === action.payload.posts[0].post.postId
+      )
+        return state;
+
       state = {
         ...state,
         posts: [...state.posts, ...action.payload.posts],
         sessionStart: action.payload.sessionStart,
-        currentPageNumber: action.payload.page + 1,
         loading: false,
         error: false,
       };
@@ -167,5 +208,10 @@ export const FeedSlice = createSlice({
   },
 });
 
-export const { setCurrentPost } = FeedSlice.actions;
+export const {
+  setCurrentPost,
+  setSessionTime,
+  setCurrentPageNumber,
+  updatePost,
+} = FeedSlice.actions;
 export default FeedSlice.reducer;

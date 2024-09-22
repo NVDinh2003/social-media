@@ -73,7 +73,7 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
         })
       );
 
-      console.log(newContent);
+      // console.log(newContent);
     }
   };
 
