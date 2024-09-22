@@ -267,14 +267,16 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
                 <ReplyOutlineSVG height={20} width={20} color={"#aab8c2"} />
               </div>
               {/* Number of replies beside it */}
-              <p
-                className="post-action-bar-count"
-                style={{
-                  color: colors.reply,
-                }}
-              >
-                {convertCount(post.replies.length)}
-              </p>
+              {post.replies.length > 0 && (
+                <p
+                  className="post-action-bar-count"
+                  style={{
+                    color: colors.reply,
+                  }}
+                >
+                  {convertCount(post.replies.length)}
+                </p>
+              )}
             </div>
 
             <div className="post-action-bar-group">
@@ -292,14 +294,16 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
                 />
               </div>
               {/* Number of repost beside it */}
-              <p
-                className="post-action-bar-count"
-                style={{
-                  color: colors.repost,
-                }}
-              >
-                {convertCount(post.reposts.length)}
-              </p>
+              {post.reposts.length > 0 && (
+                <p
+                  className="post-action-bar-count"
+                  style={{
+                    color: colors.repost,
+                  }}
+                >
+                  {convertCount(post.reposts.length)}
+                </p>
+              )}
             </div>
 
             <div className="post-action-bar-group">
@@ -313,14 +317,16 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
                 <LikeOutlineSVG height={20} width={20} color={colors.like} />
               </div>
               {/* Number of likes beside it */}
-              <p
-                className="post-action-bar-count"
-                style={{
-                  color: colors.like,
-                }}
-              >
-                {convertCount(post.likes.length)}
-              </p>
+              {post.likes.length > 0 && (
+                <p
+                  className="post-action-bar-count"
+                  style={{
+                    color: colors.like,
+                  }}
+                >
+                  {convertCount(post.likes.length)}
+                </p>
+              )}
             </div>
 
             <div className="post-action-bar-group">
@@ -333,14 +339,16 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
                 <ViewsSVG height={20} width={20} color={colors.views} />
               </div>
               {/* Number of views beside it */}
-              <p
-                className="post-action-bar-count"
-                style={{
-                  color: colors.views,
-                }}
-              >
-                {convertCount(post.views.length)}
-              </p>
+              {post.views.length > 0 && (
+                <p
+                  className="post-action-bar-count"
+                  style={{
+                    color: colors.views,
+                  }}
+                >
+                  {convertCount(post.views.length)}
+                </p>
+              )}
             </div>
 
             <div className="post-action-bar-right">
@@ -359,14 +367,16 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
                   />
                 </div>
                 {/* Number of bookmarks beside it */}
-                <p
-                  className="post-action-bar-count"
-                  style={{
-                    color: colors.bookmark,
-                  }}
-                >
-                  {convertCount(post.bookmarks.length)}
-                </p>
+                {post.bookmarks.length > 0 && (
+                  <p
+                    className="post-action-bar-count"
+                    style={{
+                      color: colors.bookmark,
+                    }}
+                  >
+                    {convertCount(post.bookmarks.length)}
+                  </p>
+                )}
               </div>
               <div
                 className="post-action-bar-blue-wrapper"

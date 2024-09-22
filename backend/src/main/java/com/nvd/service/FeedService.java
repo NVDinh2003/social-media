@@ -1,6 +1,7 @@
 package com.nvd.service;
 
 import com.nvd.dto.response.FeedPostDTO;
+import com.nvd.dto.response.FetchFeedResponseDTO;
 import com.nvd.models.ApplicationUser;
 import com.nvd.models.Post;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class FeedService {
     private final UserService userService;
     private final PostService postService;
 
-    public List<FeedPostDTO> getFeedForUser(Integer userId, LocalDateTime sessionStart, Integer page) {
+    public FetchFeedResponseDTO getFeedForUser(Integer userId, LocalDateTime sessionStart, Integer page) {
         ApplicationUser currentUser = userService.getUserById(userId);
 
         Set<ApplicationUser> following = currentUser.getFollowing();
@@ -26,7 +27,7 @@ public class FeedService {
 //        Set<Post> currentUserPosts = postService.getAllPostsByAuthor(currentUser);
 
         Page<Post> followingPosts = postService.getFeedPage(userId, sessionStart, page);
-        List<FeedPostDTO> feedPostDTOs = followingPosts.map(post -> {
+        List<FeedPostDTO> listPosts = followingPosts.map(post -> {
             FeedPostDTO feedPostDTO = new FeedPostDTO();
             feedPostDTO.setPost(post);
             feedPostDTO.setReplyTo(post.getReply() ? postService.getPostById(post.getReplyTo()) : null);
@@ -48,6 +49,6 @@ public class FeedService {
 //        allPosts.addAll(currentUserPosts);
 //        allPosts.addAll(followingPosts);
 
-        return feedPostDTOs;
+        return new FetchFeedResponseDTO(page, sessionStart, listPosts);
     }
 }

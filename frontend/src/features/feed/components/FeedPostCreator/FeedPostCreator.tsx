@@ -96,8 +96,8 @@ export const FeedPostCreator: React.FC = () => {
           scheduledDate: state.post.currentPost.scheduledDate,
           token: state.user.token,
         };
-
         dispatch(createPost(body));
+        // console.log(body);
       } else {
         let body = {
           content: state.post.currentPost.content,
@@ -115,6 +115,8 @@ export const FeedPostCreator: React.FC = () => {
 
         dispatch(createPostWithMedia(body));
       }
+
+      // console.log("check-creator: ", state.post.currentPost.content);
     }
   };
 

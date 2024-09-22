@@ -9,12 +9,12 @@ import {
 } from "../../utils/GlobalInterface";
 import axios from "axios";
 import FormData from "form-data";
+import { loadFeedPage } from "./FeedSlice";
 
 export interface PostSliceState {
   loading: boolean;
   error: boolean;
   currentPost: Post | undefined;
-  posts: Post[];
   currentPostImages: File[];
   currentReplyImages: File[];
   currentReply: Reply | undefined;
@@ -78,7 +78,6 @@ const initialState: PostSliceState = {
   loading: false,
   error: false,
   currentPost: undefined,
-  posts: [],
   currentPostImages: [],
   currentReplyImages: [],
   currentReply: undefined,
@@ -107,7 +106,19 @@ export const createPost = createAsyncThunk(
         post,
         { headers: { Authorization: `Bearer ${body.token}` } }
       );
-      return req.data;
+
+      const data = req.data;
+
+      // console.log("postedd: ", data.postedDate);
+
+      thunkAPI.dispatch(
+        loadFeedPage({
+          token: body.token,
+          userId: body.author.userId,
+        })
+      );
+
+      return data;
     } catch (e) {
       thunkAPI.rejectWithValue(e);
     }
@@ -559,7 +570,7 @@ export const PostSlice = createSlice({
 
         state = {
           ...state,
-          posts: [post, ...state.posts],
+          // posts: [post, ...state.posts];
           loading: false,
           error: false,
           currentPost: undefined,
@@ -588,7 +599,6 @@ export const PostSlice = createSlice({
 
         state = {
           ...state,
-          posts: [post, ...state.posts],
           loading: false,
           error: false,
           currentPost: undefined,

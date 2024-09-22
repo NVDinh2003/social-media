@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "./CreatePostTextArea.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,6 +22,28 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
+  const resetTextAreaHeight = () => {
+    if (textAreaRef && textAreaRef.current) {
+      textAreaRef.current.style.height = "25px"; // Đặt lại chiều cao ban đầu
+    }
+  };
+
+  useEffect(() => {
+    // Đồng bộ hóa state local với state Redux
+    let newContent = "";
+    if (location === "post") {
+      newContent = state.post.currentPost?.content || "";
+    } else if (location === "reply") {
+      newContent = state.post.currentReply?.replyContent || "";
+    }
+    setContent(newContent);
+
+    // Reset chiều cao nếu nội dung trống
+    if (newContent === "") {
+      resetTextAreaHeight();
+    }
+  }, [state.post.currentPost, state.post.currentReply, location]);
+
   const autoGrow = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     // setPostContent(e.target.value);
     if (textAreaRef && textAreaRef.current) {
@@ -30,27 +52,29 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
         textAreaRef.current.scrollHeight + "px";
     }
 
+    const newContent = e.target.value;
+    setContent(newContent);
+
     if (location === "post") {
       dispatch(
         updateCurrentPost({
           name: "content",
-          value: e.target.value,
+          value: newContent,
         })
       );
+      // console.log(newContent);
     }
 
     if (location === "reply") {
       dispatch(
         updateCurrentPost({
           name: "replyContent",
-          value: e.target.value,
+          value: newContent,
         })
       );
+
+      console.log(newContent);
     }
-
-    setContent(e.target.value);
-
-    // console.log("content: ", e.target.value);
   };
 
   const activate = (e: React.MouseEvent<HTMLDivElement>) => {

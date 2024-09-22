@@ -17,23 +17,15 @@
 }
 
 .create-post-text-area-creator-input {
-  background-color: white;
-  font-weight: 400;
-  /* color: transparent; */
-  z-index: 100;
-  caret-color: black;
-  resize: none;
   height: 30px;
+  resize: none;
   overflow: hidden;
   font-size: 20px;
   border: none;
-  /* background-color: white;
-  font-weight: 400; */
-}
-
-.input-active {
-  margin-top: 15px;
-  margin-bottom: 10px;
+  background-color: transparent;
+  font-weight: 400;
+  z-index: 100;
+  caret-color: black;
 }
 
 .create-post-text-area-creator-input::selection {
