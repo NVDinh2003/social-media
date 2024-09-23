@@ -94,5 +94,10 @@ public class PostController {
         return postService.bookmarkPost(id, token);
     }
 
+    @PutMapping("/view/{id}")
+    public Post viewPost(@PathVariable("id") int id, @RequestHeader(value = "Authorization") String token) {
+        return postService.viewPost(id, token);
+    }
+
 
 }

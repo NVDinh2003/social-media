@@ -127,9 +127,11 @@ export const FeedSlice = createSlice({
       return state;
     },
     setCurrentPageNumber(state /*action: PayloadAction<number>*/) {
+      const pageSize =
+        Number(process.env.REACT_APP_FETCH_FEED_POST_PAGE_SIZE) || 50;
       state = {
         ...state,
-        currentPageNumber: state.posts.length / 10,
+        currentPageNumber: state.posts.length / pageSize,
       };
       return state;
     },

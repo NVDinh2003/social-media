@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   FeedPost,
   Post as IPost,
@@ -30,6 +30,7 @@ import {
   bookmarkPost,
   likePost,
   repostPost,
+  viewPost,
 } from "../../../../redux/Slices/PostSlice";
 import { createImagePostContainer } from "../../../feed/utils/FeedUtils";
 import { useNavigate } from "react-router-dom";
@@ -48,6 +49,8 @@ interface HoverColor {
 }
 
 export const Post: React.FC<PostProps> = ({ feedPost }) => {
+  //
+  const postRef = useRef<HTMLDivElement>(null);
   //
   const defaultPfp = process.env.REACT_APP_PFP;
   const { post, replyTo, repost, repostUser } = feedPost;
@@ -235,8 +238,46 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
     );
   };
 
+  const createView = (entries: any) => {
+    entries.forEach((entry: any) => {
+      if (entry.isIntersecting) {
+        let updatedPost = JSON.parse(JSON.stringify(post));
+
+        if (
+          loggedIn &&
+          !post.views.some((user) => user.userId === loggedIn.userId)
+        ) {
+          let views = [...post.views, loggedIn];
+          updatedPost = {
+            ...updatedPost,
+            views,
+          };
+          dispatch(updatePost(updatedPost));
+          dispatch(
+            viewPost({
+              postId: post.postId,
+              token,
+            })
+          );
+        }
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (postRef && postRef.current) {
+      const observer = new IntersectionObserver(createView, {
+        root: null,
+        threshold: 1,
+      });
+      const target = postRef.current;
+
+      observer.observe(target);
+    }
+  }, []);
+
   return (
-    <div className="post">
+    <div className="post" ref={postRef}>
       {feedPost.repost && (
         <p
           className="post-repost-info"

@@ -305,6 +305,27 @@ export const bookmarkPost = createAsyncThunk(
   }
 );
 
+export const viewPost = createAsyncThunk(
+  "post/view",
+  async (body: PostActionBody, thunkAPI) => {
+    try {
+      let req = await axios.put(
+        `${process.env.REACT_APP_API_URL}/posts/view/${body.postId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${body.token}`,
+          },
+        }
+      );
+
+      return req.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
 export const PostSlice = createSlice({
   name: "post",
   initialState,
@@ -588,6 +609,7 @@ export const PostSlice = createSlice({
       .addCase(createPost.rejected, (state, action) => {
         state = {
           ...state,
+          loading: false,
           error: true,
         };
         return state;
@@ -617,6 +639,7 @@ export const PostSlice = createSlice({
       .addCase(createPostWithMedia.rejected, (state, action) => {
         state = {
           ...state,
+          loading: false,
           error: true,
         };
         return state;
@@ -650,14 +673,53 @@ export const PostSlice = createSlice({
     builder
       .addCase(repostPost.fulfilled, (state, action) => {
         //TODO: setup so that it modifies the current feed in place
+        state = {
+          ...state,
+          loading: false,
+          error: false,
+        };
         return state;
       })
       .addCase(likePost.fulfilled, (state, action) => {
         //TODO: setup so that it modifies the current feed in place
+        state = {
+          ...state,
+          loading: false,
+          error: false,
+        };
         return state;
       })
       .addCase(bookmarkPost.fulfilled, (state, action) => {
         //TODO: setup so that it modifies the current feed in place
+        state = {
+          ...state,
+          loading: false,
+          error: false,
+        };
+        return state;
+      })
+      .addCase(viewPost.pending, (state, action) => {
+        state = {
+          ...state,
+          loading: true,
+          error: false,
+        };
+        return state;
+      })
+      .addCase(viewPost.fulfilled, (state, action) => {
+        state = {
+          ...state,
+          loading: false,
+          error: false,
+        };
+        return state;
+      })
+      .addCase(viewPost.rejected, (state, action) => {
+        state = {
+          ...state,
+          loading: false,
+          error: true,
+        };
         return state;
       });
   },
