@@ -5,7 +5,6 @@ import {
   User,
 } from "../../../../utils/GlobalInterface";
 
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CircleIcon from "@mui/icons-material/Circle";
 import VerifiedIcon from "@mui/icons-material/Verified";
 
@@ -34,6 +33,7 @@ import {
 } from "../../../../redux/Slices/PostSlice";
 import { createImagePostContainer } from "../../../feed/utils/FeedUtils";
 import { useNavigate } from "react-router-dom";
+import { PostMore } from "../PostMore/PostMore";
 
 interface PostProps {
   feedPost: FeedPost;
@@ -352,14 +352,7 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
               )}
             </div>
 
-            <div className="post-more">
-              <MoreHorizIcon
-                sx={{
-                  height: "20px",
-                  width: "20px",
-                }}
-              />
-            </div>
+            <PostMore postId={post.postId} postAuthor={post.author} />
           </div>
 
           {/* <div className="post-content">

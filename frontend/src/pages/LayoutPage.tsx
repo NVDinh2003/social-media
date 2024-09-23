@@ -9,13 +9,17 @@ import { getUserByToken, setToken } from "../redux/Slices/UserSlice";
 import { useEffect } from "react";
 
 import "./LayoutPage.css";
+import { updateDisplayPostMore } from "../redux/Slices/ModalSlice";
 
 export const LayoutPage: React.FC = () => {
   //
   const state = useSelector((state: RootState) => state.user);
   const dispatch: AppDispatch = useDispatch();
-
   const navigate = useNavigate();
+
+  const displayPostMore = useSelector(
+    (state: RootState) => state.modal.displayPostMore
+  );
 
   const location = useLocation();
 
@@ -45,8 +49,12 @@ export const LayoutPage: React.FC = () => {
   //   }
   // }, [jwt, state.token]);
 
+  const closeOpenedModals = (e: React.MouseEvent) => {
+    if (displayPostMore) dispatch(updateDisplayPostMore());
+  };
+
   return (
-    <div className="layout-page">
+    <div className="layout-page" onClick={closeOpenedModals}>
       <div className="layout">
         {" "}
         <div className="layout-navigation-section">

@@ -111,21 +111,6 @@
   color: #657786;
 }
 
-.post-more {
-  width: 30px;
-  height: 30px;
-  border-radius: 100%;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.post-more:hover {
-  background-color: rgba(29, 161, 242, 0.2);
-}
-
 .post-content {
   height: fit-content;
   width: 100%;
