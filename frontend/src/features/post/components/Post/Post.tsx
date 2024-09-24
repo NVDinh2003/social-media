@@ -34,6 +34,7 @@ import {
 import { createImagePostContainer } from "../../../feed/utils/FeedUtils";
 import { useNavigate } from "react-router-dom";
 import { PostMore } from "../PostMore/PostMore";
+import { PostUsername } from "./PostUsername/PostUsername";
 
 interface PostProps {
   feedPost: FeedPost;
@@ -312,7 +313,8 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
         <div className="post-right">
           <div className="post-right-top">
             <div className="post-user-info">
-              <p className="post-nickname">{post.author.nickname}</p>
+              {/* <p className="post-nickname">{post.author.nickname}</p> */}
+              <PostUsername author={post.author} />
               {/* Add in verified once i add verified to the user on the backend */}
               {post.author.verifiedAccount && (
                 <VerifiedIcon
