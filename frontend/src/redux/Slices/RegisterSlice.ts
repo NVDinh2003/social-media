@@ -138,7 +138,7 @@ export const updateUserPassword = createAsyncThunk(
   "register/password",
   async (body: UpdatePassword, thunkAPI) => {
     try {
-      const req = await axios.post(
+      const req = await axios.put(
         "http://localhost:8000/auth/update/password",
         body
       );

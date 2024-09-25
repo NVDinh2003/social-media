@@ -179,27 +179,69 @@ public class UserService implements UserDetailsService {
         }
     }
 
+//    public Set<ApplicationUser> followUser(String user, String followee) {
+//        ApplicationUser loggedInUser = userRepository.findByUsername(user).orElseThrow(UserDoesNotExistException::new);
+//
+//        Set<ApplicationUser> followingList = loggedInUser.getFollowing();
+//        ApplicationUser followedUser = userRepository.findByUsername(followee).orElseThrow(UserDoesNotExistException::new);
+//
+//        Set<ApplicationUser> followersList = followedUser.getFollowers();
+//
+//        if (followingList.contains(followedUser)) {
+//            followersList.remove(followedUser);
+//        } else {
+//            // Add the followed user to the following list
+//            followingList.add(followedUser);
+//        }
+//        loggedInUser.setFollowing(followingList);
+//
+//        if (followersList.contains(loggedInUser)) {
+//
+//            followersList.remove(loggedInUser);
+//        } else {
+//            // Add the current user to the followers list of the followee
+//            followersList.add(loggedInUser);
+//        }
+//        followedUser.setFollowers(followersList);
+//
+//        // Save both users
+//        userRepository.save(loggedInUser);
+//        userRepository.save(followedUser);
+//
+//        return loggedInUser.getFollowing();
+//    }
+
+
     public Set<ApplicationUser> followUser(String user, String followee) {
-        ApplicationUser loggedInUser = userRepository.findByUsername(user).orElseThrow(UserDoesNotExistException::new);
+        ApplicationUser loggedInUser = userRepository.findByUsername(user)
+                .orElseThrow(UserDoesNotExistException::new);
+
+        ApplicationUser followedUser = userRepository.findByUsername(followee)
+                .orElseThrow(UserDoesNotExistException::new);
 
         Set<ApplicationUser> followingList = loggedInUser.getFollowing();
-        ApplicationUser followedUser = userRepository.findByUsername(followee).orElseThrow(UserDoesNotExistException::new);
-
         Set<ApplicationUser> followersList = followedUser.getFollowers();
 
-        // Add the followed user to the following list
-        followingList.add(followedUser);
-        loggedInUser.setFollowing(followingList);
+        // Check if the logged-in user is already following the followee
+        if (followingList.contains(followedUser)) {
+            // If yes, unfollow: remove from both following and followers lists
+            followingList.remove(followedUser);
+            followersList.remove(loggedInUser);
+        } else {
+            // If not, follow: add to both following and followers lists
+            followingList.add(followedUser);
+            followersList.add(loggedInUser);
+        }
 
-        // Add the current user to the followers list of the followee
-        followersList.add(loggedInUser);
+        // Set the updated following and followers lists
+        loggedInUser.setFollowing(followingList);
         followedUser.setFollowers(followersList);
 
-        // Save both users
+        // Save both users to update the database
         userRepository.save(loggedInUser);
         userRepository.save(followedUser);
 
-        return loggedInUser.getFollowing();
+        return loggedInUser.getFollowing(); // Return the updated following list
     }
 
     public Set<ApplicationUser> retrieveFollowingList(String username) {
@@ -225,5 +267,9 @@ public class UserService implements UserDetailsService {
                         credential.getEmail(), credential.getPhone(),
                         credential.getUsername())
                 .orElseThrow(UserDoesNotExistException::new);
+    }
+
+    public Set<ApplicationUser> testFollowUser(String user1, String followToUser) {
+        return followUser(user1, followToUser);
     }
 }

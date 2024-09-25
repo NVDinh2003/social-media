@@ -16,6 +16,39 @@ values ('rick@gmail.com', true, 'Rick', 'Sanchez', 'rick',
         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
         'bethsmith', 'I am a horse surgeon');
 
+insert into users(email, enabled, first_name, last_name, nickname, password, username, bio)
+values ('jerry@gmail.com', true, 'Jerry', 'Smith', 'jerry',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
+        'jerrysmith', 'I am Jerry'),
+       ('birdperson@gmail.com', true, 'Bird', 'Person', 'birdperson',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
+        'birdperson', 'Peace among worlds'),
+       ('squanchy@gmail.com', true, 'Squanchy', 'Cat', 'squanchy',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
+        'squanchy', 'Time to squanch!'),
+       ('mrmeeseeks@gmail.com', true, 'Mr', 'Meeseeks', 'meeseeks',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
+        'mrmeeseeks', 'Im Mr. Meeseeks! Look at me!'),
+       ('noobnoob@gmail.com', true, 'Noob', 'Noob', 'noobnoob',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
+        'noobnoob', 'Oh my god!'),
+       ('tammy@gmail.com', true, 'Tammy', 'Gueterman', 'tammy',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
+        'tammygueterman', 'For the Federation!'),
+       ('evilmorty@gmail.com', true, 'Evil', 'Morty', 'evilmorty',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
+        'evilmorty', 'Youll never know'),
+       ('gearhead@gmail.com', true, 'Gear', 'Head', 'gearhead',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
+        'gearhead', 'I love gears'),
+       ('scaryterry@gmail.com', true, 'Scary', 'Terry', 'scaryterry',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
+        'scaryterry', 'You can run, but you cant hide!'),
+       ('abradolf@gmail.com', true, 'Abradolf', 'Lincler', 'abradolf',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
+        'abradolflincler', 'I am a hybrid of good and evil');
+
+
 insert into users(email, enabled, first_name, last_name, nickname, password, username, bio, verified_account,
                   private_account)
 values ('iamdinhhtvq@gmail.com', true, 'Định', 'Nguyễn Văn', 'Leon',
@@ -40,10 +73,14 @@ values (1, 5),
 --        (5, 2),
 --        (5, 3);
 
-insert into followers
-values (1, 5),
-       (2, 5),
-       (3, 5);
+-- insert into followers
+-- values (1, 5),
+--        (2, 5),
+--        (3, 5);
+--
+-- insert into following(following_id, user_id)
+-- values (1, 4),
+--        (1, 3);
 
 insert into posts (audience, content, posted_date, is_reply, reply_restriction, reply_to, scheduled, scheduled_date,
                    author_id, poll_id)

@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { User } from "../../utils/GlobalInterface";
 import axios from "axios";
+import { getFollowers, getFollowing } from "../../services/UserService";
 
 const baseURL = process.env.REACT_APP_API_URL;
 
@@ -39,28 +40,6 @@ const initialState: UserSliceState = {
   fromRegister: false,
   error: false,
 };
-
-async function getFollowers(username: string) {
-  try {
-    const req = await axios.get(`${baseURL}/users/followers/${username}`);
-    // console.log("follower", req.data);
-    return req.data;
-  } catch (e) {
-    console.log(e);
-    return [];
-  }
-}
-
-async function getFollowing(username: string) {
-  try {
-    const req = await axios.get(`${baseURL}/users/following/${username}`);
-    // console.log("following: ", req.data);
-    return req.data;
-  } catch (e) {
-    console.log(e);
-    return [];
-  }
-}
 
 export const verifyUsername = createAsyncThunk(
   "user/username",

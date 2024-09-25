@@ -29,19 +29,6 @@
   padding: 6px 28px;
 }
 
-.post-repost-user {
-  font-size: 13px;
-  color: #657786;
-  font-weight: 600;
-  text-decoration: none;
-  padding: 0;
-  margin: 0;
-}
-.post-repost-user:hover {
-  cursor: pointer;
-  text-decoration: underline;
-}
-
 .post-left {
   width: 10%;
   height: 100%;

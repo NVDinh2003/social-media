@@ -287,13 +287,7 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
           }}
         >
           <RepostOutlineSVG height={18} width={18} color={"#657786"} />
-          <span
-            className="post-repost-user"
-            onClick={() => navigate(`/${feedPost.repostUser.username}`)}
-          >
-            {feedPost.repostUser.nickname ?? feedPost.repostUser.username}{" "}
-            reposted
-          </span>
+          <PostUsername author={feedPost.repostUser} repost={true} />
         </p>
       )}
 
@@ -314,7 +308,7 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
           <div className="post-right-top">
             <div className="post-user-info">
               {/* <p className="post-nickname">{post.author.nickname}</p> */}
-              <PostUsername author={post.author} />
+              <PostUsername author={post.author} repost={false} />
               {/* Add in verified once i add verified to the user on the backend */}
               {post.author.verifiedAccount && (
                 <VerifiedIcon

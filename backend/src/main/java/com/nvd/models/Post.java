@@ -24,6 +24,7 @@ public class Post implements Comparable<Post> {
     @Column(name = "post_id")
     private Integer postId;
 
+
     @Column(length = 256, nullable = false)
     private String content;
 
@@ -125,4 +126,6 @@ public class Post implements Comparable<Post> {
     public int compareTo(Post o) {
         return -this.postedDate.compareTo(o.postedDate);
     }
+
+
 }

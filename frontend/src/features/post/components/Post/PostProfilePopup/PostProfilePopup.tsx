@@ -1,24 +1,89 @@
-import React from "react";
+import React, { useState } from "react";
 import VerifiedIcon from "@mui/icons-material/Verified";
 
 import "./PostProfilePopup.css";
 import { User } from "../../../../../utils/GlobalInterface";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../../redux/Store";
+import { followUser } from "../../../../../redux/Slices/UserSlice";
+import { checkFollowing } from "../../../../../services/UserService";
+import { PostProfilePopupIcons } from "./PostProfilePopupIcons/PostProfilePopupIcons";
 
 interface PostProfilePopupProps {
   author: User;
-  following: User[];
-  followers: User[];
+  followingList: User[];
+  followersList: User[];
+  closeModal: () => void;
 }
 
 export const PostProfilePopup: React.FC<PostProfilePopupProps> = ({
   author,
-  followers,
-  following,
+  followersList,
+  followingList,
+  closeModal,
 }) => {
   const defaultPfp = process.env.REACT_APP_PFP;
+  const currentUsersFollowingList = useSelector(
+    (state: RootState) => state.user.following
+  );
+  const loggedIn = useSelector((state: RootState) => state.user.loggedIn);
+  const token = useSelector((state: RootState) => state.user.token);
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const [following, setFollowing] = useState<boolean>(() => {
+    if (loggedIn) {
+      return checkFollowing(followersList, loggedIn);
+    }
+    return false;
+  });
+
+  const [followedBy, setFollowedBy] = useState<User[]>(() => {
+    return followersList.filter((user) => {
+      return currentUsersFollowingList.some(
+        (u) => u.userId === user.userId && u.userId !== loggedIn?.userId
+      );
+    });
+  });
+
+  const [followingBtnContent, setFollowingBtnContent] =
+    useState<string>("Following");
+
+  const followingBtnActive = () => {
+    setFollowingBtnContent("Unfollow");
+  };
+
+  const followingBtnInactive = () => {
+    setFollowingBtnContent("Following");
+  };
+
+  const mapFollowedByContent = (): string => {
+    let content = "Followed by ";
+
+    followedBy.slice(0, 3).forEach((user) => {
+      content += `${user.nickname}, `;
+    });
+
+    if (followedBy.length > 3) {
+      content += `and ${followedBy.length - 3} other you follow.`;
+    } else {
+      content = content.slice(0, -2) + "."; // - ', ' và + '.'
+    }
+
+    return content;
+  };
+
+  const follow = () => {
+    dispatch(
+      followUser({
+        followee: author.username,
+        token,
+      })
+    );
+  };
 
   return (
-    <div className="post-profile-popup">
+    <div className="post-profile-popup" onMouseLeave={closeModal}>
       <div className="post-profile-top">
         <img
           src={
@@ -28,9 +93,19 @@ export const PostProfilePopup: React.FC<PostProfilePopupProps> = ({
           className="post-profile-pfp"
         />
 
-        <button className="post-profile-following-btn">
-          {/* determine whether or not the user is following  */} Following
-        </button>
+        {following ? (
+          <button
+            className="post-profile-following-btn"
+            onMouseOver={followingBtnActive}
+            onMouseLeave={followingBtnInactive}
+          >
+            {followingBtnContent}
+          </button>
+        ) : (
+          <button className="post-profile-follow-btn" onClick={follow}>
+            Follow
+          </button>
+        )}
       </div>
 
       <div className="post-profile-nickname-bar">
@@ -57,25 +132,28 @@ export const PostProfilePopup: React.FC<PostProfilePopupProps> = ({
       <p className="post-profile-bio">{author.bio}</p>
       <div className="post-profile-following-followers">
         <p className="post-profile-following-followers-text">
-          <span className="post-profile-count">{following.length}</span>{" "}
+          <span className="post-profile-count">{followingList.length}</span>{" "}
           Following
         </p>
 
         <p className="post-profile-following-followers-text">
-          <span className="post-profile-count">{followers.length}</span>{" "}
+          <span className="post-profile-count">{followersList.length}</span>{" "}
           Followers
         </p>
       </div>
 
-      <div className="post-profile-followed-by-container">
-        <div className="post-profile-followed-by-pfps">
-          {/* figure out how to stack up to three pfps */}
+      {followedBy.length > 0 && (
+        <div className="post-profile-followed-by-container">
+          <div className="post-profile-followed-by-pfps">
+            {/* figure out how to stack up to three pfps */}
+            <PostProfilePopupIcons followedBy={followedBy.slice(0, 3)} />
+          </div>
+          <p className="post-profile-followed-by-users">
+            {mapFollowedByContent()}
+            {/* map the first three user names, and then the count after the first three */}
+          </p>
         </div>
-        <p className="post-profile-followed-by-users">
-          Followed by ...
-          {/* map the first three user names, and then the count after the first three */}
-        </p>
-      </div>
+      )}
     </div>
   );
 };

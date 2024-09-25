@@ -76,6 +76,14 @@ public class UserController {
         return userService.followUser(loggedInUser, followedUser);
     }
 
+    @PutMapping("test-follow")
+    public Set<ApplicationUser> testFollowUsers(
+            @RequestBody Map<String, String> body) {
+        String user1 = body.get("user1");
+        String followToUser = body.get("followToUser");
+        return userService.testFollowUser(user1, followToUser);
+    }
+
 
     @GetMapping("/following/{username}")
     public Set<ApplicationUser> getFollowingList(@PathVariable String username) {

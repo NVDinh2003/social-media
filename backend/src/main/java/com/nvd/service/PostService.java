@@ -285,20 +285,37 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Post viewPost(Integer postId, String token) {
+    @Transactional
+    public synchronized Post viewPost(Integer postId, String token) {
         String username = tokenService.getUsernameFromToken(token);
         ApplicationUser user = userService.getUserByUsername(username);
 
         Post post = postRepository.findById(postId).orElseThrow(PostDoesNotExistException::new);
 
         Set<ApplicationUser> views = post.getViews();
+//
+//        // Check if the user has already viewed the post
+//        if (!views.contains(user)) {
+//            views.add(user);
+//            post.setViews(views);
+//
+//            // Save the post with updated views
+//            try {
+//                return postRepository.save(post);
+//            } catch (Exception e) {
+//                // Handle the exception properly
+//                return post;
+//            }
+//        }
+//
+//        return post;
 
-        if (views.contains(user)) return post;
-
-        views.add(user);
-
-        post.setViews(views);
-
-        return postRepository.save(post);
+        boolean hasViewed = postRepository.hasUserViewedPost(postId, user.getUserId());
+        if (!hasViewed) {
+            views.add(user);
+            post.setViews(views);
+            return postRepository.save(post);
+        }
+        return post;
     }
 }

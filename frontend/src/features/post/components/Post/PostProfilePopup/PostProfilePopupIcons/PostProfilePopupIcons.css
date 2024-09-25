@@ -1,0 +1,17 @@
+.post-profile-popup-icons {
+  width: fit-content;
+  height: fit-content;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.post-profile-popup-icon {
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+}

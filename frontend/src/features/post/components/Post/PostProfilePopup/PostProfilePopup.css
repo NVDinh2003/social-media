@@ -46,6 +46,22 @@
   color: red;
 }
 
+.post-profile-follow-btn {
+  width: 90px;
+  height: 30px;
+  border: none;
+  border-radius: 15px;
+  background-color: black;
+  color: white;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.post-profile-follow-btn:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
 .post-profile-nickname-bar {
   width: fit-content;
   height: fit-content;
@@ -120,7 +136,20 @@
   color: black;
 }
 
+.post-profile-followed-by-container {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  gap: 2px;
+}
+
+.post-profile-followed-by-pfps {
+  width: 20%;
+  height: fit-content;
+}
+
 .post-profile-followed-by-users {
+  width: 80%;
   font-size: 13px;
   font-weight: 400;
   color: #657786;

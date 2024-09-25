@@ -22,7 +22,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     // lấy tất cả các bài đăng mà user đó đã repost (có following)
     // union
     // lấy tất cả các bài đăng mà user đó đang theo dõi (có following)
-    String FEED_QUERY = "    SELECT * FROM (\n" +
+    String FEED_QUERY = "SELECT * FROM (\n" +
             "        SELECT \n" +
             "            post_id, audience, content, posted_date, is_reply, reply_restriction, reply_to, \n" +
             "            scheduled, scheduled_date, author_id, poll_id\n" +
@@ -63,4 +63,10 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             countQuery = "SELECT COUNT(*) FROM (" + FEED_QUERY + ") AS feed_count"
     )
     Page<Post> findFeedPosts(@Param("id") Integer id, @Param("session_start") LocalDateTime sessionDate, Pageable pageable);
+
+
+    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN TRUE ELSE FALSE END FROM Post p JOIN p.views v WHERE p.postId = :postId AND v.userId = :userId")
+    boolean hasUserViewedPost(@Param("postId") Integer postId, @Param("userId") Integer userId);
+
+
 }
