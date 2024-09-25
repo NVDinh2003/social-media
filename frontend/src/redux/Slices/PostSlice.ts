@@ -9,7 +9,7 @@ import {
 } from "../../utils/GlobalInterface";
 import axios from "axios";
 import FormData from "form-data";
-import { loadFeedPage, setSessionTime, updatePost } from "./FeedSlice";
+import { setSessionTime } from "./FeedSlice";
 
 export interface PostSliceState {
   loading: boolean;
@@ -18,6 +18,7 @@ export interface PostSliceState {
   currentPostImages: File[];
   currentReplyImages: File[];
   currentReply: Reply | undefined;
+  batchedViews: number[];
 }
 
 interface updatePostPayload {
@@ -74,6 +75,11 @@ interface UpdatePollPayload {
   choiceText: string;
 }
 
+interface BatchedPostViewsBody {
+  ids: number[];
+  token: string;
+}
+
 const initialState: PostSliceState = {
   loading: false,
   error: false,
@@ -81,6 +87,7 @@ const initialState: PostSliceState = {
   currentPostImages: [],
   currentReplyImages: [],
   currentReply: undefined,
+  batchedViews: [],
 };
 
 export const createPost = createAsyncThunk(
@@ -322,6 +329,31 @@ export const viewPost = createAsyncThunk(
       return req.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+export const sendBatchedPostViews = createAsyncThunk(
+  "post/batchedPostViews",
+  async (body: BatchedPostViewsBody, thunkAPI) => {
+    try {
+      let ids = {
+        ids: body.ids,
+      };
+
+      let req = await axios.put(
+        `${process.env.REACT_APP_API_URL}/posts/view/all`,
+        ids,
+        {
+          headers: {
+            Authorization: `Bearer ${body.token}`,
+          },
+        }
+      );
+
+      return req.data;
+    } catch (e) {
+      thunkAPI.rejectWithValue(e);
     }
   }
 );
@@ -581,6 +613,17 @@ export const PostSlice = createSlice({
 
       return state;
     },
+
+    batchPostView(state, action: PayloadAction<number>) {
+      if (state.batchedViews.includes(action.payload)) return state;
+
+      state = {
+        ...state,
+        batchedViews: [action.payload, ...state.batchedViews],
+      };
+
+      return state;
+    },
     //
   },
 
@@ -722,6 +765,15 @@ export const PostSlice = createSlice({
         };
         return state;
       });
+
+    // batch views in post
+    builder.addCase(sendBatchedPostViews.fulfilled, (state, action) => {
+      state = {
+        ...state,
+        batchedViews: [],
+      };
+      return state;
+    });
   },
 });
 
@@ -736,5 +788,6 @@ export const {
   setScheduleDate,
   initializeCurrentReply,
   // updateCurrentReply,
+  batchPostView,
 } = PostSlice.actions;
 export default PostSlice.reducer;

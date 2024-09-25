@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import "./Feed.css";
 import { FeedTopBar } from "../FeedTopBar/FeedTopBar";
@@ -17,6 +18,7 @@ import { FeedPostCreatorTagPeopleModal } from "../FeedPostCreatorTagPeopleModal/
 import { FeedPostCreatorGifModal } from "../FeedPostCreatorGifModal/FeedPostCreatorGifModal";
 import { SchedulePostModal } from "../../../schedule-post/SchedulePostModal/SchedulePostModal";
 import { CreateReply } from "../../../post/components/CreateReply/CreateReply";
+import { sendBatchedPostViews } from "../../../../redux/Slices/PostSlice";
 
 export const Feed: React.FC = () => {
   //
@@ -71,6 +73,17 @@ export const Feed: React.FC = () => {
     });
   };
 
+  const initBeforeUnload = () => {
+    window.onbeforeunload = (event: Event) => {
+      dispatch(
+        sendBatchedPostViews({
+          ids: postState.batchedViews,
+          token: userState.token,
+        })
+      );
+    };
+  };
+
   useEffect(() => {
     if (sessionStart === undefined) {
       dispatch(setSessionTime(new Date()));
@@ -105,6 +118,13 @@ export const Feed: React.FC = () => {
   useEffect(() => {
     if (currentPageNumber !== 0 && userState.loggedIn && sessionStart) {
       dispatch(
+        sendBatchedPostViews({
+          ids: postState.batchedViews,
+          token: userState.token,
+        })
+      );
+
+      dispatch(
         fetchNextFeedPage({
           token: userState.token,
           userId: userState.loggedIn.userId,
@@ -114,6 +134,19 @@ export const Feed: React.FC = () => {
       );
     }
   }, [currentPageNumber, sessionStart]);
+
+  useEffect(() => {
+    initBeforeUnload();
+
+    return () => {
+      dispatch(
+        sendBatchedPostViews({
+          ids: postState.batchedViews,
+          token: userState.token,
+        })
+      );
+    };
+  }, []);
 
   return (
     <div className="feed">
@@ -134,11 +167,14 @@ export const Feed: React.FC = () => {
         </div>
       )}
 
-      <div
-        id="autoload"
-        ref={hiddenDiv}
-        hidden={feedState.posts.length === 0}
-      ></div>
+      <div id="autoload" ref={hiddenDiv} hidden={feedState.posts.length === 0}>
+        <CircularProgress
+          size={30}
+          sx={{
+            color: "#1da1f2",
+          }}
+        />
+      </div>
     </div>
   );
 };

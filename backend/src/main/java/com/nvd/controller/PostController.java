@@ -2,6 +2,7 @@ package com.nvd.controller;
 
 import com.nvd.dto.CreatePostDTO;
 import com.nvd.dto.CreateReplyDTO;
+import com.nvd.dto.CreateViewsDTO;
 import com.nvd.exceptions.PostDoesNotExistException;
 import com.nvd.exceptions.UnableToCreatePostException;
 import com.nvd.models.ApplicationUser;
@@ -99,5 +100,9 @@ public class PostController {
         return postService.viewPost(id, token);
     }
 
+    @PutMapping("/view/all")
+    public List<Post> viewPostsById(@RequestBody CreateViewsDTO views, @RequestHeader(value = "Authorization") String token) {
+        return postService.viewPosts(views.getIds(), token);
+    }
 
 }

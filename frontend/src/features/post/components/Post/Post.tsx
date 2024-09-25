@@ -26,6 +26,7 @@ import {
 } from "../../utils/PostUtils";
 import { Reply } from "../Reply/Reply";
 import {
+  batchPostView,
   bookmarkPost,
   likePost,
   repostPost,
@@ -254,12 +255,7 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
             views,
           };
           dispatch(updatePost(updatedPost));
-          dispatch(
-            viewPost({
-              postId: post.postId,
-              token,
-            })
-          );
+          dispatch(batchPostView(post.postId));
         }
       }
     });

@@ -33,6 +33,7 @@ public class PostService {
     private final PollService pollService;
     private final TokenService tokenService;
     private final UserService userService;
+    protected final NotificationService notificationService;
 
     public Post createPost(CreatePostDTO dto) {
 
@@ -91,7 +92,7 @@ public class PostService {
 
         try {
             Post posted = postRepository.save(post);
-            log.info("posted date: " + posted.getPostedDate());
+            notificationService.createAndSendPostNotifications(posted);
             return posted;
         } catch (Exception e) {
             //TODO: setup custom exception
@@ -317,5 +318,31 @@ public class PostService {
             return postRepository.save(post);
         }
         return post;
+    }
+
+    public List<Post> viewPosts(List<Integer> postIds, String token) {
+        String username = tokenService.getUsernameFromToken(token);
+        ApplicationUser user = userService.getUserByUsername(username);
+
+        List<Post> posts = postRepository.findByPostIdIn(postIds).orElse(new ArrayList<>());
+
+        List<Post> postToUpdate = posts.stream()
+                .filter(post -> !post.getViews().contains(user))
+                .map(post -> {
+                    Set<ApplicationUser> views = post.getViews();
+                    views.add(user);
+                    post.setViews(views);
+                    return post;
+                })
+                .toList();
+
+        List<Post> updatedPosts = postRepository.saveAll(postToUpdate);
+
+        posts.removeAll(updatedPosts);
+        posts.addAll(updatedPosts);
+
+        Collections.sort(posts);
+
+        return posts;
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -68,5 +69,5 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN TRUE ELSE FALSE END FROM Post p JOIN p.views v WHERE p.postId = :postId AND v.userId = :userId")
     boolean hasUserViewedPost(@Param("postId") Integer postId, @Param("userId") Integer userId);
 
-
+    Optional<List<Post>> findByPostIdIn(List<Integer> postIds);
 }

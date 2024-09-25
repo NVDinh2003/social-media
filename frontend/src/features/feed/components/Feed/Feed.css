@@ -4,3 +4,11 @@
   border-left: 1px solid rgba(170, 184, 197, 0.25);
   border-right: 1px solid rgba(170, 184, 197, 0.25);
 }
+
+#autoload {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
