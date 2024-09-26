@@ -46,4 +46,50 @@ public class NotificationService {
                     "/notifications", notification);
         });
     }
+
+    public void createAndSendNotifications(NotificationType type, ApplicationUser recipient,
+                                           ApplicationUser actionUser, Post post) {
+        Notification notification = Notification.builder()
+                .notificationType(type)
+                .notificationTimestamp(LocalDateTime.now())
+                .acknowledged(false)
+                .recipient(recipient)
+                .actionUser(actionUser)
+                .post(post)
+                .build();
+
+        notification = nofiticationRepository.save(notification);
+        simpMessagingTemplate.convertAndSendToUser(notification.getRecipient().getUsername(),
+                "/notifications", notification);
+    }
+
+    public void createAndSendFollowNotifications(ApplicationUser recipient, ApplicationUser actionUser) {
+        Notification notification = Notification.builder()
+                .notificationType(NotificationType.FOLLOW)
+                .notificationTimestamp(LocalDateTime.now())
+                .acknowledged(false)
+                .recipient(recipient)
+                .actionUser(actionUser)
+                .build();
+
+        notification = nofiticationRepository.save(notification);
+        simpMessagingTemplate.convertAndSendToUser(notification.getRecipient().getUsername(),
+                "/notifications", notification);
+    }
+
+    public List<Notification> fetchUsersNotifications(Integer userId) {
+        ApplicationUser user = userService.getUserById(userId);
+        return nofiticationRepository.getByRecipientAndAcknowledgedFalse(user);
+    }
+
+    public void acknowledgeNotification(List<Notification> notifications) {
+        List<Notification> acknowledgedNotifications = notifications.stream()
+                .map(notification -> {
+                    notification.setAcknowledged(true);
+                    return notification;
+                })
+                .toList();
+
+        nofiticationRepository.saveAll(acknowledgedNotifications);
+    }
 }

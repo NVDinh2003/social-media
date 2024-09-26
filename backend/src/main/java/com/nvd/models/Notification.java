@@ -31,7 +31,7 @@ public class Notification {
 
     private boolean acknowledged;   // user đã xem (nhận) thông báo hay chưa
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "recipient_user_id")
     private ApplicationUser recipient;
 

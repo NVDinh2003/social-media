@@ -7,6 +7,7 @@ import com.nvd.exceptions.PostDoesNotExistException;
 import com.nvd.exceptions.UnableToCreatePostException;
 import com.nvd.models.*;
 import com.nvd.models.enums.Audience;
+import com.nvd.models.enums.NotificationType;
 import com.nvd.models.enums.ReplyRestriction;
 import com.nvd.repositories.PostRepository;
 import com.nvd.utils.Constants;
@@ -130,7 +131,9 @@ public class PostService {
             }
             p.setImages(postImages);
 
-            return postRepository.save(p);
+            Post posted = postRepository.save(p);
+            notificationService.createAndSendPostNotifications(posted);
+            return posted;
         } catch (Exception e) {
             throw new UnableToCreatePostException();
         }
@@ -146,17 +149,8 @@ public class PostService {
     }
 
     public Set<Post> getAllPostsByAuthor(ApplicationUser author) {
-        Set<Post> posts = postRepository.findByAuthor(author).orElse(new HashSet<>());
-
-        return posts;
+        return postRepository.findByAuthor(author).orElse(new HashSet<>());
     }
-
-//    public Page<Post> getAllPostsByAuthors(Set<ApplicationUser> authors, LocalDateTime sessionStart, Integer page) {
-//        // get the next 100 posts starting on specified in the request
-//        Pageable pageable = PageRequest.of(page, 100, Sort.by("postedDate").descending());
-//
-//        return postRepository.findPostsByAuthors(authors, sessionStart, pageable);
-//    }
 
     public Page<Post> getFeedPage(Integer userId, LocalDateTime sessionStart, Integer page) {
         Pageable pageable = PageRequest.of(page, Constants.FETCH_FEED_POST_PAGE_SIZE);
@@ -192,7 +186,10 @@ public class PostService {
         original.setReplies(originalPostReplies);
 
         postRepository.save(original);
-        return postRepository.save(reply);
+        Post savedReply = postRepository.save(reply);
+        notificationService.createAndSendNotifications(NotificationType.REPLY,
+                original.getAuthor(), savedReply.getAuthor(), original);
+        return savedReply;
     }
 
     public Post createReplyWithMedia(String reply, List<MultipartFile> files) {
@@ -232,7 +229,10 @@ public class PostService {
             }
             replyPost.setImages(postImages);
 
-            return postRepository.save(replyPost);
+            Post savedReply = postRepository.save(replyPost);
+            notificationService.createAndSendNotifications(NotificationType.REPLY,
+                    original.getAuthor(), savedReply.getAuthor(), original);
+            return savedReply;
         } catch (Exception e) {
             throw new UnableToCreatePostException();
         }
@@ -250,7 +250,7 @@ public class PostService {
             reposts.add(user);
         }
         post.setReposts(reposts);
-
+        notificationService.createAndSendNotifications(NotificationType.REPOST, post.getAuthor(), user, post);
         return postRepository.save(post);
     }
 
@@ -266,7 +266,7 @@ public class PostService {
             likes.add(user);
         }
         post.setLikes(likes);
-
+        notificationService.createAndSendNotifications(NotificationType.LIKE, post.getAuthor(), user, post);
         return postRepository.save(post);
     }
 
@@ -282,7 +282,7 @@ public class PostService {
             bookmarks.add(user);
         }
         post.setBookmarks(bookmarks);
-
+        notificationService.createAndSendNotifications(NotificationType.BOOKMARK, post.getAuthor(), user, post);
         return postRepository.save(post);
     }
 
@@ -294,22 +294,6 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(PostDoesNotExistException::new);
 
         Set<ApplicationUser> views = post.getViews();
-//
-//        // Check if the user has already viewed the post
-//        if (!views.contains(user)) {
-//            views.add(user);
-//            post.setViews(views);
-//
-//            // Save the post with updated views
-//            try {
-//                return postRepository.save(post);
-//            } catch (Exception e) {
-//                // Handle the exception properly
-//                return post;
-//            }
-//        }
-//
-//        return post;
 
         boolean hasViewed = postRepository.hasUserViewedPost(postId, user.getUserId());
         if (!hasViewed) {

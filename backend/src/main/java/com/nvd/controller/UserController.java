@@ -4,6 +4,7 @@ import com.google.common.net.HttpHeaders;
 import com.nvd.exceptions.UnableToResolvePhotoException;
 import com.nvd.exceptions.UnableToSavePhotoException;
 import com.nvd.models.ApplicationUser;
+import com.nvd.service.NotificationService;
 import com.nvd.service.TokenService;
 import com.nvd.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.Set;
 public class UserController {
     private final UserService userService;
     private final TokenService tokenService;
+    private final NotificationService notificationService;
 
     @GetMapping("/{username}")
     public ApplicationUser getUserByUsername(@PathVariable String username) {
@@ -73,11 +75,17 @@ public class UserController {
             @RequestBody Map<String, String> body) {
         String loggedInUser = tokenService.getUsernameFromToken(token);
         String followedUser = body.get("followedUser");
-        return userService.followUser(loggedInUser, followedUser);
+
+        ApplicationUser user = userService.followUser(loggedInUser, followedUser);
+        ApplicationUser followed = user.getFollowing().stream()
+                .filter(u -> u.getUsername().equals(followedUser)).findFirst().orElse(null);
+
+        notificationService.createAndSendFollowNotifications(followed, user);
+        return user.getFollowing();
     }
 
     @PutMapping("test-follow")
-    public Set<ApplicationUser> testFollowUsers(
+    public ApplicationUser testFollowUsers(
             @RequestBody Map<String, String> body) {
         String user1 = body.get("user1");
         String followToUser = body.get("followToUser");
