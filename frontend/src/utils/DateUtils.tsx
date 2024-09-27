@@ -68,6 +68,30 @@ export const stringifyDate = (date: Dob): string => {
   return `${MONTHS[date.month].substring(0, 3)} ${date.day}, ${date.year}`;
 };
 
+export const stringifyTime = (date: Date): string => {
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  let ampm;
+
+  if (hours === 0) {
+    hours = 12;
+    ampm = "AM";
+  } else if (hours > 12) {
+    hours = hours % 12;
+    ampm = "PM";
+  } else {
+    ampm = "AM";
+  }
+
+  return `${hours}:${minutes < 10 ? `0${minutes}` : `${minutes}`} ${ampm}`;
+};
+
+export const stringifyFullDate = (date: Date): string => {
+  return `${
+    MONTHS[date.getMonth() + 1]
+  } ${date.getDate()}, ${date.getFullYear()}`;
+};
+
 export const cleanDateForRequest = (date: Dob): string => {
   let month: string = "";
   let day: string = "";

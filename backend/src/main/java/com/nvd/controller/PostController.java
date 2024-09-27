@@ -26,6 +26,7 @@ import java.util.Set;
 public class PostController {
     private final PostService postService;
     private final UserService userService;
+    
 
     @ExceptionHandler({UnableToCreatePostException.class})
     public ResponseEntity<String> handleUnableToCreatePost() {
@@ -62,7 +63,7 @@ public class PostController {
         return postService.createMediaPost(post, files);
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public Post getPostById(@PathVariable int id) {
         return postService.getPostById(id);
     }
