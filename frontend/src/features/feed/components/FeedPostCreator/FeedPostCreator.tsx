@@ -163,7 +163,10 @@ export const FeedPostCreator: React.FC = () => {
       <div className="feed-post-creator-right">
         {state.post.currentPost ? <FeedPostAudienceDropDown /> : <></>}
 
-        <CreatePostTextArea location="post" />
+        <CreatePostTextArea
+          location="post"
+          placeholder="What is happening !?"
+        />
 
         {(state.post.currentPostImages.length > 0 ||
           (state.post.currentPost &&
@@ -185,7 +188,7 @@ export const FeedPostCreator: React.FC = () => {
           }
         >
           <div className="feed-post-creator-icons-left">
-            <CreatePostButtonCluster />
+            <CreatePostButtonCluster type="post" />
           </div>
           <div className="feed-post-creator-submit-cluster">
             {state.post.currentPost && state.post.currentPost.content !== "" ? (

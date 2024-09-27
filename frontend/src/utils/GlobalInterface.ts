@@ -108,6 +108,7 @@ export interface Post {
   postedDate?: Date;
   author: User;
   replies: Post[];
+  replyTo?: Post | null;
   likes: User[];
   images: PostImage[];
   poll?: Poll;

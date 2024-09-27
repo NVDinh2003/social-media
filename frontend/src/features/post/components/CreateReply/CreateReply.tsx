@@ -11,7 +11,7 @@ export const CreateReply: React.FC = () => {
     <Modal
       topContent={<CreateReplyTop />}
       content={<CreateReplyBody />}
-      bottomContent={<CreateReplyBottom />}
+      bottomContent={<CreateReplyBottom type="post" />}
       topPosition="50px"
       transform="translateX(-50%)"
     />

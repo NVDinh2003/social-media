@@ -11,7 +11,13 @@ import {
 } from "../../../../../redux/Slices/PostSlice";
 import { updateDisplayCreateReply } from "../../../../../redux/Slices/ModalSlice";
 
-export const CreateReplyBottom = () => {
+interface CreateReplyBottomProps {
+  type: string;
+}
+
+export const CreateReplyBottom: React.FC<CreateReplyBottomProps> = ({
+  type,
+}) => {
   const postState = useSelector((state: RootState) => state.post);
   const token = useSelector((state: RootState) => state.user.token);
   const dispatch: AppDispatch = useDispatch();
@@ -52,8 +58,7 @@ export const CreateReplyBottom = () => {
           token,
         })
       );
-
-      dispatch(updateDisplayCreateReply());
+      if (type !== "reply") dispatch(updateDisplayCreateReply());
     } else if (
       postState.currentReply &&
       postState.currentReplyImages.length > 0
@@ -70,13 +75,13 @@ export const CreateReplyBottom = () => {
           token,
         })
       );
-      dispatch(updateDisplayCreateReply());
+      if (type !== "reply") dispatch(updateDisplayCreateReply());
     }
   };
 
   return (
     <div className="create-reply-bottom">
-      <CreatePostButtonCluster />
+      <CreatePostButtonCluster type={type} />
       <div className="create-reply-submit-group">
         {postState.currentReply &&
           postState.currentReply.replyContent !== "" && (

@@ -28,3 +28,12 @@ export const convertPostedDateToString = (postedDate: Date): string => {
 export const formatTextContent = (text: any) => {
   return { __html: text.replace(/\n/g, "<br />") };
 };
+
+export const convertCount = (count: number) => {
+  if (count >= 1000 && count < 10_000) return `${(count / 1000).toFixed(2)}K`;
+  else if (count >= 10_000 && count < 100_000)
+    return `${(count / 1000).toFixed(1)}K`;
+  else if (count >= 100_000 && count < 1_000_000)
+    return `${Math.floor(count / 1000)}K`;
+  return `${count}`;
+};

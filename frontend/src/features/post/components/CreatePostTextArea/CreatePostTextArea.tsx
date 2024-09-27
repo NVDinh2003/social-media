@@ -10,10 +10,12 @@ import {
 
 interface CreatePostTextAreaProps {
   location: string;
+  placeholder: string;
 }
 
 export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
   location,
+  placeholder,
 }) => {
   const state = useSelector((state: RootState) => state);
   const dispatch: AppDispatch = useDispatch();
@@ -93,7 +95,7 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
             ? "create-post-text-area-creator-input input-active"
             : "create-post-text-area-creator-input"
         }
-        placeholder="What is happening?!"
+        placeholder={placeholder}
         ref={textAreaRef}
         onChange={autoGrow}
         cols={50}

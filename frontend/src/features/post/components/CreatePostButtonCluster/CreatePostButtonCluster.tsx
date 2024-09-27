@@ -18,7 +18,13 @@ import {
   updateDisplaySchedule,
 } from "../../../../redux/Slices/ModalSlice";
 
-export const CreatePostButtonCluster = () => {
+interface CreatePostButtonClusterProps {
+  type: string;
+}
+
+export const CreatePostButtonCluster: React.FC<
+  CreatePostButtonClusterProps
+> = ({ type }) => {
   //
   const state = useSelector((state: RootState) => state);
   const dispatch: AppDispatch = useDispatch();
@@ -68,6 +74,23 @@ export const CreatePostButtonCluster = () => {
 
     if (state.post.currentPostImages[0]?.type === "image/gif") return true;
 
+    if (
+      (state.post.currentReply && state.post.currentReply.images.length > 0) ||
+      (state.post.currentPost && state.post.currentPost.images.length > 0)
+    )
+      return true;
+
+    return false;
+  };
+
+  const disableGif = (): boolean => {
+    if (
+      state.post.currentPostImages.length > 0 ||
+      state.post.currentReplyImages.length > 0 ||
+      (state.post.currentPost && state.post.currentPost.images.length > 0) ||
+      (state.post.currentReply && state.post.currentReply.images.length > 0)
+    )
+      return true;
     return false;
   };
 
@@ -116,7 +139,7 @@ export const CreatePostButtonCluster = () => {
       </div>
       <div
         className={
-          state.post.currentPostImages.length > 0
+          disableGif()
             ? "create-post-button-cluster-icon-bg"
             : "create-post-button-cluster-icon-bg icon-active"
         }
@@ -132,33 +155,41 @@ export const CreatePostButtonCluster = () => {
           }
         />
       </div>
-      <div
-        className={
-          state.post.currentPostImages.length > 0
-            ? "create-post-button-cluster-icon-bg"
-            : "create-post-button-cluster-icon-bg icon-active"
-        }
-        onClick={generatePoll}
-      >
-        <PollSVG
-          height={20}
-          width={20}
-          color={
+
+      {type === "post" && (
+        <div
+          className={
             state.post.currentPostImages.length > 0
-              ? "rgba(19,161,242,.5)"
-              : "#1DA1F2"
+              ? "create-post-button-cluster-icon-bg"
+              : "create-post-button-cluster-icon-bg icon-active"
           }
-        />
-      </div>
+          onClick={generatePoll}
+        >
+          <PollSVG
+            height={20}
+            width={20}
+            color={
+              state.post.currentPostImages.length > 0
+                ? "rgba(19,161,242,.5)"
+                : "#1DA1F2"
+            }
+          />
+        </div>
+      )}
+
       <div className="create-post-button-cluster-icon-bg icon-active">
         <EmojiSVG height={20} width={20} color={"#1DA1F2"} />
       </div>
-      <div
-        className="create-post-button-cluster-icon-bg icon-active"
-        onClick={openScheduleModal}
-      >
-        <ScheduleSVG height={20} width={20} color={"#1DA1F2"} />
-      </div>
+
+      {type === "post" && (
+        <div
+          className="create-post-button-cluster-icon-bg icon-active"
+          onClick={openScheduleModal}
+        >
+          <ScheduleSVG height={20} width={20} color={"#1DA1F2"} />
+        </div>
+      )}
+
       <div className="create-post-button-cluster-location">
         <LocationSVG height={20} width={20} color={"rgba(29,161,242,.5)"} />
       </div>

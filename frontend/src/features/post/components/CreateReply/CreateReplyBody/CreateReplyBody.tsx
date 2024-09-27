@@ -125,7 +125,10 @@ export const CreateReplyBody: React.FC = () => {
                 alt="User's avatar"
               />
               <div className="create-reply-body-post-reply">
-                <CreatePostTextArea location="reply" />
+                <CreatePostTextArea
+                  location="reply"
+                  placeholder="Post your reply..."
+                />
               </div>
             </div>
 
