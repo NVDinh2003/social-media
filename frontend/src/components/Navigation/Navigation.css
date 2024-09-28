@@ -146,3 +146,7 @@
   color: #14171a;
   font-weight: 800;
 }
+
+.navigation-notification-wrapper {
+  position: relative;
+}

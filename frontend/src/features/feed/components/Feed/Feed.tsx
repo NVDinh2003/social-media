@@ -19,32 +19,15 @@ import { FeedPostCreatorGifModal } from "../FeedPostCreatorGifModal/FeedPostCrea
 import { SchedulePostModal } from "../../../schedule-post/SchedulePostModal/SchedulePostModal";
 import { CreateReply } from "../../../post/components/CreateReply/CreateReply";
 import { sendBatchedPostViews } from "../../../../redux/Slices/PostSlice";
+import { FeedMorePosts } from "./FeedMorePosts/FeedMorePosts";
 
 export const Feed: React.FC = () => {
   //
   const userState = useSelector((state: RootState) => state.user);
   const feedState = useSelector((state: RootState) => state.feed);
   const postState = useSelector((state: RootState) => state.post);
-
-  // display modal
-  const displayEditImageModal = useSelector(
-    (state: RootState) => state.modal.displayEditPostImage
-  );
-
-  const displayTagPeopleModal = useSelector(
-    (state: RootState) => state.modal.displayTagPeople
-  );
-
-  const displayGifModal = useSelector(
-    (state: RootState) => state.modal.displayGif
-  );
-
-  const displayScheduleModal = useSelector(
-    (state: RootState) => state.modal.displaySchedule
-  );
-
-  const displayCreateReplyModal = useSelector(
-    (state: RootState) => state.modal.displayCreateReply
+  const notificationState = useSelector(
+    (state: RootState) => state.notification
   );
 
   const currentPageNumber = useSelector(
@@ -152,13 +135,10 @@ export const Feed: React.FC = () => {
     <div className="feed">
       <FeedTopBar />
 
-      {displayEditImageModal && <FeedPostCreatorEditImageModal />}
-      {displayTagPeopleModal && <FeedPostCreatorTagPeopleModal />}
-      {displayGifModal && <FeedPostCreatorGifModal />}
-      {displayScheduleModal && <SchedulePostModal />}
-      {displayCreateReplyModal && <CreateReply />}
-
       <FeedPostCreator />
+
+      {notificationState.newPostNotifications.length > 0 && <FeedMorePosts />}
+
       {feedState.posts.length > 0 && (
         <div className="feed-posts">
           {feedState.posts.map((post) => (

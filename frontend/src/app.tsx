@@ -14,6 +14,7 @@ import { RootState } from "./redux/Store";
 import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
 import { ViewPost } from "./pages/ViewPost";
+import { useWebsocket } from "./hooks/useWebsocket";
 
 const theme: Theme = {
   colors: {
@@ -35,37 +36,8 @@ const GlobalStyle = createGlobalStyle`
 
 export const App = () => {
   const API_URL = process.env.REACT_APP_API_URL;
-  let stompClient: Client | null = null;
   const user = useSelector((state: RootState) => state.user.loggedIn);
-  const [connected, setConnected] = useState<boolean>(false);
-
-  function connect() {
-    if (user) {
-      const socket = new SockJS(`${API_URL}/ws`);
-      stompClient = over(socket);
-
-      stompClient.connect({}, onConnected, onError);
-    }
-  }
-
-  function onConnected() {
-    // console.log("Connected to websocket server");
-    setConnected(true);
-    if (stompClient) {
-      stompClient.subscribe(
-        `/user/${user?.username}/notifications`,
-        onMessageReceived
-      );
-    }
-  }
-
-  function onError() {
-    setConnected(false);
-  }
-
-  function onMessageReceived(payload: any) {
-    console.log(payload);
-  }
+  const { connected, connect } = useWebsocket();
 
   useEffect(() => {
     if (user && !connected) {

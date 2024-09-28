@@ -156,3 +156,20 @@ export interface Poll {
   endTime: string;
   choices: PollChoice[];
 }
+
+export interface Notification {
+  notificationId: number;
+  notificationType:
+    | "NEW_POST"
+    | "REPOST"
+    | "LIKE"
+    | "REPLY"
+    | "BOOKMARK"
+    | "MESSAGE"
+    | "FOLLOW";
+  notificationTimeStamp: string;
+  acknowledged: boolean;
+  recipient: User;
+  actionUser: User;
+  post: Post | null;
+}
