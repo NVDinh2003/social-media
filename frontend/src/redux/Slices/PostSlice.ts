@@ -9,7 +9,7 @@ import {
 } from "../../utils/GlobalInterface";
 import axios from "axios";
 import FormData from "form-data";
-import { setSessionTime } from "./FeedSlice";
+import { setSessionTime, updatePost } from "./FeedSlice";
 
 export interface PostSliceState {
   loading: boolean;
@@ -158,7 +158,16 @@ export const createReply = createAsyncThunk(
 
       thunkAPI.dispatch(setSessionTime(new Date()));
 
-      return req.data;
+      const savedReply = req.data;
+      let original = body.reply.originalPost;
+
+      original = {
+        ...original,
+        replies: [...original.replies, savedReply],
+      };
+
+      thunkAPI.dispatch(updatePost(original));
+      return savedReply;
     } catch (e) {
       thunkAPI.rejectWithValue(e);
     }
@@ -239,7 +248,14 @@ export const createReplyWithMedia = createAsyncThunk(
     try {
       let req = await axios(config);
 
-      return req.data;
+      const savedReply = req.data;
+
+      let original = savedReply?.replyTo;
+
+      original = {
+        ...original,
+        replies: [...original.replies, savedReply],
+      };
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
     }

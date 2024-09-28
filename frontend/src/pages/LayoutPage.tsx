@@ -10,6 +10,7 @@ import { useEffect } from "react";
 
 import "./LayoutPage.css";
 import { updateDisplayPostMore } from "../redux/Slices/ModalSlice";
+import ModalContainer from "../components/ModalContainer/ModalContainer";
 
 export const LayoutPage: React.FC = () => {
   //
@@ -29,7 +30,7 @@ export const LayoutPage: React.FC = () => {
     if (jwt !== "" && state.token !== "") dispatch(getUserByToken(state.token));
     else if (jwt === "" && state.token !== "") setJwt(state.token);
     else if (jwt !== "" && state.token === "") dispatch(setToken(jwt));
-    else navigate("/");
+    else if (!location.pathname.startsWith("/post")) navigate("/");
   }, [state.token]);
 
   // useEffect(() => {
@@ -55,8 +56,8 @@ export const LayoutPage: React.FC = () => {
 
   return (
     <div className="layout-page" onClick={closeOpenedModals}>
+      <ModalContainer />
       <div className="layout">
-        {" "}
         <div className="layout-navigation-section">
           <Navigation currentPage={location.pathname} />
         </div>
