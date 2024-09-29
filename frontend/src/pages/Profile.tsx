@@ -21,6 +21,7 @@ export const Profile: React.FC = () => {
     //
     let user;
     try {
+      console.log(username);
       let req = await axios.get(
         `${process.env.REACT_APP_API_URL}/users/${username}`,
         {

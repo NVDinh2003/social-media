@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
 import { ViewPost } from "./pages/ViewPost";
 import { useWebsocket } from "./hooks/useWebsocket";
+import NotificationsPage from "./pages/NotificationsPage";
 
 const theme: Theme = {
   colors: {
@@ -57,6 +58,15 @@ export const App = () => {
             <Route path="/explore" element={<>Explore</>} />
             <Route path="/:username" element={<Profile />} />
             <Route path="/post/:postId" element={<ViewPost />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route
+              path="/notifications/verified"
+              element={<NotificationsPage />}
+            />
+            <Route
+              path="/notifications/mentions"
+              element={<NotificationsPage />}
+            />
           </Route>
 
           {/* <Route path="/home" element={<Home></Home>} /> */}

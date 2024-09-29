@@ -3,12 +3,16 @@ import { Client, over } from "stompjs";
 import { AppDispatch, RootState } from "../redux/Store";
 import { useState } from "react";
 import SockJS from "sockjs-client";
-import { recievedNotification } from "../redux/Slices/NotificationSlice";
+import {
+  loadNotifications,
+  recievedNotification,
+} from "../redux/Slices/NotificationSlice";
 
 export function useWebsocket() {
   const API_URL = process.env.REACT_APP_API_URL;
   let stompClient: Client | null = null;
   const user = useSelector((state: RootState) => state.user.loggedIn);
+  const token = useSelector((state: RootState) => state.user.token);
   const dispatch: AppDispatch = useDispatch();
   const [connected, setConnected] = useState<boolean>(false);
 
@@ -18,6 +22,14 @@ export function useWebsocket() {
       stompClient = over(socket);
 
       stompClient.connect({}, onConnected, onError);
+      if (token) {
+        dispatch(
+          loadNotifications({
+            userId: user.userId,
+            token,
+          })
+        );
+      }
     }
   }
 

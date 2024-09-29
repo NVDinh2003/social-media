@@ -20,8 +20,21 @@ public class NotificationService {
 
     private final NofiticationRepository nofiticationRepository;
     private final UserService userService;
-
     private final SimpMessagingTemplate simpMessagingTemplate;
+
+    private final static List<NotificationType> NON_NEW_NOTIFICATION_TYPES = List.of(
+            NotificationType.FOLLOW,
+            NotificationType.LIKE,
+            NotificationType.REPLY,
+            NotificationType.REPOST,
+            NotificationType.BOOKMARK,
+            NotificationType.MESSAGE);
+
+    public List<Notification> getAllNotificationsFotUser(Integer userId) {
+        ApplicationUser user = userService.getUserById(userId);
+        return nofiticationRepository.getByRecipientAndNotificationTypeInOrderByNotificationTimestampDesc(user,
+                NON_NEW_NOTIFICATION_TYPES);
+    }
 
     public void createAndSendPostNotifications(Post post) {
         ApplicationUser author = userService.getUserById(post.getAuthor().getUserId());

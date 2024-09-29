@@ -19,7 +19,12 @@ export const FeedMorePosts: React.FC = () => {
 
   const loadNewPosts = () => {
     if (userState.loggedIn && userState.token) {
-      dispatch(readNotifications("NEW_POST"));
+      dispatch(
+        readNotifications({
+          notifications: posts,
+          token: userState.token,
+        })
+      );
       dispatch(
         loadFeedPage({
           token: userState.token,

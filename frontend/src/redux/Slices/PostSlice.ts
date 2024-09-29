@@ -90,6 +90,8 @@ const initialState: PostSliceState = {
   batchedViews: [],
 };
 
+const baseUrl = process.env.REACT_APP_API_URL;
+
 export const createPost = createAsyncThunk(
   "post/create",
   async (body: createPostBody, thunkAPI) => {
@@ -108,11 +110,9 @@ export const createPost = createAsyncThunk(
 
       // console.log("post created", post);
 
-      const req = await axios.post(
-        `${process.env.REACT_APP_API_URL}/posts`,
-        post,
-        { headers: { Authorization: `Bearer ${body.token}` } }
-      );
+      const req = await axios.post(`${baseUrl}/posts`, post, {
+        headers: { Authorization: `Bearer ${body.token}` },
+      });
 
       const data = req.data;
 
@@ -148,13 +148,9 @@ export const createReply = createAsyncThunk(
       poll: body.reply.poll,
     };
     try {
-      const req = await axios.post(
-        `${process.env.REACT_APP_API_URL}/posts/reply`,
-        reply,
-        {
-          headers: { Authorization: `Bearer ${body.token}` },
-        }
-      );
+      const req = await axios.post(`${baseUrl}/posts/reply`, reply, {
+        headers: { Authorization: `Bearer ${body.token}` },
+      });
 
       thunkAPI.dispatch(setSessionTime(new Date()));
 
@@ -197,7 +193,7 @@ export const createPostWithMedia = createAsyncThunk(
 
       let config = {
         method: "post",
-        url: `${process.env.REACT_APP_API_URL}/posts/media`,
+        url: `${baseUrl}/posts/media`,
         headers: {
           Authorization: `Bearer ${body.token}`,
           "Content-Type": "multipart/form-data",
@@ -237,7 +233,7 @@ export const createReplyWithMedia = createAsyncThunk(
 
     let config = {
       method: "post",
-      url: `${process.env.REACT_APP_API_URL}/posts/reply/media`,
+      url: `${baseUrl}/posts/reply/media`,
       headers: {
         Authorization: `Bearer ${body.token}`,
         "Content-Type": "multipart/form-data",
@@ -267,7 +263,7 @@ export const repostPost = createAsyncThunk(
   async (body: PostActionBody, thunkAPI) => {
     try {
       let req = await axios.put(
-        `${process.env.REACT_APP_API_URL}/posts/repost/${body.postId}`,
+        `${baseUrl}/posts/repost/${body.postId}`,
         {},
         {
           headers: {
@@ -292,7 +288,7 @@ export const likePost = createAsyncThunk(
   async (body: PostActionBody, thunkAPI) => {
     try {
       let req = await axios.put(
-        `${process.env.REACT_APP_API_URL}/posts/like/${body.postId}`,
+        `${baseUrl}/posts/like/${body.postId}`,
         {},
         {
           headers: {
@@ -313,7 +309,7 @@ export const bookmarkPost = createAsyncThunk(
   async (body: PostActionBody, thunkAPI) => {
     try {
       let req = await axios.put(
-        `${process.env.REACT_APP_API_URL}/posts/bookmark/${body.postId}`,
+        `${baseUrl}/posts/bookmark/${body.postId}`,
         {},
         {
           headers: {
@@ -333,7 +329,7 @@ export const viewPost = createAsyncThunk(
   async (body: PostActionBody, thunkAPI) => {
     try {
       let req = await axios.put(
-        `${process.env.REACT_APP_API_URL}/posts/view/${body.postId}`,
+        `${baseUrl}/posts/view/${body.postId}`,
         {},
         {
           headers: {
@@ -357,15 +353,11 @@ export const sendBatchedPostViews = createAsyncThunk(
         ids: body.ids,
       };
 
-      let req = await axios.put(
-        `${process.env.REACT_APP_API_URL}/posts/view/all`,
-        ids,
-        {
-          headers: {
-            Authorization: `Bearer ${body.token}`,
-          },
-        }
-      );
+      let req = await axios.put(`${baseUrl}/posts/view/all`, ids, {
+        headers: {
+          Authorization: `Bearer ${body.token}`,
+        },
+      });
 
       return req.data;
     } catch (e) {

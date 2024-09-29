@@ -81,7 +81,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
         </div>
 
         <div className="navigation-item">
-          <Link to="/home" className="navigation-link">
+          <Link to="/notifications" className="navigation-link">
             <div className="navigation-notification-wrapper">
               {(notifications.followNotifications.length > 0 ||
                 notifications.postActionNotifications.length > 0) && (
@@ -99,12 +99,21 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
               <NotificationSVG height={26} width={26} />
             </div>
 
-            <p className="navigation-text navigation-inactive">Notification</p>
+            <p
+              className={`navigation-text 
+                ${
+                  currentPage.startsWith("/notifications")
+                    ? "navigation-active"
+                    : "navigation-inactive"
+                } `}
+            >
+              Notifications
+            </p>
           </Link>
         </div>
 
         <div className="navigation-item">
-          <Link to="/home" className="navigation-link">
+          <Link to="" className="navigation-link">
             <div className="navigation-notification-wrapper">
               {notifications.messageNotifications.length > 0 && (
                 <Circle
@@ -125,35 +134,35 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
         </div>
 
         <div className="navigation-item">
-          <Link to="/home" className="navigation-link">
+          <Link to="" className="navigation-link">
             <ListsSVG height={26} width={26} />
             <p className="navigation-text navigation-inactive">List</p>
           </Link>
         </div>
 
         <div className="navigation-item">
-          <Link to="/home" className="navigation-link">
+          <Link to="" className="navigation-link">
             <CommunitiesSVG height={26} width={26} />
             <p className="navigation-text navigation-inactive">Communities</p>
           </Link>
         </div>
 
         <div className="navigation-item">
-          <Link to="/home" className="navigation-link">
+          <Link to="" className="navigation-link">
             <BookmarksSVG height={26} width={26} />
             <p className="navigation-text navigation-inactive">Bookmarks</p>
           </Link>
         </div>
 
         <div className="navigation-item">
-          <Link to="/home" className="navigation-link">
+          <Link to="" className="navigation-link">
             <ProfileSVG height={26} width={26} />
             <p className="navigation-text navigation-inactive">Profile</p>
           </Link>
         </div>
 
         <div className="navigation-item">
-          <Link to="/home" className="navigation-link">
+          <Link to="" className="navigation-link">
             <MoreSVG height={26} width={26} />
             <p className="navigation-text navigation-inactive">More</p>
           </Link>

@@ -1,19 +1,73 @@
+import axios from "axios";
 import { Notification } from "./../../utils/GlobalInterface";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface NotificationSliceState {
   newPostNotifications: Notification[];
   postActionNotifications: Notification[];
+  mentionNotifications: Notification[];
   messageNotifications: Notification[];
   followNotifications: Notification[];
+}
+
+interface loadNotificationsPayload {
+  userId: number;
+  token: string;
+}
+
+interface ReadNotificationsPayload {
+  notifications: Notification[];
+  token: string;
 }
 
 const initialState: NotificationSliceState = {
   newPostNotifications: [],
   postActionNotifications: [],
+  mentionNotifications: [],
   messageNotifications: [],
   followNotifications: [],
 };
+const baseUrl = process.env.REACT_APP_API_URL;
+
+export const loadNotifications = createAsyncThunk(
+  "notification/load",
+  async (payload: loadNotificationsPayload, thunkAPI) => {
+    try {
+      let req = await axios.get(`${baseUrl}/notifications/${payload.userId}`, {
+        headers: {
+          Authorization: `Bearer ${payload.token}`,
+        },
+      });
+
+      return req.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+export const readNotifications = createAsyncThunk(
+  "notification/read",
+  async (payload: ReadNotificationsPayload, thunkAPI) => {
+    try {
+      await axios.post(
+        `${baseUrl}/notifications/acknowledge`,
+        {
+          notifications: payload.notifications,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${payload.token}`,
+          },
+        }
+      );
+
+      return payload.notifications;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
 
 export const NotificationSlice = createSlice({
   name: "notification",
@@ -32,13 +86,21 @@ export const NotificationSlice = createSlice({
           return state;
         case "LIKE":
         case "REPOST":
-        case "REPLY":
         case "BOOKMARK":
           state = {
             ...state,
             postActionNotifications: [
               action.payload,
               ...state.postActionNotifications,
+            ],
+          };
+          return state;
+        case "REPLY":
+          state = {
+            ...state,
+            mentionNotifications: [
+              action.payload,
+              ...state.mentionNotifications,
             ],
           };
           return state;
@@ -61,23 +123,114 @@ export const NotificationSlice = createSlice({
           return state;
       }
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(loadNotifications.fulfilled, (state, action) => {
+      let posts: Notification[] = [];
+      let mentions: Notification[] = [];
+      let messages: Notification[] = [];
+      let follow: Notification[] = [];
 
-    readNotifications(state, action: PayloadAction<string>) {
-      switch (action.payload) {
-        case "NEW_POST":
-          state = {
-            ...state,
-            newPostNotifications: [],
-          };
-          return state;
-        default:
-          return state;
+      let allNotifications: Notification[] = action.payload;
+      for (let notification of allNotifications) {
+        switch (notification.notificationType) {
+          case "LIKE":
+          case "REPOST":
+          case "BOOKMARK":
+            posts.push(notification);
+            break;
+          case "REPLY":
+            mentions.push(notification);
+            break;
+          case "FOLLOW":
+            follow.push(notification);
+            break;
+          default:
+            messages.push(notification);
+        }
       }
-    },
+
+      state = {
+        ...state,
+        postActionNotifications: posts,
+        mentionNotifications: mentions,
+        followNotifications: follow,
+        messageNotifications: messages,
+      };
+
+      return state;
+    });
+
+    builder.addCase(readNotifications.fulfilled, (state, action) => {
+      let posts: Notification[] = [];
+      let mentions: Notification[] = [];
+      let messages: Notification[] = [];
+      let follow: Notification[] = [];
+
+      if (action.payload[0].notificationType === "NEW_POST") {
+        state = {
+          ...state,
+          newPostNotifications: [],
+        };
+        return state;
+      }
+
+      let allNotifications = [
+        ...state.postActionNotifications,
+        ...state.mentionNotifications,
+        ...state.followNotifications,
+        ...state.messageNotifications,
+      ];
+
+      let readNotifications = action.payload.map((notification) => {
+        return {
+          ...notification,
+          acknowledged: true,
+        };
+      });
+
+      for (let i = 0; i < allNotifications.length; i++) {
+        for (let j = 0; j < readNotifications.length; j++) {
+          if (
+            allNotifications[i].notificationId ===
+            readNotifications[j].notificationId
+          ) {
+            allNotifications.splice(i, 1, readNotifications[j]);
+          }
+        }
+      }
+
+      for (let notification of allNotifications) {
+        switch (notification.notificationType) {
+          case "LIKE":
+          case "REPOST":
+          case "BOOKMARK":
+            posts.push(notification);
+            break;
+          case "REPLY":
+            mentions.push(notification);
+            break;
+          case "FOLLOW":
+            follow.push(notification);
+            break;
+          default:
+            messages.push(notification);
+        }
+      }
+
+      state = {
+        ...state,
+        postActionNotifications: posts,
+        mentionNotifications: mentions,
+        followNotifications: follow,
+        messageNotifications: messages,
+      };
+
+      return state;
+    });
   },
 });
 
-export const { recievedNotification, readNotifications } =
-  NotificationSlice.actions;
+export const { recievedNotification } = NotificationSlice.actions;
 
 export default NotificationSlice.reducer;
