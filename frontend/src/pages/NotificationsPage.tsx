@@ -4,29 +4,27 @@ import { useLocation } from "react-router-dom";
 
 import "./NotificationsPage.css";
 import { NotificationHeader } from "../features/notification/Notification/NotificationHeader/NotificationHeader";
+import { NotificationsAll } from "../features/notification/NotificationsAll/NotificationsAll";
 
 export default function NotificationsPage() {
   const notificationState = useSelector(
     (state: RootState) => state.notification
   );
-  const allNotifications = [
-    ...notificationState.followNotifications,
-    ...notificationState.postActionNotifications,
-    ...notificationState.mentionNotifications,
-  ];
 
   const location = useLocation();
 
   return (
     <div className="notifications">
       <NotificationHeader />
-      Notifications:
-      {allNotifications.map((notification) => (
-        <h2>
-          {notification.notificationType} Notification from{" "}
-          {notification.actionUser.username}
-        </h2>
-      ))}
+
+      {location.pathname === "/notifications" && (
+        <NotificationsAll
+          notifications={[
+            ...notificationState.followNotifications,
+            ...notificationState.postActionNotifications,
+          ]}
+        />
+      )}
     </div>
   );
 }

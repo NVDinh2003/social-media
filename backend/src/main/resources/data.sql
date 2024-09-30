@@ -82,12 +82,12 @@ values (1, 5),
 -- values (1, 4),
 --        (1, 3);
 
-insert into notifications(acknowledged, action_user_id, notification_id, notification_type,
+insert into notifications(acknowledged, action_user_id, notification_type,
                           post_id, recipient_user_id, "timestamp")
-values (false, 1, 1, 6, null, 5, now()),
-       (false, 1, 2, 6, null, 5, now()),
-       (false, 1, 3, 6, null, 5, now()),
-       (false, 1, 4, 6, null, 5, now());
+values (true, 1, 6, null, 5, '2024-07-27 02:58:57'),
+       (false, 1, 6, null, 5, '2024-07-28 02:58:57'),
+       (false, 1, 6, null, 5, '2024-08-30 02:58:57'),
+       (false, 1, 6, null, 5, '2024-08-30 02:58:57');
 
 insert into posts (audience, content, posted_date, is_reply, reply_restriction, reply_to, scheduled, scheduled_date,
                    author_id, poll_id)

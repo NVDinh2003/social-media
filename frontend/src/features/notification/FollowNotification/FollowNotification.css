@@ -1,0 +1,12 @@
+.follow-notification-text {
+  margin: 0;
+  margin-top: 8px;
+  margin-left: 48px;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.follow-notification-text-bold {
+  font-weight: 900;
+}
