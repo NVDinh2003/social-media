@@ -3,6 +3,7 @@ import { RootState } from "../redux/Store";
 import { useLocation } from "react-router-dom";
 
 import "./NotificationsPage.css";
+import { NotificationHeader } from "../features/notification/Notification/NotificationHeader/NotificationHeader";
 
 export default function NotificationsPage() {
   const notificationState = useSelector(
@@ -18,6 +19,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="notifications">
+      <NotificationHeader />
       Notifications:
       {allNotifications.map((notification) => (
         <h2>
