@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/Store";
 import { FeedPostCreatorEditImageModal } from "../../features/feed/components/FeedPostCreatorEditImageModal/FeedPostCreatorEditImageModal";
@@ -6,6 +5,7 @@ import { FeedPostCreatorTagPeopleModal } from "../../features/feed/components/Fe
 import { FeedPostCreatorGifModal } from "../../features/feed/components/FeedPostCreatorGifModal/FeedPostCreatorGifModal";
 import { SchedulePostModal } from "../../features/schedule-post/SchedulePostModal/SchedulePostModal";
 import { CreateReply } from "../../features/post/components/CreateReply/CreateReply";
+import { MentionsLearnMoreModal } from "../../features/notification/MentionNotification/MentionsLearnMoreModal/MentionsLearnMoreModal";
 
 export default function ModalContainer() {
   const displayEditImageModal = useSelector(
@@ -23,6 +23,9 @@ export default function ModalContainer() {
   const displayCreateReply = useSelector(
     (state: RootState) => state.modal.displayCreateReply
   );
+  const displatMentionLearnMore = useSelector(
+    (state: RootState) => state.modal.displayMentionLearnMore
+  );
 
   return (
     <>
@@ -31,6 +34,7 @@ export default function ModalContainer() {
       {displatGifModal && <FeedPostCreatorGifModal />}
       {displayScheduleModal && <SchedulePostModal />}
       {displayCreateReply && <CreateReply />}
+      {displatMentionLearnMore && <MentionsLearnMoreModal />}
     </>
   );
 }

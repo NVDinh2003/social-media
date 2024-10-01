@@ -150,3 +150,27 @@
 .navigation-notification-wrapper {
   position: relative;
 }
+
+.navigation-notification-count-wrapper {
+  background-color: #1da1f2;
+  height: 18px;
+  width: 18px;
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 100%;
+  z-index: 10;
+}
+
+.navigation-notification-count {
+  font-size: 10px;
+  margin: 0;
+  padding: 0;
+  color: white;
+  margin-bottom: 1;
+  margin-left: 1;
+}

@@ -1,0 +1,19 @@
+.mention-learn-more-modal-top {
+  width: 100%;
+  padding: 12px;
+}
+
+.mention-learn-more-modal-top-exit {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 100%;
+}
+
+.mention-learn-more-modal-top-exit:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.1);
+}

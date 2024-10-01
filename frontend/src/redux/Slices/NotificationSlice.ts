@@ -167,7 +167,10 @@ export const NotificationSlice = createSlice({
       let messages: Notification[] = [];
       let follow: Notification[] = [];
 
-      if (action.payload[0].notificationType === "NEW_POST") {
+      if (
+        action.payload.length > 0 &&
+        action.payload[0].notificationType === "NEW_POST"
+      ) {
         state = {
           ...state,
           newPostNotifications: [],

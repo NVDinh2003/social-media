@@ -48,10 +48,12 @@
   padding: 8px 32px 32px 32px;
   font-size: 15px;
   color: #657786;
+  font-weight: 400;
 }
 
 .mention-notification-bold-underline {
   color: black;
   text-decoration: underline;
   font-weight: 900;
+  cursor: pointer;
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import blueLogo from "../../assets/fwitter-logo-large-blue.png";
 
 import "./Navigation.css";
@@ -28,20 +28,30 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
   const state = useSelector((state: RootState) => state.user);
   const notifications = useSelector((state: RootState) => state.notification);
 
-  const showNotificationBubble = () => {
-    console.log(
-      notifications.followNotifications.length +
-        " " +
-        notifications.postActionNotifications.length +
-        " " +
-        notifications.mentionNotifications.length
+  const [newNotifications, setNewNotifications] = useState<number>(0);
+
+  const calculateNewNotifications = () => {
+    const allNotifications = [
+      ...notifications.postActionNotifications,
+      ...notifications.mentionNotifications,
+      ...notifications.followNotifications,
+    ];
+
+    const unreadNotifications = allNotifications.filter(
+      (notification) => !notification.acknowledged
     );
-    return (
-      notifications.followNotifications.length > 0 ||
-      notifications.postActionNotifications.length > 0 ||
-      notifications.mentionNotifications.length > 0
-    );
+
+    setNewNotifications(unreadNotifications.length);
   };
+
+  useEffect(() => {
+    calculateNewNotifications();
+  }, [
+    notifications.followNotifications.length,
+    notifications.mentionNotifications.length,
+    notifications.newPostNotifications.length,
+    notifications.postActionNotifications.length,
+  ]);
 
   return (
     <div className="navigation">
@@ -98,17 +108,12 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
         <div className="navigation-item">
           <Link to="/notifications" className="navigation-link">
             <div className="navigation-notification-wrapper">
-              {showNotificationBubble() && (
-                <Circle
-                  sx={{
-                    color: "#1da1f2",
-                    height: "8px",
-                    width: "8px",
-                    position: "absolute",
-                    top: "-4px",
-                    right: 0,
-                  }}
-                />
+              {newNotifications > 0 && (
+                <div className="navigation-notification-count-wrapper">
+                  <p className="navigation-notification-count">
+                    {newNotifications < 10 ? newNotifications : "9+"}
+                  </p>
+                </div>
               )}
               <NotificationSVG height={26} width={26} />
             </div>

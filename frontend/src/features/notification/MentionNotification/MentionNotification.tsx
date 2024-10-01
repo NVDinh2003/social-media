@@ -11,12 +11,17 @@ import { AppDispatch, RootState } from "../../../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import { readNotifications } from "../../../redux/Slices/NotificationSlice";
 import { Post } from "../../post/components/Post/Post";
+import { updateDisplatMentionLearnMore } from "../../../redux/Slices/ModalSlice";
 
 export const MentionNotification: React.FC<{
   notifications: INotification[];
 }> = ({ notifications }) => {
   const userState = useSelector((state: RootState) => state.user);
   const dispatch: AppDispatch = useDispatch();
+
+  const openLearnMore = () => {
+    dispatch(updateDisplatMentionLearnMore());
+  };
 
   useEffect(() => {
     if (notifications.length > 0 && userState.loggedIn && userState.token) {
@@ -50,7 +55,10 @@ export const MentionNotification: React.FC<{
         <p className="mention-notification-hero-text">
           Use the action menu — those three little dots on a post — to untag
           yourself and leave a conversation.{" "}
-          <span className="mention-notification-bold-underline">
+          <span
+            className="mention-notification-bold-underline"
+            onClick={openLearnMore}
+          >
             Learn more
           </span>
         </p>
