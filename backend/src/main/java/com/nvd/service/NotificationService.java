@@ -48,6 +48,7 @@ public class NotificationService {
                         .recipient(follower)
                         .actionUser(author)
                         .post(post)
+                        .reply(null)
                         .build())
                 .collect(Collectors.toList());
 
@@ -61,7 +62,7 @@ public class NotificationService {
     }
 
     public void createAndSendNotifications(NotificationType type, ApplicationUser recipient,
-                                           ApplicationUser actionUser, Post post) {
+                                           ApplicationUser actionUser, Post post, Post reply) {
         Notification notification = Notification.builder()
                 .notificationType(type)
                 .notificationTimestamp(LocalDateTime.now())
@@ -69,6 +70,7 @@ public class NotificationService {
                 .recipient(recipient)
                 .actionUser(actionUser)
                 .post(post)
+                .reply(reply)
                 .build();
 
         notification = nofiticationRepository.save(notification);

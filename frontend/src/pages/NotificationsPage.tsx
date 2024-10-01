@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import "./NotificationsPage.css";
 import { NotificationHeader } from "../features/notification/Notification/NotificationHeader/NotificationHeader";
 import { NotificationsAll } from "../features/notification/NotificationsAll/NotificationsAll";
+import { MentionNotification } from "../features/notification/MentionNotification/MentionNotification";
 
 export default function NotificationsPage() {
   const notificationState = useSelector(
@@ -23,6 +24,12 @@ export default function NotificationsPage() {
             ...notificationState.followNotifications,
             ...notificationState.postActionNotifications,
           ]}
+        />
+      )}
+
+      {location.pathname === "/notifications/mentions" && (
+        <MentionNotification
+          notifications={notificationState.mentionNotifications}
         />
       )}
     </div>

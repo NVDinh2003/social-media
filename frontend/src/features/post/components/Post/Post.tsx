@@ -1,24 +1,15 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { FeedPost, Post as IPost } from "../../../../utils/GlobalInterface";
 
 import CircleIcon from "@mui/icons-material/Circle";
 import VerifiedIcon from "@mui/icons-material/Verified";
-
-import ReplyOutlineSVG from "../../../../components/SVGs/ReplyOutlineSVG";
 import RepostOutlineSVG from "../../../../components/SVGs/RepostOutlineSVG";
-import LikeOutlineSVG from "../../../../components/SVGs/LikeOutlineSVG";
-import ViewsSVG from "../../../../components/SVGs/ViewsSVG";
-import ShareSVG from "../../../../components/SVGs/ShareSVG";
-import BookmarksSVG from "../../../../components/SVGs/BookmarksSVG";
-
 import "./Post.css";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
-import { updateDisplayCreateReply } from "../../../../redux/Slices/ModalSlice";
-import { setCurrentPost, updatePost } from "../../../../redux/Slices/FeedSlice";
+import { updatePost } from "../../../../redux/Slices/FeedSlice";
 import { convertPostedDateToString } from "../../utils/PostUtils";
 import { batchPostView } from "../../../../redux/Slices/PostSlice";
-import { createImagePostContainer } from "../../../feed/utils/FeedUtils";
 import { useNavigate } from "react-router-dom";
 import { PostMore } from "../PostMore/PostMore";
 import { PostUsername } from "./PostUsername/PostUsername";
@@ -27,9 +18,10 @@ import { PostActionBar } from "./PostActionBar/PostActionBar";
 
 interface PostProps {
   feedPost: FeedPost;
+  notification: boolean;
 }
 
-export const Post: React.FC<PostProps> = ({ feedPost }) => {
+export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
   //
   const postRef = useRef<HTMLDivElement>(null);
   //
@@ -46,7 +38,9 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
 
         if (
           loggedIn &&
-          !post.views.some((user) => user.userId === loggedIn.userId)
+          !post.views.some(
+            (user) => user.userId === loggedIn.userId && !notification
+          )
         ) {
           let views = [...post.views, loggedIn];
           updatedPost = {
@@ -150,7 +144,20 @@ export const Post: React.FC<PostProps> = ({ feedPost }) => {
             <PostMore postId={post.postId} postAuthor={post.author} />
           </div>
 
-          <PostContent post={feedPost.post} />
+          {notification && (
+            <div className="post-replying-to-container">
+              <div className="post-replying-to">
+                Replying to{" "}
+                <div className="post-replying-to-user">
+                  @{feedPost.replyTo?.author.username}
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className={notification ? "post-content-negative-wrapper" : ""}>
+            <PostContent post={feedPost.post} />
+          </div>
 
           <PostActionBar post={feedPost.post} isIndividual={false} />
         </div>

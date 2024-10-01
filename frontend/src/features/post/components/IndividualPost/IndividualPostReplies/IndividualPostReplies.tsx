@@ -9,7 +9,7 @@ export const IndividualPostReplies: React.FC = () => {
   return (
     <>
       {replies.map((post) => (
-        <Post key={post.post.postId} feedPost={post} />
+        <Post key={post.post.postId} feedPost={post} notification={false} />
       ))}
     </>
   );

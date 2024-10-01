@@ -172,4 +172,5 @@ export interface Notification {
   recipient: User;
   actionUser: User;
   post: Post | null;
+  reply: Post | null;
 }

@@ -43,37 +43,23 @@ public class Notification {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @ManyToOne
+    @JoinColumn(name = "reply_id")
+    private Post reply;
+
     //TODO: add messages when we get to that point
 
-    public Notification(Integer notificationId, NotificationType notificationType, LocalDateTime notificationTimestamp, boolean acknowledged, ApplicationUser recipient, ApplicationUser actionUser) {
-        this.notificationId = notificationId;
-        this.notificationType = notificationType;
-        this.notificationTimestamp = notificationTimestamp;
-        this.acknowledged = acknowledged;
-        this.recipient = recipient;
-        this.actionUser = actionUser;
-    }
 
-
-    // impliment 2 methods: giúp so sánh và quản lý các đối tượng một cách chính xác hơn
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Notification that = (Notification) o;
-        return acknowledged == that.acknowledged
-                && Objects.equals(notificationId, that.notificationId)
-                && notificationType == that.notificationType
-                && Objects.equals(notificationTimestamp, that.notificationTimestamp)
-                && Objects.equals(recipient, that.recipient)
-                && Objects.equals(actionUser, that.actionUser)
-                && Objects.equals(post, that.post);
+        return acknowledged == that.acknowledged && Objects.equals(notificationId, that.notificationId) && notificationType == that.notificationType && Objects.equals(notificationTimestamp, that.notificationTimestamp) && Objects.equals(recipient, that.recipient) && Objects.equals(actionUser, that.actionUser) && Objects.equals(post, that.post) && Objects.equals(reply, that.reply);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(notificationId, notificationType, notificationTimestamp,
-                acknowledged, recipient, actionUser, post);
+        return Objects.hash(notificationId, notificationType, notificationTimestamp, acknowledged, recipient, actionUser, post, reply);
     }
-
 }

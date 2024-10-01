@@ -188,7 +188,7 @@ public class PostService {
         postRepository.save(original);
         Post savedReply = postRepository.save(reply);
         notificationService.createAndSendNotifications(NotificationType.REPLY,
-                original.getAuthor(), savedReply.getAuthor(), original);
+                original.getAuthor(), savedReply.getAuthor(), original, savedReply);
         return savedReply;
     }
 
@@ -231,7 +231,7 @@ public class PostService {
 
             Post savedReply = postRepository.save(replyPost);
             notificationService.createAndSendNotifications(NotificationType.REPLY,
-                    original.getAuthor(), savedReply.getAuthor(), original);
+                    original.getAuthor(), savedReply.getAuthor(), original, savedReply);
             return savedReply;
         } catch (Exception e) {
             throw new UnableToCreatePostException();
@@ -250,7 +250,7 @@ public class PostService {
             reposts.add(user);
         }
         post.setReposts(reposts);
-        notificationService.createAndSendNotifications(NotificationType.REPOST, post.getAuthor(), user, post);
+        notificationService.createAndSendNotifications(NotificationType.REPOST, post.getAuthor(), user, post, null);
         return postRepository.save(post);
     }
 
@@ -266,7 +266,7 @@ public class PostService {
             likes.add(user);
         }
         post.setLikes(likes);
-        notificationService.createAndSendNotifications(NotificationType.LIKE, post.getAuthor(), user, post);
+        notificationService.createAndSendNotifications(NotificationType.LIKE, post.getAuthor(), user, post, null);
         return postRepository.save(post);
     }
 
@@ -282,7 +282,7 @@ public class PostService {
             bookmarks.add(user);
         }
         post.setBookmarks(bookmarks);
-        notificationService.createAndSendNotifications(NotificationType.BOOKMARK, post.getAuthor(), user, post);
+        notificationService.createAndSendNotifications(NotificationType.BOOKMARK, post.getAuthor(), user, post, null);
         return postRepository.save(post);
     }
 

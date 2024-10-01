@@ -28,6 +28,21 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
   const state = useSelector((state: RootState) => state.user);
   const notifications = useSelector((state: RootState) => state.notification);
 
+  const showNotificationBubble = () => {
+    console.log(
+      notifications.followNotifications.length +
+        " " +
+        notifications.postActionNotifications.length +
+        " " +
+        notifications.mentionNotifications.length
+    );
+    return (
+      notifications.followNotifications.length > 0 ||
+      notifications.postActionNotifications.length > 0 ||
+      notifications.mentionNotifications.length > 0
+    );
+  };
+
   return (
     <div className="navigation">
       <nav className="navigation-container">
@@ -83,8 +98,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
         <div className="navigation-item">
           <Link to="/notifications" className="navigation-link">
             <div className="navigation-notification-wrapper">
-              {(notifications.followNotifications.length > 0 ||
-                notifications.postActionNotifications.length > 0) && (
+              {showNotificationBubble() && (
                 <Circle
                   sx={{
                     color: "#1da1f2",
