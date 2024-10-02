@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import "./FeedPostReplyRestrictionDropDown.css";
 import GlobeSVG from "../../../../components/SVGs/GlobeSVG";

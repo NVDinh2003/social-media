@@ -38,3 +38,7 @@
   align-items: center;
   gap: 8px;
 }
+
+.notification-padding {
+  padding: 12px 16px;
+}

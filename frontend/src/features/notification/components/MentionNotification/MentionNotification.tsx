@@ -2,16 +2,17 @@ import React, { useEffect } from "react";
 import {
   FeedPost,
   Notification as INotification,
-} from "../../../utils/GlobalInterface";
-import mentionHero from "../../../assets/mentions.png";
+} from "../../../../utils/GlobalInterface";
+import mentionHero from "../../../../assets/mentions.png";
 
 import "./MentionNotification.css";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
-import { AppDispatch, RootState } from "../../../redux/Store";
+import { AppDispatch, RootState } from "../../../../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
-import { readNotifications } from "../../../redux/Slices/NotificationSlice";
-import { Post } from "../../post/components/Post/Post";
-import { updateDisplatMentionLearnMore } from "../../../redux/Slices/ModalSlice";
+import { readNotifications } from "../../../../redux/Slices/NotificationSlice";
+import { Post } from "../../../post/components/Post/Post";
+import { updateDisplatMentionLearnMore } from "../../../../redux/Slices/ModalSlice";
+import { Notification } from "../Notification/Notification";
 
 export const MentionNotification: React.FC<{
   notifications: INotification[];
@@ -66,20 +67,25 @@ export const MentionNotification: React.FC<{
 
       <div className="mention-notification-posts">
         {notifications.map((notification) => {
-          if (notification.post !== null && notification.reply !== null) {
+          if (notification.post !== null) {
             const feedPost: FeedPost = {
-              post: notification.reply,
-              replyTo: notification.post,
+              post: notification.reply ? notification.reply : notification.post,
+              replyTo:
+                notification.notificationType === "REPLY"
+                  ? notification.post
+                  : null,
               repost: false,
               repostUser: notification.actionUser,
             };
 
             return (
-              <Post
-                key={notification.notificationId}
-                feedPost={feedPost}
-                notification={true}
-              />
+              <Notification icon={<></>} notifications={[notification]}>
+                <Post
+                  key={notification.notificationId}
+                  feedPost={feedPost}
+                  notification={true}
+                />
+              </Notification>
             );
           }
 

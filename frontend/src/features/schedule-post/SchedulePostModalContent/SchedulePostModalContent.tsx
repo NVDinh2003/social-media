@@ -15,7 +15,6 @@ import {
 import { AppDispatch } from "../../../redux/Store";
 import { useDispatch } from "react-redux";
 import { setScheduleDate } from "../../../redux/Slices/PostSlice";
-import { updateDisplaySchedule } from "../../../redux/Slices/ModalSlice";
 import { validateFutureDate } from "../../../services/Validator";
 
 export const SchedulePostModalContent: React.FC = () => {

@@ -1,8 +1,7 @@
 import React from "react";
 
 import "./NotificationPostContent.css";
-import { Post } from "../../../utils/GlobalInterface";
-import { convertPostContentToElementForNotifications } from "../../../utils/EmojiUtils";
+import { Post } from "../../../../utils/GlobalInterface";
 
 export const NotificationPostContent: React.FC<{ post: Post }> = ({ post }) => {
   return (

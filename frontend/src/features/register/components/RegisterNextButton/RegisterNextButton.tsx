@@ -9,7 +9,6 @@ import {
   updateUserPassword,
   updateUserPhone,
 } from "../../../../redux/Slices/RegisterSlice";
-import { register } from "module";
 import { cleanDateForRequest } from "../../../../utils/DateUtils";
 
 export const StyledNextButton = styled.button<StyledNextButtonProps>`

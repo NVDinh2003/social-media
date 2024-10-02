@@ -18,6 +18,14 @@
   padding-top: 8px;
 }
 
+.post-body-wrapper-notification {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  padding: 0;
+  margin: 0;
+}
+
 .post-repost-info {
   width: 100%;
   height: fit-content;
@@ -38,6 +46,14 @@
   justify-content: flex-start;
   align-items: flex-start;
   padding: 0 16px;
+}
+
+.post-left-notification {
+  width: 8%;
+  height: 100%;
+  display: flex;
+  padding: 0;
+  margin: 0;
 }
 
 .post-pfp {

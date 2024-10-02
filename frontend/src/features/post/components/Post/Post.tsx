@@ -71,7 +71,11 @@ export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
   }, []);
 
   return (
-    <div className="post" ref={postRef} onClick={openPost}>
+    <div
+      className={notification ? "" : "post"}
+      ref={postRef}
+      onClick={openPost}
+    >
       {feedPost.repost && (
         <p
           className="post-repost-info"
@@ -84,8 +88,12 @@ export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
         </p>
       )}
 
-      <div className="post-body-wrapper">
-        <div className="post-left">
+      <div
+        className={
+          notification ? "post-body-wrapper-notification" : "post-body-wrapper"
+        }
+      >
+        <div className={notification ? "post-left-notification" : "post-left"}>
           <img
             className="post-pfp"
             src={
@@ -144,7 +152,7 @@ export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
             <PostMore postId={post.postId} postAuthor={post.author} />
           </div>
 
-          {notification && (
+          {notification && feedPost.replyTo && (
             <div className="post-replying-to-container">
               <div className="post-replying-to">
                 Replying to{" "}
@@ -155,7 +163,13 @@ export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
             </div>
           )}
 
-          <div className={notification ? "post-content-negative-wrapper" : ""}>
+          <div
+            className={
+              notification && feedPost.replyTo
+                ? "post-content-negative-wrapper"
+                : ""
+            }
+          >
             <PostContent post={feedPost.post} />
           </div>
 

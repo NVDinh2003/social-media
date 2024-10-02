@@ -28,7 +28,8 @@ public class NotificationService {
             NotificationType.REPLY,
             NotificationType.REPOST,
             NotificationType.BOOKMARK,
-            NotificationType.MESSAGE);
+            NotificationType.MESSAGE,
+            NotificationType.MENTION);
 
     public List<Notification> getAllNotificationsFotUser(Integer userId) {
         ApplicationUser user = userService.getUserById(userId);

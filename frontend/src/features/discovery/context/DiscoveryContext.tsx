@@ -2,7 +2,6 @@ import { createContext, useState } from "react";
 import { DiscoveryContextType } from "./Modals";
 import { User } from "../../../utils/GlobalInterface";
 import axios from "axios";
-import { useLocalStorage } from "../../../hooks/useLocalStorage";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/Store";
 

@@ -1,13 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 import "./FeedPostCreator.css";
 import { Link } from "react-router-dom";
-import MediaSVG from "../../../../components/SVGs/MediaSVG";
-import PollSVG from "../../../../components/SVGs/PollSVG";
-import GIFSVG from "../../../../components/SVGs/GIFSVG";
-import EmojiSVG from "../../../../components/SVGs/EmojiSVG";
-import ScheduleSVG from "../../../../components/SVGs/ScheduleSVG";
-import LocationSVG from "../../../../components/SVGs/LocationSVG";
 import { FeedPostCreatorProgress } from "../FeedPostCreatorProgress/FeedPostCreatorProgress";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";

@@ -96,6 +96,7 @@ export const NotificationSlice = createSlice({
           };
           return state;
         case "REPLY":
+        case "MENTION":
           state = {
             ...state,
             mentionNotifications: [
@@ -140,6 +141,7 @@ export const NotificationSlice = createSlice({
             posts.push(notification);
             break;
           case "REPLY":
+          case "MENTION":
             mentions.push(notification);
             break;
           case "FOLLOW":
@@ -211,6 +213,7 @@ export const NotificationSlice = createSlice({
             posts.push(notification);
             break;
           case "REPLY":
+          case "MENTION":
             mentions.push(notification);
             break;
           case "FOLLOW":

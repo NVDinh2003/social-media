@@ -1,5 +1,5 @@
 import React from "react";
-import { Notification as INotification } from "../../../utils/GlobalInterface";
+import { Notification as INotification } from "../../../../utils/GlobalInterface";
 
 import "./PostActionNotification.css";
 import { Notification } from "../Notification/Notification";

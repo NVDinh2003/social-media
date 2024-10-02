@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from "react";
 
 import SearchIcon from "@mui/icons-material/Search";
 import "./DiscoverySearchDropDown.css";
-import { User } from "../../../../utils/GlobalInterface";
 import { DiscoveryContext } from "../../context/DiscoveryContext";
 import { DiscoveryContextType } from "../../context/Modals";
 import { DiscoverySearchDropDownResult } from "./DiscoverySearchDropDownResult/DiscoverySearchDropDownResult";

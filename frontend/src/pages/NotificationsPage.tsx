@@ -3,9 +3,10 @@ import { RootState } from "../redux/Store";
 import { useLocation } from "react-router-dom";
 
 import "./NotificationsPage.css";
-import { NotificationHeader } from "../features/notification/Notification/NotificationHeader/NotificationHeader";
-import { NotificationsAll } from "../features/notification/NotificationsAll/NotificationsAll";
-import { MentionNotification } from "../features/notification/MentionNotification/MentionNotification";
+import { NotificationHeader } from "../features/notification/components/Notification/NotificationHeader/NotificationHeader";
+import { NotificationsAll } from "../features/notification/components/NotificationsAll/NotificationsAll";
+import { MentionNotification } from "../features/notification/components/MentionNotification/MentionNotification";
+import { VerifiedNotifications } from "../features/notification/components/VerifiedNotifications/VerifiedNotifications";
 
 export default function NotificationsPage() {
   const notificationState = useSelector(
@@ -23,6 +24,7 @@ export default function NotificationsPage() {
           notifications={[
             ...notificationState.followNotifications,
             ...notificationState.postActionNotifications,
+            ...notificationState.mentionNotifications,
           ]}
         />
       )}
@@ -31,6 +33,10 @@ export default function NotificationsPage() {
         <MentionNotification
           notifications={notificationState.mentionNotifications}
         />
+      )}
+
+      {location.pathname === "/notifications/verified" && (
+        <VerifiedNotifications />
       )}
     </div>
   );

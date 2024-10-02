@@ -2,15 +2,17 @@ import React from "react";
 import {
   FeedPost,
   Notification as INotification,
-} from "../../../utils/GlobalInterface";
+} from "../../../../utils/GlobalInterface";
 
 import "./NotificationsAll.css";
 import { FollowNotification } from "../FollowNotification/FollowNotification";
-import { sortNotificationsByTimestamp } from "../utils/NotificationUtils";
-import { lessThanMonth, lessThanYear } from "../../../utils/DateUtils";
+import { sortNotificationsByTimestamp } from "../../utils/NotificationUtils";
+import { lessThanMonth, lessThanYear } from "../../../../utils/DateUtils";
 import { PostActionNotification } from "../PostActionNotifications/PostActionNotification";
 import { Notification } from "../Notification/Notification";
-import { Post } from "../../post/components/Post/Post";
+import { Post } from "../../../post/components/Post/Post";
+import LikeNotificationSVG from "../../../../components/SVGs/NotificationAction/LikeNotificationSVG";
+import RepostNotificationSVG from "../../../../components/SVGs/NotificationAction/RepostNotificationSVG";
 
 export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
   notifications,
@@ -122,6 +124,9 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
   const notificationListToElement = (
     notificationList: INotification[]
   ): JSX.Element => {
+    //
+    let feedPost;
+
     switch (notificationList[0].notificationType) {
       case "FOLLOW":
         return (
@@ -136,7 +141,13 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
             key={notificationList[0].notificationId}
             notifications={notificationList}
             text={" liked your post"}
-            icon={<></>}
+            icon={
+              <LikeNotificationSVG
+                height={30}
+                width={30}
+                color={"rgb(249,24,128"}
+              />
+            }
           />
         );
       case "REPOST":
@@ -145,13 +156,36 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
             key={notificationList[0].notificationId}
             notifications={notificationList}
             text={" reposted your post"}
-            icon={<></>}
+            icon={
+              <RepostNotificationSVG
+                height={30}
+                width={30}
+                color={"rgb(0,186,124"}
+              />
+            }
           />
         );
       case "REPLY":
-        const feedPost: FeedPost = {
+        feedPost = {
           post: notificationList[0].reply!,
           replyTo: notificationList[0].post!,
+          repost: false,
+          repostUser: notificationList[0].actionUser,
+        };
+
+        return (
+          <Notification icon={<></>} notifications={notificationList}>
+            <Post
+              key={notificationList[0].notificationId}
+              feedPost={feedPost}
+              notification={true}
+            />
+          </Notification>
+        );
+      case "MENTION":
+        feedPost = {
+          post: notificationList[0].post!,
+          replyTo: null,
           repost: false,
           repostUser: notificationList[0].actionUser,
         };

@@ -1,7 +1,7 @@
 import React from "react";
 
 import "./MentionsLearnMoreModal.css";
-import { BottomlessModal } from "../../../../components/BottomlessModal/BottomlessModal";
+import { BottomlessModal } from "../../../../../components/BottomlessModal/BottomlessModal";
 import { MentionLearnMoreModalTop } from "../MentionLearnMoreModalTop/MentionLearnMoreModalTop";
 import { MentionLearnMoreModalContent } from "../MentionLearnMoreModalContent/MentionLearnMoreModalContent";
 

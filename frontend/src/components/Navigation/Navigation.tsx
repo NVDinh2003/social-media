@@ -47,10 +47,10 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
   useEffect(() => {
     calculateNewNotifications();
   }, [
-    notifications.followNotifications.length,
-    notifications.mentionNotifications.length,
-    notifications.newPostNotifications.length,
-    notifications.postActionNotifications.length,
+    notifications.followNotifications,
+    notifications.mentionNotifications,
+    notifications.newPostNotifications,
+    notifications.postActionNotifications,
   ]);
 
   return (

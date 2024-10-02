@@ -91,6 +91,7 @@ export const FeedPostCreatorGifModalDisplay: React.FC<
         {autoPlay
           ? gifs.map((gif) => (
               <img
+                alt="gif"
                 key={gif}
                 src={gif}
                 className="feed-post-creator-gif-modal-display-gif"

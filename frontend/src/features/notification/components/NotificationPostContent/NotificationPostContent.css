@@ -12,6 +12,9 @@
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+  /* font-size: 15px; */
+  color: #657786;
+  font-weight: 400;
 }
 
 .post-notification-content-text {

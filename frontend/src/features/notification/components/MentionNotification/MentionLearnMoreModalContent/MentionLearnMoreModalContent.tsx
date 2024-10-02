@@ -1,12 +1,12 @@
 import React from "react";
 
 import "./MentionLearnMoreModalContent.css";
-import { AppDispatch } from "../../../../redux/Store";
+import { AppDispatch } from "../../../../../redux/Store";
 import { useDispatch } from "react-redux";
-import { updateDisplatMentionLearnMore } from "../../../../redux/Slices/ModalSlice";
-import BlockSVG from "../../../../components/SVGs/PostMoreSVG/BlockSVG";
-import UntagSVG from "../../../../components/SVGs/MentionNotiSVG/UntagSVG";
-import DoNotNotifySVG from "../../../../components/SVGs/MentionNotiSVG/DoNotNotifySVG";
+import { updateDisplatMentionLearnMore } from "../../../../../redux/Slices/ModalSlice";
+import BlockSVG from "../../../../../components/SVGs/PostMoreSVG/BlockSVG";
+import UntagSVG from "../../../../../components/SVGs/MentionNotiSVG/UntagSVG";
+import DoNotNotifySVG from "../../../../../components/SVGs/MentionNotiSVG/DoNotNotifySVG";
 
 export const MentionLearnMoreModalContent: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();

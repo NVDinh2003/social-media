@@ -5,7 +5,7 @@ import { FeedPostCreatorTagPeopleModal } from "../../features/feed/components/Fe
 import { FeedPostCreatorGifModal } from "../../features/feed/components/FeedPostCreatorGifModal/FeedPostCreatorGifModal";
 import { SchedulePostModal } from "../../features/schedule-post/SchedulePostModal/SchedulePostModal";
 import { CreateReply } from "../../features/post/components/CreateReply/CreateReply";
-import { MentionsLearnMoreModal } from "../../features/notification/MentionNotification/MentionsLearnMoreModal/MentionsLearnMoreModal";
+import { MentionsLearnMoreModal } from "../../features/notification/components/MentionNotification/MentionsLearnMoreModal/MentionsLearnMoreModal";
 
 export default function ModalContainer() {
   const displayEditImageModal = useSelector(

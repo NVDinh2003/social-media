@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Notification as INotification } from "../../../utils/GlobalInterface";
+import React from "react";
+import { Notification as INotification } from "../../../../utils/GlobalInterface";
 
 import "./FollowNotification.css";
 import { Notification } from "../Notification/Notification";
-import FollowNotificationSVG from "../../../components/SVGs/FollowNotificationSVG";
+import FollowNotificationSVG from "../../../../components/SVGs/FollowNotificationSVG";
 import { NotificationUsersText } from "../NotificationUsersText/NotificationUsersText";
 
 export const FollowNotification: React.FC<{

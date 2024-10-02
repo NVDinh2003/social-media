@@ -1,9 +1,9 @@
 import React from "react";
 
 import "./MentionLearnMoreModalTop.css";
-import { AppDispatch } from "../../../../redux/Store";
+import { AppDispatch } from "../../../../../redux/Store";
 import { useDispatch } from "react-redux";
-import { updateDisplatMentionLearnMore } from "../../../../redux/Slices/ModalSlice";
+import { updateDisplatMentionLearnMore } from "../../../../../redux/Slices/ModalSlice";
 import Close from "@mui/icons-material/Close";
 
 export const MentionLearnMoreModalTop: React.FC = () => {

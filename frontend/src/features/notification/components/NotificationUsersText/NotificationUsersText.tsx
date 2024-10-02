@@ -1,8 +1,8 @@
 import React from "react";
-import { Notification as INotification } from "../../../utils/GlobalInterface";
+import { Notification as INotification } from "../../../../utils/GlobalInterface";
 
 import "./NotificationUsersText.css";
-import { PostUsername } from "../../post/components/Post/PostUsername/PostUsername";
+import { PostUsername } from "../../../post/components/Post/PostUsername/PostUsername";
 
 export const NotificationUsersText: React.FC<{
   notifications: INotification[];
