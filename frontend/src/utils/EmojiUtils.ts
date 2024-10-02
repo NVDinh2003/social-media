@@ -1,5 +1,6 @@
 import data from "../assets/list.with.modifiers.json";
 import dataWithImg from "../assets/list.with.images.coppy.json";
+import { ClassNames } from "@emotion/react";
 
 const EMOJIS = data.emojis;
 const EMOJIS_IMG = dataWithImg.emojis;
@@ -227,4 +228,20 @@ export const getEmojiCharacterByName = (name: string) => {
   }
 
   return emoji;
+};
+
+export const convertPostContentToElementForNotifications = (
+  elements: JSX.Element[]
+) => {
+  return elements.map((element) => {
+    element = {
+      ...element,
+      props: {
+        ...element.props,
+        ClassNames: "post-notification-content-text",
+      },
+    };
+
+    return element;
+  });
 };

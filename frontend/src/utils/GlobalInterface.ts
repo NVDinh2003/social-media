@@ -167,7 +167,7 @@ export interface Notification {
     | "BOOKMARK"
     | "MESSAGE"
     | "FOLLOW";
-  notificationTimeStamp: string;
+  notificationTimestamp: string;
   acknowledged: boolean;
   recipient: User;
   actionUser: User;

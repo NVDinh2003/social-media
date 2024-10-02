@@ -5,8 +5,8 @@ export function sortNotificationsByTimestamp(
 ): Notification[] {
   return notifications.sort((a, b) => {
     return -(
-      new Date(a.notificationTimeStamp).getTime() -
-      new Date(b.notificationTimeStamp).getTime()
+      new Date(a.notificationTimestamp).getTime() -
+      new Date(b.notificationTimestamp).getTime()
     );
   });
 }

@@ -104,3 +104,15 @@ export const cleanDateForRequest = (date: Dob): string => {
 
   return `${date.year}-${month}-${day}`;
 };
+
+export function lessThanMonth(d1: Date, d2: Date): boolean {
+  let timeDifference = d1.getTime() - d2.getTime();
+  let dayDifference = Math.round(timeDifference / (1000 * 3600 * 24));
+  return dayDifference <= 30;
+}
+
+export function lessThanYear(d1: Date, d2: Date): boolean {
+  let timeDifference = d1.getTime() - d2.getTime();
+  let dayDifference = Math.round(timeDifference / (1000 * 3600 * 24));
+  return dayDifference <= 365;
+}

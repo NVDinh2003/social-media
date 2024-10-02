@@ -1,0 +1,21 @@
+.notification-post-content {
+  width: 100%;
+  height: fit-content;
+  padding-left: 48px;
+  font-weight: 400;
+}
+
+.notification-post-content-overflow-container {
+  line-height: 25px;
+  max-height: 135px;
+  height: fit-content;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-notification-content-text {
+  font-size: 15px;
+  color: #657786;
+  font-weight: 400;
+}

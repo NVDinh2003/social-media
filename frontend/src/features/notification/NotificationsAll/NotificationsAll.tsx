@@ -1,9 +1,16 @@
 import React from "react";
-import { Notification as INotification } from "../../../utils/GlobalInterface";
+import {
+  FeedPost,
+  Notification as INotification,
+} from "../../../utils/GlobalInterface";
 
 import "./NotificationsAll.css";
 import { FollowNotification } from "../FollowNotification/FollowNotification";
 import { sortNotificationsByTimestamp } from "../utils/NotificationUtils";
+import { lessThanMonth, lessThanYear } from "../../../utils/DateUtils";
+import { PostActionNotification } from "../PostActionNotifications/PostActionNotification";
+import { Notification } from "../Notification/Notification";
+import { Post } from "../../post/components/Post/Post";
 
 export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
   notifications,
@@ -11,61 +18,156 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
   const groupedNotifications = (): JSX.Element[] => {
     const sorted: INotification[] = sortNotificationsByTimestamp(notifications);
     let notificationMap = new Map<string, INotification[]>();
-    let notificationComponent: JSX.Element[] = [];
+    let notificationComponents: JSX.Element[] = [];
+    let key = "";
+    let listKeys: string[] = [];
 
-    // loop through all of the notifications
+    // console.log(sorted[0].notificationTimestamp);
+
     sorted.forEach((notification) => {
-      switch (notification.notificationType) {
-        case "FOLLOW":
-          if (notification.acknowledged) {
-            const notificationMonth = new Date(
-              notification.notificationTimeStamp
-            ).getMonth();
-            const key = `readFollowNotificationsForMonth${notificationMonth}`;
+      const todaysDate = new Date();
+      // console.log(notification.notificationTimestamp);
+      const notificationDate = new Date(notification.notificationTimestamp);
+      const dateString = `${
+        notificationDate.getMonth() + 1
+      }-${notificationDate.getDate()}-${notificationDate.getFullYear()}`;
+      key = "";
 
-            if (!notificationMap.has(key)) {
-              notificationMap.set(key, [notification]);
-              break;
-            }
+      // console.log(dateString);
 
-            let notificationsForThisMonth = notificationMap.get(key);
-            notificationsForThisMonth!.push(notification); // !may not exist
-            notificationMap.set(key, notificationsForThisMonth!);
-          } else {
-            if (!notificationMap.has("unreadFollowNotifications"))
-              notificationMap.set("unreadFollowNotifications", []);
+      if (notification.acknowledged) {
+        if (
+          notification.notificationType === "REPLY" &&
+          notification.post &&
+          notification.reply
+        ) {
+          key = `read${notification.notificationType.toLowerCase()}NotificationForPost${
+            notification.post.postId
+          }${notification.notificationType.toLowerCase()}${
+            notification.reply.postId
+          }`;
+        } else if (lessThanMonth(todaysDate, notificationDate)) {
+          // less than month
+          // console.log("less than month");
+          key = `read${notification.notificationType.toLowerCase()}NotificationsFor${dateString}${
+            notification.post && `AndPost${notification.post.postId}`
+          }: ''`;
+        } else if (lessThanYear(todaysDate, notificationDate)) {
+          // less than year
+          // console.log("less than year");
+          key = `read${notification.notificationType.toLowerCase()}Notifications${
+            notification.post ? `ForPost${notification.post.postId}` : ""
+          }`;
+        }
 
-            const unreadFollowNotifications = notificationMap.get(
-              "unreadFollowNotifications"
-            );
-            unreadFollowNotifications!.push(notification);
-            notificationMap.set(
-              "unreadFollowNotifications",
-              unreadFollowNotifications!
-            );
-          }
-          break;
-        default:
-          break;
+        if (key !== "" && !notificationMap.has(key)) {
+          notificationMap.set(key, [notification]);
+        } else if (key !== "" && notificationMap.has(key)) {
+          let readNotifications = notificationMap.get(key);
+          readNotifications!.push(notification);
+          notificationMap.set(key, readNotifications!);
+        }
+        listKeys.push(key);
+        //
+      } else {
+        if (
+          notification.notificationType === "REPLY" &&
+          notification.post &&
+          notification.reply
+        ) {
+          key = `unread${notification.notificationType.toLowerCase()}NotificationForPost${
+            notification.post.postId
+          }${notification.notificationType.toLowerCase()}${
+            notification.reply.postId
+          }`;
+        } else {
+          key = `unread${notification.notificationType.toLowerCase()}NotificationsFor${dateString}${
+            notification.post ? `ForPost${notification.post.postId}` : ""
+          }`;
+        }
+
+        if (!notificationMap.has(key)) notificationMap.set(key, []);
+
+        const unreadNotifications = notificationMap.get(key);
+        unreadNotifications!.push(notification);
+        notificationMap.set(key, unreadNotifications!);
+        listKeys.push(key);
       }
     });
+
+    // console.log(listKeys);
+
+    let unreadNotificationLists: Array<INotification[]> = [];
+    let readNotificationLists: Array<INotification[]> = [];
 
     notificationMap.forEach((notificationList) => {
-      switch (notificationList[0].notificationType) {
-        case "FOLLOW":
-          notificationComponent.push(
-            <FollowNotification
-              key={notificationList[0].notificationId}
-              notifications={notificationList}
-            />
-          );
-          break;
-        default:
-          break;
+      if (notificationList[0].acknowledged) {
+        readNotificationLists.push(notificationList);
+      } else {
+        unreadNotificationLists.push(notificationList);
       }
     });
 
-    return notificationComponent;
+    unreadNotificationLists.forEach((notificationList) => {
+      notificationComponents.push(notificationListToElement(notificationList));
+    });
+
+    readNotificationLists.forEach((notificationList) => {
+      notificationComponents.push(notificationListToElement(notificationList));
+    });
+
+    return notificationComponents;
+  };
+
+  const notificationListToElement = (
+    notificationList: INotification[]
+  ): JSX.Element => {
+    switch (notificationList[0].notificationType) {
+      case "FOLLOW":
+        return (
+          <FollowNotification
+            key={notificationList[0].notificationId}
+            notifications={notificationList}
+          />
+        );
+      case "LIKE":
+        return (
+          <PostActionNotification
+            key={notificationList[0].notificationId}
+            notifications={notificationList}
+            text={" liked your post"}
+            icon={<></>}
+          />
+        );
+      case "REPOST":
+        return (
+          <PostActionNotification
+            key={notificationList[0].notificationId}
+            notifications={notificationList}
+            text={" reposted your post"}
+            icon={<></>}
+          />
+        );
+      case "REPLY":
+        const feedPost: FeedPost = {
+          post: notificationList[0].reply!,
+          replyTo: notificationList[0].post!,
+          repost: false,
+          repostUser: notificationList[0].actionUser,
+        };
+
+        return (
+          <Notification icon={<></>} notifications={notificationList}>
+            <Post
+              key={notificationList[0].notificationId}
+              feedPost={feedPost}
+              notification={true}
+            />
+          </Notification>
+        );
+      default:
+        return <></>;
+    }
   };
 
   return <div className="notification-all">{groupedNotifications()}</div>;

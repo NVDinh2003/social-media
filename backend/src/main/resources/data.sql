@@ -82,12 +82,31 @@ values (1, 5),
 -- values (1, 4),
 --        (1, 3);
 
--- insert into notifications(acknowledged, action_user_id, notification_type,
---                           post_id, recipient_user_id, "timestamp")
--- values (true, 1, 6, null, 5, '2024-07-27 02:58:57'),
---        (false, 1, 6, null, 5, '2024-07-28 02:58:57'),
---        (false, 1, 6, null, 5, '2024-08-30 02:58:57'),
---        (false, 1, 6, null, 5, '2024-08-30 02:58:57');
+insert into notifications(acknowledged, action_user_id, notification_type,
+                          post_id, recipient_user_id, "timestamp")
+values (true, 1, 6, null, 5, '2023-07-27 02:58:57'),
+       (false, 1, 6, null, 5, '2023-07-28 02:58:57'),
+       (false, 1, 6, null, 5, '2024-08-30 02:58:57'),
+       (false, 1, 6, null, 5, '2024-08-30 02:58:57');
+
+-- insert into posts (audience, content, posted_date, is_reply, reply_restriction, reply_to, scheduled, scheduled_date,
+--                    author_id, poll_id)
+-- values (0, 'Test post for notifications', now(), null, 0, null, false, null, 5, null);
+--
+-- insert into posts (audience, content, posted_date, is_reply, reply_restriction, reply_to, scheduled, scheduled_date,
+--                    author_id, poll_id)
+-- values (0, 'Hi Im bird person', '2024-01-01 06:34:12', false, 0, 1, false, null, 4, null);
+--
+-- insert into notifications (acknowledged, "timestamp", notification_type, action_user_id, post_id,
+--                            reply_id, recipient_user_id)
+-- values (true, '2024-07-02 06:34:12', 2, 1, null, null, 5),
+--        (true, '2024-07-02 06:34:12', 1, 1, null, null, 5),
+--        (true, '2024-07-02 06:34:12', 1, 1, null, null, 5),
+--        (true, '2024-07-08 06:34:12', 2, 1, null, null, 5),
+--        (false, '2024-07-08 01:39:15', 1, 3, 1, null, 5),
+--        (false, now(), 6, 1, null, null, 5),
+--        (false, now(), 6, 2, null, null, 5),
+--        (false, '2024-08-07 06:34:12', 3, 4, 1, 2, 5);
 
 insert into posts (audience, content, posted_date, is_reply, reply_restriction, reply_to, scheduled, scheduled_date,
                    author_id, poll_id)
