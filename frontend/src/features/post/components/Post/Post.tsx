@@ -170,7 +170,7 @@ export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
                 : ""
             }
           >
-            <PostContent post={feedPost.post} />
+            <PostContent post={feedPost.post} location={"post"} />
           </div>
 
           <PostActionBar post={feedPost.post} isIndividual={false} />

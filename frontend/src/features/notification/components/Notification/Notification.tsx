@@ -40,7 +40,7 @@ export const Notification: React.FC<NotificationProps> = ({
         case "MENTION":
         case "REPLY":
           if (notifications[0].post)
-            navigate(`/${notifications[0].post.postId}`);
+            navigate(`/post/${notifications[0].post.postId}`);
           break;
       }
     } else {

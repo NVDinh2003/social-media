@@ -81,7 +81,7 @@ export const IndividualPost: React.FC<IndividualPostProps> = ({ post }) => {
       </div>
 
       <div className="individual-post-content-wrapper">
-        <PostContent post={post} />
+        <PostContent post={post} location={"post"} />
       </div>
 
       <div className="individual-post-data-section">

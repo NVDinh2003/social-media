@@ -6,8 +6,8 @@ import { AppDispatch, RootState } from "../../../../../redux/Store";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import CircleIcon from "@mui/icons-material/Circle";
 import {
+  convertPostContentToElements,
   convertPostedDateToString,
-  formatTextContent,
 } from "../../../utils/PostUtils";
 import { CreatePostTextArea } from "../../CreatePostTextArea/CreatePostTextArea";
 import { initializeCurrentReply } from "../../../../../redux/Slices/PostSlice";
@@ -96,8 +96,10 @@ export const CreateReplyBody: React.FC = () => {
             <div className="create-reply-body-post-bottom-right">
               <div
                 className="create-reply-body-post-content"
-                dangerouslySetInnerHTML={formatTextContent(feedPost.content)}
-              />
+                // dangerouslySetInnerHTML={formatTextContent(feedPost.content)}
+              >
+                {convertPostContentToElements(feedPost.content, "creator")}
+              </div>
               <p className="create-reply-body-post-replying-to">
                 Replying to{" "}
                 <span className="create-reply-body-post-replying-to-user post-content-span">

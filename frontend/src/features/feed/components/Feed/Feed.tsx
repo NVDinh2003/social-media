@@ -141,9 +141,15 @@ export const Feed: React.FC = () => {
 
       {feedState.posts.length > 0 && (
         <div className="feed-posts">
-          {feedState.posts.map((post) => (
-            <Post feedPost={post} key={post.post.postId} notification={false} />
-          ))}
+          {feedState.posts
+            .filter((post) => !post.replyTo)
+            .map((post) => (
+              <Post
+                feedPost={post}
+                key={post.post.postId}
+                notification={false}
+              />
+            ))}
         </div>
       )}
 

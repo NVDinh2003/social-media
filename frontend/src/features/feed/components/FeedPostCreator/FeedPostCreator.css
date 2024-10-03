@@ -40,28 +40,21 @@
   cursor: pointer;
 }
 
-.feed-post-creator-input {
-  resize: none;
-  height: 30px;
-  overflow: hidden;
-  font-size: 20px;
-  border: none;
-  background-color: white;
+.feed-post-creator-content-paragraph {
+  height: 20px;
+  width: 20px;
+  margin: 0;
+  padding: 0;
+  /* margin-left: 4px;
+  margin-right: 4px; */
   font-weight: 400;
+  font-size: 20px;
 }
 
-.input-active {
-  margin-top: 15px;
-  margin-bottom: 10px;
-}
-
-.feed-post-creator-input::selection {
-  background: rgba(51, 153, 255, 0.4);
-  color: transparent;
-}
-
-.feed-post-creator-input:focus {
-  outline: none;
+.feed-post-creator-content-paragraph-mention {
+  font-size: 20px;
+  font-weight: 400;
+  color: #1da1f2;
 }
 
 .feed-post-creator-reply {

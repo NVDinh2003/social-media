@@ -7,6 +7,7 @@ import {
   updateCurrentPost,
   // updateCurrentReply,
 } from "../../../../redux/Slices/PostSlice";
+import { convertPostContentToElements } from "../../utils/PostUtils";
 
 interface CreatePostTextAreaProps {
   location: string;
@@ -47,7 +48,6 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
   }, [state.post.currentPost, state.post.currentReply, location]);
 
   const autoGrow = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    // setPostContent(e.target.value);
     if (textAreaRef && textAreaRef.current) {
       textAreaRef.current.style.height = "25px";
       textAreaRef.current.style.height =
@@ -83,11 +83,37 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
     if (textAreaRef && textAreaRef.current) textAreaRef.current.focus();
   };
 
+  const textContent = (): { elements: JSX.Element[]; content: string } => {
+    if (location === "post" && state.post.currentPost) {
+      return {
+        elements: convertPostContentToElements(
+          state.post.currentPost.content,
+          "creator"
+        ),
+        content: state.post.currentPost.content,
+      };
+    }
+
+    if (location === "reply" && state.post.currentReply) {
+      return {
+        elements: convertPostContentToElements(
+          state.post.currentReply.replyContent,
+          "creator"
+        ),
+        content: state.post.currentReply.replyContent,
+      };
+    }
+
+    return { elements: [], content: "" };
+  };
+
   return (
     <div className="create-post-text-area" onClick={activate}>
-      {/* {content !== "" && (
-        <div className="create-post-text-area-content">{content}</div>
-      )} */}
+      {content !== "" && (
+        <div className="create-post-text-area-content">
+          {textContent().elements}
+        </div>
+      )}
 
       <textarea
         className={
@@ -101,7 +127,7 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
         cols={50}
         maxLength={256}
         id={"post-text"}
-        value={content}
+        value={textContent().content}
       />
     </div>
   );

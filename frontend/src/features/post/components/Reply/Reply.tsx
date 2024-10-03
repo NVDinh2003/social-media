@@ -7,8 +7,8 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import VerifiedIcon from "@mui/icons-material/Verified";
 
 import {
+  convertPostContentToElements,
   convertPostedDateToString,
-  formatTextContent,
 } from "../../utils/PostUtils";
 import { createImagePostContainer } from "../../../feed/utils/FeedUtils";
 
@@ -96,8 +96,10 @@ export const Reply: React.FC<ReplyProps> = ({ reply }) => {
         <div
           className="reply-content"
           ref={overflowRef}
-          dangerouslySetInnerHTML={formatTextContent(reply.content)}
-        />
+          // dangerouslySetInnerHTML={formatTextContent(reply.content)}
+        >
+          {convertPostContentToElements(reply.content, "creator")}
+        </div>
 
         {reply.images.length > 0 && postImageContainer}
 
