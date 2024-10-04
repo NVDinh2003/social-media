@@ -77,6 +77,21 @@ public class PostService {
 
         Post post = new Post();
         post.setContent(dto.getContent());
+
+        // Mentioned users
+        String[] words = dto.getContent().split(" ");
+        List<ApplicationUser> mentionedUsers = new ArrayList<>();
+        for (String word : words) {
+            if (word.startsWith("@")) {
+                try {
+                    String username = word.substring(1).replaceAll(("[^a-zA-Z0-9]*$"), "");
+                    ApplicationUser mentionedUser = userService.getUserByUsername(username);
+                    mentionedUsers.add(mentionedUser);
+                } catch (Exception e) {
+                }
+            }
+        }
+
         if (dto.getScheduled())
             post.setPostedDate(dto.getScheduledDate());
         else
@@ -94,6 +109,9 @@ public class PostService {
         try {
             Post posted = postRepository.save(post);
             notificationService.createAndSendPostNotifications(posted);
+            mentionedUsers.forEach(mentionUser
+                    -> notificationService.createAndSendNotifications(NotificationType.MENTION,
+                    mentionUser, posted.getAuthor(), posted, null));
             return posted;
         } catch (Exception e) {
             //TODO: setup custom exception
@@ -110,6 +128,21 @@ public class PostService {
 
             Post p = new Post();
             p.setContent(dto.getContent());
+
+            // Mentioned users
+            String[] words = dto.getContent().split(" ");
+            List<ApplicationUser> mentionedUsers = new ArrayList<>();
+            for (String word : words) {
+                if (word.startsWith("@")) {
+                    try {
+                        String username = word.substring(1).replaceAll(("[^a-zA-Z0-9]*$"), "");
+                        ApplicationUser mentionedUser = userService.getUserByUsername(username);
+                        mentionedUsers.add(mentionedUser);
+                    } catch (Exception e) {
+                    }
+                }
+            }
+
             if (dto.getScheduled())
                 p.setPostedDate(dto.getScheduledDate());
             else
@@ -133,6 +166,9 @@ public class PostService {
 
             Post posted = postRepository.save(p);
             notificationService.createAndSendPostNotifications(posted);
+            mentionedUsers.forEach(mentionUser
+                    -> notificationService.createAndSendNotifications(NotificationType.MENTION,
+                    mentionUser, posted.getAuthor(), posted, null));
             return posted;
         } catch (Exception e) {
             throw new UnableToCreatePostException();

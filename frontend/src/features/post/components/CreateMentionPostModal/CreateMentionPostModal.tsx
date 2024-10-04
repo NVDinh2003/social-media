@@ -27,7 +27,7 @@ export const CreateMentionPostModal: React.FC<CreateMentionPostModalProps> = ({
   useEffect(() => {
     updateSearchContent(content);
     searchForUsers(content);
-    console.log(content);
+    // console.log(content);
   }, [content]);
 
   return (

@@ -13,10 +13,10 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Integer> 
 
     Optional<ApplicationUser> findByEmailOrPhoneOrUsername(String email, String phone, String username);
 
-    List<ApplicationUser> findByUsernameContainingIgnoreCase(String username);
+    List<ApplicationUser> findByUsernameLikeIgnoreCase(String username);
 
-    List<ApplicationUser> findByNicknameContainingIgnoreCase(String nickname);
+    List<ApplicationUser> findByNicknameLikeIgnoreCase(String nickname);
 
-    List<ApplicationUser> findByBioContainingIgnoreCase(String bio);
+    List<ApplicationUser> findByBioLikeIgnoreCase(String bio);
 
 }

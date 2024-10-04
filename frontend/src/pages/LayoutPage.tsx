@@ -9,7 +9,10 @@ import { getUserByToken, setToken } from "../redux/Slices/UserSlice";
 import { useEffect } from "react";
 
 import "./LayoutPage.css";
-import { updateDisplayPostMore } from "../redux/Slices/ModalSlice";
+import {
+  updateDisplayPostMention,
+  updateDisplayPostMore,
+} from "../redux/Slices/ModalSlice";
 import ModalContainer from "../components/ModalContainer/ModalContainer";
 
 export const LayoutPage: React.FC = () => {
@@ -20,6 +23,9 @@ export const LayoutPage: React.FC = () => {
 
   const displayPostMore = useSelector(
     (state: RootState) => state.modal.displayPostMore
+  );
+  const displayPostMention = useSelector(
+    (state: RootState) => state.modal.displayPostMention
   );
 
   const location = useLocation();
@@ -52,6 +58,7 @@ export const LayoutPage: React.FC = () => {
 
   const closeOpenedModals = (e: React.MouseEvent) => {
     if (displayPostMore) dispatch(updateDisplayPostMore());
+    if (displayPostMention) dispatch(updateDisplayPostMention(false));
   };
 
   return (

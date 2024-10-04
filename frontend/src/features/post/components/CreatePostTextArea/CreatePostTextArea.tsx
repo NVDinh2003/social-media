@@ -127,7 +127,35 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
     return { elements: [], content: "" };
   };
 
-  const selectMention = (username: string) => {};
+  const selectMention = (username: string) => {
+    dispatch(updateDisplayPostMention(false));
+    if (location === "post") {
+      dispatch(
+        updateCurrentPost({
+          name: "content",
+          value:
+            content.substring(0, content.lastIndexOf("@") + 1) + username + " ",
+        })
+      );
+    }
+
+    if (location === "reply") {
+      dispatch(
+        updateCurrentPost({
+          name: "replyContent",
+          value:
+            content.substring(0, content.lastIndexOf("@") + 1) + username + " ",
+        })
+      );
+
+      setMentionedUser(username);
+      setContent((content) => {
+        return (
+          content.substring(0, content.lastIndexOf("@") + 1) + username + " "
+        );
+      });
+    }
+  };
 
   useEffect(() => {
     console.log(mentioning, content);

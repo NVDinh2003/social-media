@@ -6,11 +6,10 @@ import com.nvd.utils.DiscoveryUserComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class DiscoveryService {
@@ -25,24 +24,20 @@ public class DiscoveryService {
     }
 
 
-    public Set<ApplicationUser> searchForUsers(String searchTerm) {
-        List<ApplicationUser> usersByUsername = userRepository.findByUsernameContainingIgnoreCase(searchTerm);
-        List<ApplicationUser> usersByNickname = userRepository.findByNicknameContainingIgnoreCase(searchTerm);
-        List<ApplicationUser> usersByBio = userRepository.findByBioContainingIgnoreCase(searchTerm);
+    public List<ApplicationUser> searchForUsers(String searchTerm) {
+        List<ApplicationUser> usersByUsername = userRepository.findByUsernameLikeIgnoreCase("%" + searchTerm + "%");
+        List<ApplicationUser> usersByNickname = userRepository.findByNicknameLikeIgnoreCase("%" + searchTerm + "%");
+        List<ApplicationUser> usersByBio = userRepository.findByBioLikeIgnoreCase("%" + searchTerm + "%");
 
-        //Stream.concat(): kết hợp các luồng người dùng từ các tìm kiếm khác nhau thành một luồng duy nhất.
-        Set<ApplicationUser> combinedSet = Stream.concat(
-                usersByUsername.stream(),
-                Stream.concat(usersByNickname.stream(), usersByBio.stream())
-        ).collect(Collectors.toSet());  // chuyển kết quả thành Set để loại bỏ các phần tử trùng lặp
+        List<ApplicationUser> allUsers = new ArrayList<>();
+        allUsers.addAll(usersByUsername);
+        allUsers.addAll(usersByNickname);
+        allUsers.addAll(usersByBio);
 
-        // tạo ra một tập hợp có sắp xếp dựa trên bộ so sánh (followers giảm dần)
-        Set<ApplicationUser> sortedUsersSet = new TreeSet<>(discoveryUserComparator);
+        allUsers = allUsers.stream().distinct().collect(Collectors.toList());
+        Collections.sort(allUsers, discoveryUserComparator);
 
-        // thêm tất cả các người dùng từ combinedSet vào sortedUsersSet.
-        sortedUsersSet.addAll(combinedSet);
-
-        return sortedUsersSet;
+        return allUsers;
         // => Tập hợp người dùng được sắp xếp theo số lượng followers giảm dần.
     }
 }

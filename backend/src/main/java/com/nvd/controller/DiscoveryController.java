@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/discovery")
@@ -18,7 +18,7 @@ public class DiscoveryController {
     private final DiscoveryService discoveryService;
 
     @GetMapping("/users")
-    public Set<ApplicationUser> searchForUsers(@RequestParam String searchTerm) {
+    public List<ApplicationUser> searchForUsers(@RequestParam String searchTerm) {
         return discoveryService.searchForUsers(searchTerm);
     }
 }
