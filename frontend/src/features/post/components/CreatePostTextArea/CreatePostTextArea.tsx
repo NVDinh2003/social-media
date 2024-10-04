@@ -8,6 +8,9 @@ import {
   // updateCurrentReply,
 } from "../../../../redux/Slices/PostSlice";
 import { convertPostContentToElements } from "../../utils/PostUtils";
+import { updateDisplayPostMention } from "../../../../redux/Slices/ModalSlice";
+import DiscoveryProvider from "../../../discovery/context/DiscoveryContext";
+import { CreateMentionPostModal } from "../CreateMentionPostModal/CreateMentionPostModal";
 
 interface CreatePostTextAreaProps {
   location: string;
@@ -19,10 +22,12 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
   placeholder,
 }) => {
   const state = useSelector((state: RootState) => state);
+  const mentioning = useSelector(
+    (state: RootState) => state.modal.displayPostMention
+  );
   const dispatch: AppDispatch = useDispatch();
-
   const [content, setContent] = useState<string>("");
-
+  const [mentionedUser, setMentionedUser] = useState<string>("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const resetTextAreaHeight = () => {
@@ -52,6 +57,21 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
       textAreaRef.current.style.height = "25px";
       textAreaRef.current.style.height =
         textAreaRef.current.scrollHeight + "px";
+    }
+    const content = textContent();
+    if (
+      content.elements[content.elements.length - 1].props.className.includes(
+        "mention"
+      )
+    ) {
+      dispatch(updateDisplayPostMention(true));
+      setMentionedUser(
+        content.elements[content.elements.length - 1].props.children.substring(
+          1
+        )
+      );
+    } else {
+      dispatch(updateDisplayPostMention(false));
     }
 
     const newContent = e.target.value;
@@ -107,28 +127,42 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
     return { elements: [], content: "" };
   };
 
-  return (
-    <div className="create-post-text-area" onClick={activate}>
-      {content !== "" && (
-        <div className="create-post-text-area-content">
-          {textContent().elements}
-        </div>
-      )}
+  const selectMention = (username: string) => {};
 
-      <textarea
-        className={
-          state.post.currentPost || state.post.currentReply
-            ? "create-post-text-area-creator-input input-active"
-            : "create-post-text-area-creator-input"
-        }
-        placeholder={placeholder}
-        ref={textAreaRef}
-        onChange={autoGrow}
-        cols={50}
-        maxLength={256}
-        id={"post-text"}
-        value={textContent().content}
-      />
-    </div>
+  useEffect(() => {
+    console.log(mentioning, content);
+  }, [content, mentionedUser]);
+
+  return (
+    <DiscoveryProvider>
+      <div className="create-post-text-area" onClick={activate}>
+        {mentioning && (
+          <CreateMentionPostModal
+            content={mentionedUser}
+            userClicked={selectMention}
+          />
+        )}
+        {content !== "" && (
+          <div className="create-post-text-area-content">
+            {textContent().elements}
+          </div>
+        )}
+
+        <textarea
+          className={
+            state.post.currentPost || state.post.currentReply
+              ? "create-post-text-area-creator-input input-active"
+              : "create-post-text-area-creator-input"
+          }
+          placeholder={placeholder}
+          ref={textAreaRef}
+          onChange={autoGrow}
+          cols={50}
+          maxLength={256}
+          id={"post-text"}
+          value={textContent().content}
+        />
+      </div>
+    </DiscoveryProvider>
   );
 };

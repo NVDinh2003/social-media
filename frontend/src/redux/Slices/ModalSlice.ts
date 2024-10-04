@@ -1,5 +1,5 @@
 import { Gif } from "@mui/icons-material";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ModalSliceState {
   displayEditPostImage: boolean;
@@ -9,6 +9,7 @@ interface ModalSliceState {
   displayCreateReply: boolean;
   displayPostMore: boolean;
   displayMentionLearnMore: boolean;
+  displayPostMention: boolean;
 }
 
 const initialState: ModalSliceState = {
@@ -19,6 +20,7 @@ const initialState: ModalSliceState = {
   displayCreateReply: false,
   displayPostMore: false,
   displayMentionLearnMore: false,
+  displayPostMention: false,
 };
 
 export const ModalSlice = createSlice({
@@ -83,6 +85,15 @@ export const ModalSlice = createSlice({
 
       return state;
     },
+
+    updateDisplayPostMention(state, action: PayloadAction<boolean>) {
+      state = {
+        ...state,
+        displayPostMention: action.payload,
+      };
+
+      return state;
+    },
   },
 });
 
@@ -94,6 +105,7 @@ export const {
   updateDisplayCreateReply,
   updateDisplayPostMore,
   updateDisplatMentionLearnMore,
+  updateDisplayPostMention,
 } = ModalSlice.actions;
 
 export default ModalSlice.reducer;
