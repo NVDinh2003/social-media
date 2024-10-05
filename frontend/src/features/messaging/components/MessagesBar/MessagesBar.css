@@ -1,0 +1,50 @@
+.messages-bar {
+  width: 400px;
+  height: 50px;
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(256, 256, 256, 0.5);
+  backdrop-filter: blur(10px);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.unread-messages {
+  background-color: #1da1f2;
+}
+
+.messages-bar-header-group {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+}
+
+.messages-bar-header {
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.messages-bar-icon-group {
+  display: flex;
+  gap: 2px;
+}
+
+.messages-bar-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 100%;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.messages-bar-icon-wrapper:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.1);
+}

@@ -15,6 +15,7 @@ import BookmarksSVG from "../SVGs/BookmarksSVG";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/Store";
 import Circle from "@mui/icons-material/Circle";
+import CreateMessageSVG from "../SVGs/Messages/CreateMessageSVG";
 
 interface NavigationProps {
   currentPage: string;
@@ -146,7 +147,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
                   }}
                 />
               )}
-              <MessagesSVG height={26} width={26} />
+              <CreateMessageSVG height={26} width={26} color="none" />
             </div>
             <p className="navigation-text navigation-inactive">Message</p>
           </Link>
