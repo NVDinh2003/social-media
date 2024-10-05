@@ -14,7 +14,6 @@ import {
   updateDisplayPostMore,
 } from "../redux/Slices/ModalSlice";
 import ModalContainer from "../components/ModalContainer/ModalContainer";
-import MessagingContextProvider from "../features/messaging/context/MessagingContext";
 import { MessagesPopup } from "../features/messaging/components/MessagesPopup/MessagesPopup";
 
 export const LayoutPage: React.FC = () => {
@@ -78,9 +77,7 @@ export const LayoutPage: React.FC = () => {
         </div>
       </div>
 
-      <MessagingContextProvider>
-        <MessagesPopup />
-      </MessagingContextProvider>
+      <MessagesPopup />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { FeedPostCreatorGifModal } from "../../features/feed/components/FeedPost
 import { SchedulePostModal } from "../../features/schedule-post/SchedulePostModal/SchedulePostModal";
 import { CreateReply } from "../../features/post/components/CreateReply/CreateReply";
 import { MentionsLearnMoreModal } from "../../features/notification/components/MentionNotification/MentionsLearnMoreModal/MentionsLearnMoreModal";
+import { CreateMessageModal } from "../../features/messaging/components/CreateMessageModal/CreateMessageModal";
 
 export default function ModalContainer() {
   const displayEditImageModal = useSelector(
@@ -26,6 +27,9 @@ export default function ModalContainer() {
   const displatMentionLearnMore = useSelector(
     (state: RootState) => state.modal.displayMentionLearnMore
   );
+  const displayCreateMessage = useSelector(
+    (state: RootState) => state.modal.displayCreateMessage
+  );
 
   return (
     <>
@@ -35,6 +39,7 @@ export default function ModalContainer() {
       {displayScheduleModal && <SchedulePostModal />}
       {displayCreateReply && <CreateReply />}
       {displatMentionLearnMore && <MentionsLearnMoreModal />}
+      {displayCreateMessage && <CreateMessageModal />}
     </>
   );
 }

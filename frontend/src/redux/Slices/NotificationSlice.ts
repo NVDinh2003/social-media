@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Notification } from "./../../utils/GlobalInterface";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { updateUnreadMessages } from "./MessagesSlice";
 
 interface NotificationSliceState {
   newPostNotifications: Notification[];
@@ -39,7 +40,16 @@ export const loadNotifications = createAsyncThunk(
         },
       });
 
-      return req.data;
+      const data: Notification[] = req.data;
+      const unreadMessages: Notification[] = data.filter(
+        (notification) =>
+          !notification.acknowledged &&
+          notification.notificationType === "MESSAGE"
+      );
+
+      thunkAPI.dispatch(updateUnreadMessages(unreadMessages));
+
+      return data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
     }

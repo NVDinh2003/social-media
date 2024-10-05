@@ -6,24 +6,25 @@ import {
   MessagingContextType,
 } from "../../context/MessagingContext";
 import { MessagesBar } from "../MessagesBar/MessagesBar";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/Store";
 
 export const MessagesPopup: React.FC = () => {
-  const { open, conversationOpen } = useContext(
-    MessagingContext
-  ) as MessagingContextType;
+  //
+  const messageState = useSelector((state: RootState) => state.message);
 
   return (
     <div className="messages-popup-container">
       <div
         className={`messages-popup ${
-          open ? "messages-open" : "messages-closed"
+          messageState.popupOpen ? "messages-open" : "messages-closed"
         }`}
       >
         <MessagesBar />
 
-        {open && (
+        {messageState.popupOpen && (
           <div className="messages-popup-content">
-            {conversationOpen ? (
+            {messageState.conversationOpen ? (
               <>MessagingConversationComponent</>
             ) : (
               <>MessagingOverviewComponent</>

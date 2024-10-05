@@ -6,6 +6,7 @@ import modalReducer from "../redux/Slices/ModalSlice";
 import gifReducer from "./Slices/GifSlice";
 import feedReducer from "./Slices/FeedSlice";
 import notificationReducer from "./Slices/NotificationSlice";
+import messageReducer from "./Slices/MessagesSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     gif: gifReducer, // Thêm reducer cho gifs
     feed: feedReducer,
     notification: notificationReducer,
+    message: messageReducer,
   },
 
   // middleware để kiểm tra tuần tự hóa nhưng bỏ qua một số hành động và đường dẫn nhất định.
