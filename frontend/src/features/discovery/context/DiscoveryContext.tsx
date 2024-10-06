@@ -21,22 +21,26 @@ const DiscoveryProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const searchForUsers = async (searchContent: string) => {
     // search for users, wait a second or two to stop typing
-    let req = await axios.get(
-      `${process.env.REACT_APP_API_URL}/discovery/users`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    if (searchContent !== "") {
+      let req = await axios.get(
+        `${process.env.REACT_APP_API_URL}/discovery/users`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
 
-        params: {
-          searchTerm: searchContent,
-        },
-      }
-    );
+          params: {
+            searchTerm: searchContent,
+          },
+        }
+      );
 
-    let body = req.data;
-    setSearchResultUsers(body);
-    // console.log(body);
+      let body = req.data;
+      setSearchResultUsers(body);
+      // console.log(body);
+    } else {
+      setSearchResultUsers([]);
+    }
   };
 
   const updateSearchContent = (content: string) => {

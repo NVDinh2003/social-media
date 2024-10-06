@@ -1,0 +1,78 @@
+.create-message-modal-content {
+  height: 600px;
+  width: 100%;
+}
+
+.create-message-modal-content-search {
+  width: 100%;
+  height: 42px;
+  padding-left: 16px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.create-message-modal-content-search-input {
+  width: 80%;
+  height: 40px;
+  padding: 12px;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.create-message-modal-content-scroll-box {
+  height: 558px;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.create-message-modal-content-selected-users {
+  width: 100%;
+  height: 65px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.create-message-modal-content-create-group {
+  width: 100%;
+  height: 65px;
+  padding: 16px 12px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+}
+
+.create-message-modal-content-create-group:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.create-message-modal-content-group-icon-wrapper {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #657786;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.create-message-modal-content-group-icon-wrapper:hover {
+  cursor: pointer;
+  background-color: rgba(29, 155, 240, 0.2);
+}
+
+.create-message-modal-content-group-text {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  color: #1da1f2;
+  font-weight: 800;
+}
