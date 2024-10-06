@@ -1,19 +1,59 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Notification as INotification } from "../../utils/GlobalInterface";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  Conversation,
+  Notification as INotification,
+} from "../../utils/GlobalInterface";
+import axios from "axios";
+
+const baseURL = process.env.REACT_APP_API_URL;
+
+interface ConversationUser {
+  userId: number;
+  pfp: string;
+  nickname: string;
+}
 
 interface MessagesSliceState {
   unreadMessages: INotification[];
   popupOpen: boolean;
   conversationOpen: boolean;
-  conversationUsers: number[];
+  conversationUsers: ConversationUser[];
+  conversations: Conversation[];
+  loading: boolean;
+  error: boolean;
+}
+
+interface LoadConversationPayload {
+  userId: number;
+  token: string;
 }
 
 const initialState: MessagesSliceState = {
   unreadMessages: [],
   popupOpen: false,
   conversationOpen: false,
-  conversationUsers: [1],
+  conversationUsers: [],
+  conversations: [],
+  loading: false,
+  error: false,
 };
+
+export const loadConversations = createAsyncThunk(
+  "message/load",
+  async (payload: LoadConversationPayload, thunkAPI) => {
+    try {
+      const req = await axios.get(
+        `${baseURL}/conversations?userId=${payload.userId}`,
+        {
+          headers: { Authorization: `Bearer ${payload.token}` },
+        }
+      );
+      return req.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
 
 export const MessageSlice = createSlice({
   name: "message",
@@ -26,7 +66,7 @@ export const MessageSlice = createSlice({
       };
       return state;
     },
-    openConversation: (state, action: PayloadAction<number[]>) => {
+    openConversation: (state, action: PayloadAction<ConversationUser[]>) => {
       state = {
         ...state,
         conversationOpen: !state.conversationOpen,
@@ -40,13 +80,44 @@ export const MessageSlice = createSlice({
       };
       return state;
     },
-    updateConversationUsers: (state, action: PayloadAction<number[]>) => {
+    updateConversationUsers: (
+      state,
+      action: PayloadAction<ConversationUser[]>
+    ) => {
       state = {
         ...state,
-        conversationUsers: [...state.conversationUsers, ...action.payload],
+        conversationUsers: action.payload,
       };
       return state;
     },
+  },
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(loadConversations.pending, (state, action) => {
+        state = {
+          ...state,
+          error: false,
+          loading: true,
+        };
+        return state;
+      })
+      .addCase(loadConversations.fulfilled, (state, action) => {
+        state = {
+          ...state,
+          conversations: action.payload,
+          loading: false,
+        };
+        return state;
+      })
+      .addCase(loadConversations.rejected, (state, action) => {
+        state = {
+          ...state,
+          error: true,
+          loading: false,
+        };
+        return state;
+      });
   },
 });
 

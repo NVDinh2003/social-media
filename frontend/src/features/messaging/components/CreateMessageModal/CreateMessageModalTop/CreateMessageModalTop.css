@@ -11,6 +11,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  padding-left: 8px;
   gap: 32px;
 }
 
@@ -45,6 +46,7 @@
   color: white;
   font-size: 14px;
   font-weight: 800;
+  margin-right: 12px;
   cursor: pointer;
 }
 
@@ -56,5 +58,6 @@
   font-size: 14px;
   font-weight: 800;
   background-color: rgba(0, 0, 0, 0.5);
+  margin-right: 12px;
   color: white;
 }

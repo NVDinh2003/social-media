@@ -175,3 +175,14 @@ export interface Notification {
   post: Post | null;
   reply: Post | null;
 }
+
+export interface Message {
+  messageId: number;
+  conversationId: number;
+}
+
+export interface Conversation {
+  conversationId: number;
+  conversationUsers: User[];
+  messages: Message[];
+}
