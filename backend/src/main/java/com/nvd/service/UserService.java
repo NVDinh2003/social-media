@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -73,6 +74,10 @@ public class UserService implements UserDetailsService {
 
     public ApplicationUser getUserById(Integer userId) {
         return userRepository.findById(userId).orElseThrow(UserDoesNotExistException::new);
+    }
+
+    public List<ApplicationUser> getAllUsersByIds(List<Integer> userIds) {
+        return userRepository.findAllById(userIds);
     }
 
     public ApplicationUser getUserByUsername(String username) {
@@ -272,4 +277,5 @@ public class UserService implements UserDetailsService {
     public ApplicationUser testFollowUser(String user1, String followToUser) {
         return followUser(user1, followToUser);
     }
+
 }
