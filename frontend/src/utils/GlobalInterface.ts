@@ -186,3 +186,9 @@ export interface Conversation {
   conversationUsers: User[];
   messages: Message[];
 }
+
+export interface ConversationUser {
+  userId: number;
+  pfp: string;
+  nickname: string;
+}

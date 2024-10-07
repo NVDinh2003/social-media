@@ -1,0 +1,56 @@
+.create-message-user-card {
+  width: 100%;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.create-message-user-card:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.create-message-user-card-left-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
+
+.create-message-user-card-pfps-container {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 100%;
+  overflow: hidden;
+}
+
+.create-message-user-card-pfp {
+  flex-basis: 50%;
+  flex-grow: 1;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+}
+.create-message-user-card-info-nickname {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.create-message-user-card-info-text {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 400;
+  color: #657786;
+}
+
+.create-message-user-card-following-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+}

@@ -7,10 +7,12 @@ import { DiscoveryContext } from "../../../../discovery/context/DiscoveryContext
 import { DiscoveryContextType } from "../../../../discovery/context/Modals";
 import ThinSearchSVG from "../../../../../components/SVGs/Messages/ThinSearchSVG";
 import CreateGroupSVG from "../../../../../components/SVGs/Messages/CreateGroupSVG";
+import { CreateMessageUserCard } from "../../CreateMessageUserCard/CreateMessageUserCard";
 
 export const CreateMessageModalContent: React.FC = () => {
   //
   const messageState = useSelector((state: RootState) => state.message);
+  const loggedInUser = useSelector((state: RootState) => state.user.loggedIn);
   const {
     updateSearchContent,
     searchForUsers,
@@ -60,7 +62,11 @@ export const CreateMessageModalContent: React.FC = () => {
               </h3>
             </div>
           ) : (
-            <div className="create-message-modal-content-user-list"></div>
+            <div className="create-message-modal-content-user-list">
+              {messageState.conversationUsers.map((user) => {
+                return <>{user.nickname}</>;
+              })}
+            </div>
           )}
         </div>
 
@@ -77,13 +83,13 @@ export const CreateMessageModalContent: React.FC = () => {
         ) : (
           <div className="create-message-modal-content-conversation-users">
             {messageState.conversations.map((conversation) => {
-              return (
-                <div className="">
-                  {conversation.conversationUsers.map((user) => (
-                    <>{user.nickname}</>
-                  ))}
-                </div>
-              );
+              let conversationUsers = loggedInUser
+                ? conversation.conversationUsers.filter(
+                    (user) => user.userId !== loggedInUser.userId
+                  )
+                : conversation.conversationUsers;
+
+              return <CreateMessageUserCard users={conversationUsers} />;
             })}
           </div>
         )}

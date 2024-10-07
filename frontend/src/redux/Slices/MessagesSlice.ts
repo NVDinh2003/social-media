@@ -1,17 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   Conversation,
+  ConversationUser,
   Notification as INotification,
 } from "../../utils/GlobalInterface";
 import axios from "axios";
 
 const baseURL = process.env.REACT_APP_API_URL;
-
-interface ConversationUser {
-  userId: number;
-  pfp: string;
-  nickname: string;
-}
 
 interface MessagesSliceState {
   unreadMessages: INotification[];
