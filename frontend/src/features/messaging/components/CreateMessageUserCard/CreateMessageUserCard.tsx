@@ -12,6 +12,7 @@ import {
   updateConversationUsers,
 } from "../../../../redux/Slices/MessagesSlice";
 import { updateDisplayCreateMessage } from "../../../../redux/Slices/ModalSlice";
+import Verified from "@mui/icons-material/Verified";
 
 interface CreateMessageUserCardProps {
   users: User[];
@@ -30,7 +31,14 @@ export const CreateMessageUserCard: React.FC<CreateMessageUserCardProps> = ({
   const messageState = useSelector((state: RootState) => state.message);
   const dispatch: AppDispatch = useDispatch();
 
-  const [selected, setSelected] = useState<boolean>(false);
+  const selected = () => {
+    return (
+      users.length === 1 &&
+      messageState.conversationUsers.some(
+        (u: ConversationUser) => u.userId === users[0].userId
+      )
+    );
+  };
 
   const generateFollowingText = () => {
     if (users.length === 1) {
@@ -79,9 +87,6 @@ export const CreateMessageUserCard: React.FC<CreateMessageUserCardProps> = ({
   const handleConversationClicked = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     if (users.length === 1) {
-      setSelected((selected) => {
-        return !selected;
-      });
       let currentConversationUsers = JSON.parse(
         JSON.stringify(messageState.conversationUsers)
       );
@@ -111,9 +116,24 @@ export const CreateMessageUserCard: React.FC<CreateMessageUserCardProps> = ({
         };
       });
 
-      dispatch(openConversation(cUsers));
       dispatch(updateDisplayCreateMessage());
-      dispatch(togglePopup());
+
+      if (userState.loggedIn && userState.token) {
+        cUsers.push({
+          userId: userState.loggedIn.userId,
+          nickname: userState.loggedIn.nickname,
+          pfp: userState.loggedIn.profilePicture
+            ? userState.loggedIn.profilePicture.imageURL
+            : "",
+        });
+
+        dispatch(
+          openConversation({
+            token: userState.token,
+            conversationUsers: cUsers,
+          })
+        );
+      }
     }
   };
 
@@ -135,9 +155,14 @@ export const CreateMessageUserCard: React.FC<CreateMessageUserCardProps> = ({
         </div>
 
         <div>
-          <h3 className="create-message-user-card-info-nickname">
+          <div className="create-message-user-card-info-nickname">
             {generateNicknameText()}
-          </h3>
+            {users.length === 1 && users[0].verifiedAccount && (
+              <Verified
+                sx={{ width: "15px", height: "15px", color: "#1da1f2" }}
+              />
+            )}
+          </div>
           <p className="create-message-user-card-info-text">
             {users.length === 1
               ? `@${users[0].username}`
@@ -159,7 +184,7 @@ export const CreateMessageUserCard: React.FC<CreateMessageUserCardProps> = ({
         </div>
       </div>
 
-      {selected && (
+      {selected() && (
         <CheckSharp sx={{ height: "18px", width: "18px", color: "#1da1f2" }} />
       )}
     </div>

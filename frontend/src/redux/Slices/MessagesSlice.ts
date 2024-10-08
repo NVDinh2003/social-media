@@ -14,6 +14,7 @@ interface MessagesSliceState {
   conversationOpen: boolean;
   conversationUsers: ConversationUser[];
   conversations: Conversation[];
+  conversation: Conversation | undefined;
   loading: boolean;
   error: boolean;
 }
@@ -23,12 +24,18 @@ interface LoadConversationPayload {
   token: string;
 }
 
+interface OpenConversationPayload {
+  token: string;
+  conversationUsers: ConversationUser[];
+}
+
 const initialState: MessagesSliceState = {
   unreadMessages: [],
   popupOpen: false,
   conversationOpen: false,
   conversationUsers: [],
   conversations: [],
+  conversation: undefined,
   loading: false,
   error: false,
 };
@@ -50,6 +57,57 @@ export const loadConversations = createAsyncThunk(
   }
 );
 
+export const openConversation = createAsyncThunk(
+  "message/open",
+  async (payload: OpenConversationPayload, thunkAPI) => {
+    const state: any = thunkAPI.getState();
+    let conversations: Conversation[] = state?.message?.conversations;
+
+    if (conversations) {
+      let selectedConversationUsers = payload.conversationUsers.map(
+        (u) => u.userId
+      );
+      let allConversationWithUserIds = conversations.map((c) => {
+        return {
+          ...c,
+          conversationUsers: c.conversationUsers.map((u) => u.userId),
+        };
+      });
+
+      for (let i = 0; i < allConversationWithUserIds.length; i++) {
+        if (
+          allConversationWithUserIds[i].conversationUsers.sort().join(",") ===
+          selectedConversationUsers.sort().join(",")
+        ) {
+          return conversations.filter(
+            (c) =>
+              c.conversationId === allConversationWithUserIds[i].conversationId
+          )[0];
+        }
+      }
+    }
+
+    try {
+      let req = await axios.post(
+        `${baseURL}/conversations`,
+        {
+          userIds: payload.conversationUsers.map((u) => u.userId),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${payload.token}`,
+          },
+        }
+      );
+
+      let conversation = req.data;
+      return conversation;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
 export const MessageSlice = createSlice({
   name: "message",
   initialState,
@@ -61,13 +119,7 @@ export const MessageSlice = createSlice({
       };
       return state;
     },
-    openConversation: (state, action: PayloadAction<ConversationUser[]>) => {
-      state = {
-        ...state,
-        conversationOpen: !state.conversationOpen,
-      };
-      return state;
-    },
+
     updateUnreadMessages: (state, action: PayloadAction<INotification[]>) => {
       state = {
         ...state,
@@ -113,14 +165,40 @@ export const MessageSlice = createSlice({
         };
         return state;
       });
+
+    builder
+      .addCase(openConversation.pending, (state, action) => {
+        state = {
+          ...state,
+          error: false,
+          loading: true,
+        };
+        return state;
+      })
+      .addCase(openConversation.fulfilled, (state, action) => {
+        state = {
+          ...state,
+          loading: false,
+          popupOpen: true,
+          conversationOpen: true,
+          conversation: action.payload,
+          conversationUsers: [],
+          conversations: [action.payload, ...state.conversations],
+        };
+        return state;
+      })
+      .addCase(openConversation.rejected, (state, action) => {
+        state = {
+          ...state,
+          error: true,
+          loading: false,
+        };
+        return state;
+      });
   },
 });
 
-export const {
-  togglePopup,
-  openConversation,
-  updateUnreadMessages,
-  updateConversationUsers,
-} = MessageSlice.actions;
+export const { togglePopup, updateUnreadMessages, updateConversationUsers } =
+  MessageSlice.actions;
 
 export default MessageSlice.reducer;

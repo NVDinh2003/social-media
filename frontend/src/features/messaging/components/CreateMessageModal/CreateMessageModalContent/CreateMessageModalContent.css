@@ -32,7 +32,6 @@
 
 .create-message-modal-content-selected-users {
   width: 100%;
-  height: 65px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -75,4 +74,14 @@
   font-size: 15px;
   color: #1da1f2;
   font-weight: 800;
+}
+
+.create-message-modal-content-user-list {
+  width: 100%;
+  padding: 12px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }

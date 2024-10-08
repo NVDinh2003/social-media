@@ -1,17 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 
 import "./CreateMessageModalTop.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../redux/Store";
 import { updateDisplayCreateMessage } from "../../../../../redux/Slices/ModalSlice";
-import {
-  openConversation,
-  togglePopup,
-} from "../../../../../redux/Slices/MessagesSlice";
+import { openConversation } from "../../../../../redux/Slices/MessagesSlice";
 import Close from "@mui/icons-material/Close";
 
 export const CreateMessageModalTop: React.FC = () => {
   //
+  const userState = useSelector((state: RootState) => state.user);
   const conversationUsers = useSelector(
     (state: RootState) => state.message.conversationUsers
   );
@@ -20,8 +18,22 @@ export const CreateMessageModalTop: React.FC = () => {
   const createMessageThread = (e: React.MouseEvent) => {
     e.stopPropagation();
     dispatch(updateDisplayCreateMessage());
-    dispatch(togglePopup());
-    dispatch(openConversation(conversationUsers));
+    if (userState.loggedIn && userState.token) {
+      const users = [
+        ...conversationUsers,
+        {
+          userId: userState.loggedIn.userId,
+          nickname: userState.loggedIn.nickname,
+          pfp: userState.loggedIn.profilePicture
+            ? userState.loggedIn.profilePicture.imageURL
+            : "",
+        },
+      ];
+
+      dispatch(
+        openConversation({ token: userState.token, conversationUsers: users })
+      );
+    }
   };
 
   const closeModal = (e: React.MouseEvent) => {

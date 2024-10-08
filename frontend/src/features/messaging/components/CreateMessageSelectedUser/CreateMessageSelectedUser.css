@@ -1,0 +1,38 @@
+.create-message-selected-user {
+  height: 30px;
+  width: fit-content;
+  border: 1px solid #e1e8ed;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px 0 3px;
+  gap: 12px;
+}
+
+.create-message-selected-user:hover {
+  cursor: pointer;
+  background-color: rgba(29, 155, 240, 0.2);
+}
+
+.create-message-selected-user-left-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+}
+
+.create-message-selected-user-pfp {
+  height: 24px;
+  width: 24px;
+  border: none;
+  border-radius: 100%;
+  object-fit: cover;
+}
+
+.create-message-selected-user-name {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 800;
+}

@@ -8,6 +8,7 @@ import { DiscoveryContextType } from "../../../../discovery/context/Modals";
 import ThinSearchSVG from "../../../../../components/SVGs/Messages/ThinSearchSVG";
 import CreateGroupSVG from "../../../../../components/SVGs/Messages/CreateGroupSVG";
 import { CreateMessageUserCard } from "../../CreateMessageUserCard/CreateMessageUserCard";
+import { CreateMessageSelectedUser } from "../../CreateMessageSelectedUser/CreateMessageSelectedUser";
 
 export const CreateMessageModalContent: React.FC = () => {
   //
@@ -64,7 +65,7 @@ export const CreateMessageModalContent: React.FC = () => {
           ) : (
             <div className="create-message-modal-content-user-list">
               {messageState.conversationUsers.map((user) => {
-                return <>{user.nickname}</>;
+                return <CreateMessageSelectedUser user={user} />;
               })}
             </div>
           )}
@@ -73,11 +74,7 @@ export const CreateMessageModalContent: React.FC = () => {
         {searchContent ? (
           <div className="create-message-modal-content-search-users">
             {searchResultUsers.map((user) => {
-              return (
-                <div className="">
-                  {user.nickname}@{user.username}
-                </div>
-              );
+              return <CreateMessageUserCard users={[user]} />;
             })}
           </div>
         ) : (
