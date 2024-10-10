@@ -1,5 +1,6 @@
 package com.nvd.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nvd.models.enums.Audience;
 import com.nvd.models.enums.ReplyRestriction;
 import jakarta.persistence.*;
@@ -104,6 +105,21 @@ public class Post implements Comparable<Post> {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "poll_id", referencedColumnName = "poll_id")
     private Poll poll;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "post_province_id")
+    Province province;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "post_district_id")
+    District district;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "post_ward_id")
+    Ward ward;
 
     public Post() {
         super();

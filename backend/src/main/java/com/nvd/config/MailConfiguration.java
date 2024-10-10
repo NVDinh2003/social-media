@@ -16,6 +16,7 @@ import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
+import com.nvd.utils.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,8 +31,8 @@ import java.util.List;
 @Configuration
 public class MailConfiguration {
 
-    private static final String CLIENT_ID = "296142259290-ecapnsftga90mqqjnvkjj3uhpu42k0t2.apps.googleusercontent.com";
-    private static final String CLIENT_SECRET = "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";
+    private static final String CLIENT_ID = Constants.MAIL_CLIENT_ID;
+    private static final String CLIENT_SECRET = Constants.MAIL_CLIENT_SECRET;
 
     private static final String APPLICATION_NAME = "EnViDi-Twitter";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();

@@ -184,11 +184,13 @@ src/main/resources/credentials.json
 tokens/**
 tokens/StoredCredential
 tokens/gmail_token
+local.env
 
 # Để đảm bảo, thêm các pattern tổng quát
 **/credentials.json
 **/StoredCredential
 **/gmail_token
+**/local.env
 
 # misc react env
 .env

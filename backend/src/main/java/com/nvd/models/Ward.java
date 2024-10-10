@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -22,4 +24,8 @@ public class Ward {
     @JoinColumn(name = "district_code", referencedColumnName = "code")
     @JsonIgnore
     private District district;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "ward")
+    List<Post> post;
 }

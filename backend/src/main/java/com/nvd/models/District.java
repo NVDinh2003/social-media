@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -24,5 +26,12 @@ public class District {
     @JsonIgnore
     private Province province;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "district")
+    List<Ward> wards;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "district")
+    List<Post> post;
 
 }
