@@ -158,7 +158,7 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
   };
 
   useEffect(() => {
-    console.log(mentioning, content);
+    // console.log(mentioning, content);
   }, [content, mentionedUser]);
 
   return (

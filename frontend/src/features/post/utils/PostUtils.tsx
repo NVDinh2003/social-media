@@ -125,10 +125,27 @@ export const convertPostContentToElements = (
 };
 
 export const convertCount = (count: number) => {
-  if (count >= 1000 && count < 10_000) return `${(count / 1000).toFixed(2)}K`;
+  if (count >= 1_000_000 && count < 10_000_000)
+    return `${(count / 1_000_000).toFixed(2)}M`;
+  else if (count >= 10_000_000 && count < 100_000_000)
+    return `${(count / 1_000_000).toFixed(1)}M`;
+  else if (count >= 100_000_000 && count < 1_000_000_000)
+    return `${Math.floor(count / 1_000_000)}M`;
+  else if (count >= 1_000_000_000)
+    return `${(count / 1_000_000_000).toFixed(1)}B`;
+  else if (count >= 1000 && count < 10_000)
+    return `${(count / 1000).toFixed(2)}K`;
   else if (count >= 10_000 && count < 100_000)
     return `${(count / 1000).toFixed(1)}K`;
   else if (count >= 100_000 && count < 1_000_000)
     return `${Math.floor(count / 1000)}K`;
+
   return `${count}`;
+};
+
+export const getMarginLeft = (count: number) => {
+  if (count < 10) return "26px";
+  // if (count < 100) return "10px";
+  if (count < 1000) return "28px";
+  return "28px";
 };

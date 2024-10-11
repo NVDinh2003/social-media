@@ -144,7 +144,7 @@
   font-weight: 400;
 }
 
-.post-action-bar-count {
+/* .post-action-bar-count {
   margin: 0;
   padding: 0;
   font-size: 13px;
@@ -152,7 +152,7 @@
   position: absolute;
   bottom: 4px;
   right: -4px;
-}
+} */
 
 .post-replying-to-container {
   width: fit-content;

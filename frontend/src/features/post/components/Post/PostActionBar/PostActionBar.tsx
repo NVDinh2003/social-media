@@ -6,7 +6,7 @@ import LikeOutlineSVG from "../../../../../components/SVGs/LikeOutlineSVG";
 import ViewsSVG from "../../../../../components/SVGs/ViewsSVG";
 import BookmarksSVG from "../../../../../components/SVGs/BookmarksSVG";
 import ShareSVG from "../../../../../components/SVGs/ShareSVG";
-import { convertCount } from "../../../utils/PostUtils";
+import { convertCount, getMarginLeft } from "../../../utils/PostUtils";
 import { usePostActions } from "../../../../../hooks/usePostActions";
 
 import "./PostActionBar.css";
@@ -83,6 +83,30 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
     <div className="post-action-bar">
       <div className="post-action-bar-group">
         <div
+          className="post-action-bar-like-wrapper"
+          id="like"
+          onMouseOver={updateHoverColor}
+          onMouseLeave={resetColors}
+          onClick={() => createLike(post)}
+        >
+          <LikeOutlineSVG height={20} width={20} color={colors.like} />
+        </div>
+        {/* Number of likes beside it */}
+        {post.likes.length > 0 && (
+          <p
+            className="post-action-bar-count"
+            style={{
+              color: colors.like,
+              marginLeft: getMarginLeft(post.likes.length),
+            }}
+          >
+            {convertCount(post.likes.length)}
+          </p>
+        )}
+      </div>
+
+      <div className="post-action-bar-group">
+        <div
           className="post-action-bar-blue-wrapper"
           id="reply"
           onMouseOver={updateHoverColor}
@@ -97,6 +121,7 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
             className="post-action-bar-count"
             style={{
               color: colors.reply,
+              marginLeft: getMarginLeft(post.replies.length),
             }}
           >
             {convertCount(post.replies.length)}
@@ -120,32 +145,10 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
             className="post-action-bar-count"
             style={{
               color: colors.repost,
+              marginLeft: getMarginLeft(post.reposts.length),
             }}
           >
             {convertCount(post.reposts.length)}
-          </p>
-        )}
-      </div>
-
-      <div className="post-action-bar-group">
-        <div
-          className="post-action-bar-like-wrapper"
-          id="like"
-          onMouseOver={updateHoverColor}
-          onMouseLeave={resetColors}
-          onClick={() => createLike(post)}
-        >
-          <LikeOutlineSVG height={20} width={20} color={colors.like} />
-        </div>
-        {/* Number of likes beside it */}
-        {post.likes.length > 0 && (
-          <p
-            className="post-action-bar-count"
-            style={{
-              color: colors.like,
-            }}
-          >
-            {convertCount(post.likes.length)}
           </p>
         )}
       </div>
@@ -161,14 +164,16 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
         </div>
         {/* Number of views beside it */}
         {post.views.length > 0 && (
-          <p
+          <div
             className="post-action-bar-count"
             style={{
               color: colors.views,
+              paddingLeft: "2px",
+              marginLeft: getMarginLeft(post.views.length),
             }}
           >
             {convertCount(post.views.length)}
-          </p>
+          </div>
         )}
       </div>
 

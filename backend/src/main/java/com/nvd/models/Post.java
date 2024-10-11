@@ -108,17 +108,17 @@ public class Post implements Comparable<Post> {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "post_province_id")
+    @JoinColumn(name = "post_province_id", unique = true)
     Province province;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "post_district_id")
+    @JoinColumn(name = "post_district_id", unique = true)
     District district;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "post_ward_id")
+    @JoinColumn(name = "post_ward_id", unique = true)
     Ward ward;
 
     public Post() {

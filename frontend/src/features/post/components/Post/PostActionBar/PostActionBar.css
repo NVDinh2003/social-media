@@ -7,7 +7,7 @@
   padding-bottom: 8px;
 }
 
-.post-action-bar-group {
+/* .post-action-bar-group {
   width: fit-content;
   height: fit-content;
   position: relative;
@@ -26,6 +26,43 @@
   border-radius: 100%;
   border: none;
   background-color: rgba(29, 155, 240, 0.2);
+} */
+
+.post-action-bar-group {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* Adds space between the icon and the count */
+  position: relative;
+}
+
+.post-action-bar-blue-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-radius 0.3s ease; /* Smooth hover effect */
+}
+
+.post-action-bar-blue-wrapper:hover {
+  border-radius: 50%; /* Fully rounded when hovered */
+  background-color: rgba(29, 155, 240, 0.2);
+}
+
+.post-action-bar-count {
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 400;
+  position: absolute;
+  bottom: 4px;
+  transition: color 0.3s ease; /* Smooth color transition on hover */
+  margin-left: 8px;
+}
+
+.post-action-bar-blue-wrapper:hover + .post-action-bar-count {
+  color: #1d9bf0; /* Changes count color when icon is hovered */
 }
 
 .post-action-bar-repost-wrapper {

@@ -26,7 +26,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     String FEED_QUERY = "SELECT * FROM (\n" +
             "        SELECT \n" +
             "            post_id, audience, content, posted_date, is_reply, reply_restriction, reply_to, \n" +
-            "            scheduled, scheduled_date, author_id, poll_id\n" +
+            "            scheduled, scheduled_date, author_id, poll_id, post_province_id, post_district_id, post_ward_id\n" +
             "        FROM posts \n" +
             "        WHERE author_id = :id\n" +
             "\n" +
@@ -34,7 +34,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "\n" +
             "        SELECT \n" +
             "            p.post_id, p.audience, p.content, p.posted_date, p.is_reply, p.reply_restriction, p.reply_to, \n" +
-            "            p.scheduled, p.scheduled_date, p.author_id, p.poll_id\n" +
+            "            p.scheduled, p.scheduled_date, p.author_id, p.poll_id, p.post_province_id, p.post_district_id, p.post_ward_id\n" +
             "        FROM posts p\n" +
             "        INNER JOIN post_repost_juntion prj ON p.post_id = prj.post_id\n" +
             "        WHERE prj.user_id IN (\n" +
@@ -48,7 +48,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "\n" +
             "        SELECT \n" +
             "            p.post_id, p.audience, p.content, p.posted_date, p.is_reply, p.reply_restriction, p.reply_to, \n" +
-            "            p.scheduled, p.scheduled_date, p.author_id, p.poll_id\n" +
+            "            p.scheduled, p.scheduled_date, p.author_id, p.poll_id, p.post_province_id, p.post_district_id, p.post_ward_id\n" +
             "        FROM posts p\n" +
             "        WHERE p.author_id IN (\n" +
             "            SELECT u.user_id AS following_id\n" +
@@ -59,6 +59,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "    ) AS p \n" +
             "    WHERE p.posted_date <= :session_start \n" +
             "    ORDER BY p.posted_date DESC";
+
 
     @Query(nativeQuery = true, value = FEED_QUERY,
             countQuery = "SELECT COUNT(*) FROM (" + FEED_QUERY + ") AS feed_count"
