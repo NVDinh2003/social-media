@@ -40,7 +40,7 @@ public class AuthenticationController {
 
     @ExceptionHandler({EmailAlreadyTakenException.class})
     public ResponseEntity<String> handleEmailTaken() {
-        return new ResponseEntity<String>("The email you provided is already in use", HttpStatus.CONFLICT);
+        return new ResponseEntity<>("The email you provided is already in use", HttpStatus.CONFLICT);
     }
 
     @PostMapping("/register")
@@ -50,7 +50,7 @@ public class AuthenticationController {
 
     @ExceptionHandler({UserDoesNotExistException.class})
     public ResponseEntity<String> handleUserDoesntExist() {
-        return new ResponseEntity<String>("The user you are looking for does not exist!", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("The user you are looking for does not exist!", HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/update/phone")
@@ -65,18 +65,18 @@ public class AuthenticationController {
 
     @ExceptionHandler({EmailFaildToSendException.class})
     public ResponseEntity<String> handleFaildEmail() {
-        return new ResponseEntity<String>("Email failed to send, try again in a moment!", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("Email failed to send, try again in a moment!", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/email/code")
     public ResponseEntity<String> createEmailVerification(@RequestBody LinkedHashMap<String, String> body) {
         userService.generateEmailVerification(body.get("username"));
-        return new ResponseEntity<String>("Verification code generated, email sent!", HttpStatus.OK);
+        return new ResponseEntity<>("Verification code generated, email sent!", HttpStatus.OK);
     }
 
     @ExceptionHandler({IncorrectVerificationCodeException.class})
     public ResponseEntity<String> incorrectCodeHandler() {
-        return new ResponseEntity<String>("The verification code provided is incorrect! ", HttpStatus.CONFLICT);
+        return new ResponseEntity<>("The verification code provided is incorrect! ", HttpStatus.CONFLICT);
     }
 
     @PostMapping("/email/verify")

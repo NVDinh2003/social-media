@@ -7,6 +7,7 @@ import com.nvd.models.ApplicationUser;
 import com.nvd.service.NotificationService;
 import com.nvd.service.TokenService;
 import com.nvd.service.UserService;
+import com.nvd.utils.SpamRrequestCheck;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ public class UserController {
         return userService.getUserByUsername(username);
     }
 
+    @SpamRrequestCheck // Áp dụng kiểm tra Redis trước khi xử lý method này
     @GetMapping("/verify")
     public ApplicationUser verifyIdentity(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         String username = tokenService.getUsernameFromToken(token);
