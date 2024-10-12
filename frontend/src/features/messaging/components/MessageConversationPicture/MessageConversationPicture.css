@@ -1,0 +1,16 @@
+.message-conversation-picture {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 100%;
+  overflow: hidden;
+}
+
+.message-conversation-picture-pfp {
+  flex-basis: 50%;
+  flex-grow: 1;
+  background-size: 40px 40px;
+  background-repeat: no-repeat;
+  background-position: center;
+}

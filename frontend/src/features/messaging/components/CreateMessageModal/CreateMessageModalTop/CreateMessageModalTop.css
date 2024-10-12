@@ -37,6 +37,13 @@
   font-weight: 900;
 }
 
+.create-message-modal-top-subheader {
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: #657786;
+}
 .create-message-modal-top-next-button-active {
   width: 64px;
   height: 32px;

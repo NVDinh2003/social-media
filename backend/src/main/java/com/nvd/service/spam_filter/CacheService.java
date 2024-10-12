@@ -4,7 +4,6 @@ package com.nvd.service.spam_filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nvd.utils.CacheConstants;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.ScanParams;
@@ -14,7 +13,7 @@ import redis.clients.jedis.resps.ScanResult;
 @RequiredArgsConstructor
 public class CacheService {
 
-    @Autowired
+    //    @Autowired
     private Jedis jedisConnectionFactory;
 
     private final ObjectMapper objectMapper;

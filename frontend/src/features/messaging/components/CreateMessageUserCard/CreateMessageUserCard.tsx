@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import "./CreateMessageUserCard.css";
 import { ConversationUser, User } from "../../../../utils/GlobalInterface";
 import FollowNotificationSVG from "../../../../components/SVGs/FollowNotificationSVG";
 import { CheckSharp } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
-import { checkFollowing } from "../../../../services/UserService";
 import {
   openConversation,
-  togglePopup,
   updateConversationUsers,
 } from "../../../../redux/Slices/MessagesSlice";
 import { updateDisplayCreateMessage } from "../../../../redux/Slices/ModalSlice";
 import Verified from "@mui/icons-material/Verified";
+import {
+  generateConversationName,
+  generateFollowingText,
+} from "../../utils/utils";
+import { MessageConversationPicture } from "../MessageConversationPicture/MessageConversationPicture";
 
 interface CreateMessageUserCardProps {
   users: User[];
@@ -40,48 +43,13 @@ export const CreateMessageUserCard: React.FC<CreateMessageUserCardProps> = ({
     );
   };
 
-  const generateFollowingText = () => {
-    if (users.length === 1) {
-      let user = users[0];
-      let loggedInUserFollowsUser = checkFollowing(userState.following, user);
-      let userFollowsLoggedInUser = checkFollowing(userState.followers, user);
+  const disabled = () => {
+    if (messageState.conversationUsers.length > 0 && users.length > 1)
+      return true;
 
-      if (!loggedInUserFollowsUser && !userFollowsLoggedInUser) return "";
-      if (!loggedInUserFollowsUser && userFollowsLoggedInUser)
-        return "Follows you";
-      if (loggedInUserFollowsUser && !userFollowsLoggedInUser)
-        return "Following";
-      if (loggedInUserFollowsUser && userFollowsLoggedInUser)
-        return "You follow each other";
-    } else return "";
-  };
+    if (messageState.createGroup && users.length > 1) return true;
 
-  const generateNicknameText = () => {
-    if (conversationName) return conversationName;
-    if (users.length === 1) return users[0].nickname;
-    else if (users.length === 2) {
-      return `${users[0].nickname}, ${users[1].nickname}`;
-    } else if (users.length > 2) {
-      return `${users[0].nickname}, ${users[1].nickname} and ${
-        users.length - 2
-      } others`;
-    }
-  };
-
-  const generatePfp = (user: User): JSX.Element => {
-    return user.profilePicture ? (
-      <div
-        className="create-message-user-card-pfp"
-        style={{ backgroundImage: `url("${user.profilePicture.imageURL}")` }}
-        key={`${user.userId}-converstion-pfp`}
-      ></div>
-    ) : (
-      <div
-        className="create-message-user-card-pfp"
-        style={{ backgroundImage: `url("${default_pfp}")` }}
-        key={`${user.userId}-converstion-pfp`}
-      ></div>
-    );
+    return false;
   };
 
   const handleConversationClicked = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -107,7 +75,7 @@ export const CreateMessageUserCard: React.FC<CreateMessageUserCardProps> = ({
       }
 
       dispatch(updateConversationUsers(currentConversationUsers));
-    } else {
+    } else if (users.length > 1 && !disabled()) {
       let cUsers: ConversationUser[] = users.map((user: User) => {
         return {
           userId: user.userId,
@@ -139,24 +107,22 @@ export const CreateMessageUserCard: React.FC<CreateMessageUserCardProps> = ({
 
   return (
     <div
-      className="create-message-user-card"
+      className={`create-message-user-card ${
+        disabled()
+          ? "create-message-user-card-disabled"
+          : "create-message-user-card-active"
+      }`}
       onClick={handleConversationClicked}
     >
       <div className="create-message-user-card-left-container">
-        <div className="create-message-user-card-pfps-container">
-          {conversationPicture ? (
-            <div
-              className="create-message-user-card-pfp"
-              style={{ backgroundImage: `url("${conversationPicture}")` }}
-            ></div>
-          ) : (
-            users.slice(0, 4).map((user) => generatePfp(user))
-          )}
-        </div>
+        <MessageConversationPicture
+          users={users}
+          conversationPicture={conversationPicture}
+        />
 
         <div>
           <div className="create-message-user-card-info-nickname">
-            {generateNicknameText()}
+            {generateConversationName(users, conversationName)}
             {users.length === 1 && users[0].verifiedAccount && (
               <Verified
                 sx={{ width: "15px", height: "15px", color: "#1da1f2" }}
@@ -169,7 +135,11 @@ export const CreateMessageUserCard: React.FC<CreateMessageUserCardProps> = ({
               : `${users.length} people`}
           </p>
 
-          {generateFollowingText() && (
+          {generateFollowingText(
+            users,
+            userState.following,
+            userState.followers
+          ) && (
             <div className="create-message-user-card-following-container">
               <FollowNotificationSVG
                 height={12}
@@ -177,7 +147,11 @@ export const CreateMessageUserCard: React.FC<CreateMessageUserCardProps> = ({
                 color="rgba(113,118,123)"
               />
               <p className="create-message-user-card-info-text">
-                {generateFollowingText()}
+                {generateFollowingText(
+                  users,
+                  userState.following,
+                  userState.followers
+                )}
               </p>
             </div>
           )}

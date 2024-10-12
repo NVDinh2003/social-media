@@ -184,6 +184,8 @@ export interface Message {
 export interface Conversation {
   conversationId: number;
   conversationUsers: User[];
+  conversationPicture?: string;
+  conversationName?: string;
   messages: Message[];
 }
 

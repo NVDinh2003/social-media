@@ -12,6 +12,7 @@ interface MessagesSliceState {
   unreadMessages: INotification[];
   popupOpen: boolean;
   conversationOpen: boolean;
+  createGroup: boolean;
   conversationUsers: ConversationUser[];
   conversations: Conversation[];
   conversation: Conversation | undefined;
@@ -32,6 +33,7 @@ interface OpenConversationPayload {
 const initialState: MessagesSliceState = {
   unreadMessages: [],
   popupOpen: false,
+  createGroup: false,
   conversationOpen: false,
   conversationUsers: [],
   conversations: [],
@@ -119,6 +121,13 @@ export const MessageSlice = createSlice({
       };
       return state;
     },
+    toggleCreateGroup: (state) => {
+      state = {
+        ...state,
+        createGroup: !state.createGroup,
+      };
+      return state;
+    },
 
     updateUnreadMessages: (state, action: PayloadAction<INotification[]>) => {
       state = {
@@ -183,8 +192,18 @@ export const MessageSlice = createSlice({
           conversationOpen: true,
           conversation: action.payload,
           conversationUsers: [],
-          conversations: [action.payload, ...state.conversations],
         };
+
+        if (
+          !state.conversations.some(
+            (c) => c.conversationId === action.payload.conversationId
+          )
+        ) {
+          state = {
+            ...state,
+            conversations: [action.payload, ...state.conversations],
+          };
+        }
         return state;
       })
       .addCase(openConversation.rejected, (state, action) => {
@@ -198,7 +217,11 @@ export const MessageSlice = createSlice({
   },
 });
 
-export const { togglePopup, updateUnreadMessages, updateConversationUsers } =
-  MessageSlice.actions;
+export const {
+  togglePopup,
+  toggleCreateGroup,
+  updateUnreadMessages,
+  updateConversationUsers,
+} = MessageSlice.actions;
 
 export default MessageSlice.reducer;

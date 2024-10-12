@@ -1,19 +1,21 @@
 import React, { useContext, useState } from "react";
 
 import "./CreateMessageModalContent.css";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../redux/Store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../../redux/Store";
 import { DiscoveryContext } from "../../../../discovery/context/DiscoveryContext";
 import { DiscoveryContextType } from "../../../../discovery/context/Modals";
 import ThinSearchSVG from "../../../../../components/SVGs/Messages/ThinSearchSVG";
 import CreateGroupSVG from "../../../../../components/SVGs/Messages/CreateGroupSVG";
 import { CreateMessageUserCard } from "../../CreateMessageUserCard/CreateMessageUserCard";
 import { CreateMessageSelectedUser } from "../../CreateMessageSelectedUser/CreateMessageSelectedUser";
+import { toggleCreateGroup } from "../../../../../redux/Slices/MessagesSlice";
 
 export const CreateMessageModalContent: React.FC = () => {
   //
   const messageState = useSelector((state: RootState) => state.message);
   const loggedInUser = useSelector((state: RootState) => state.user.loggedIn);
+  const dispatch: AppDispatch = useDispatch();
   const {
     updateSearchContent,
     searchForUsers,
@@ -26,6 +28,11 @@ export const CreateMessageModalContent: React.FC = () => {
   const searchForMessagingUsers = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateSearchContent(e.target.value);
     searchForUsers(e.target.value);
+  };
+
+  const handleCreateGroup = () => {
+    // console.log("create group");
+    dispatch(toggleCreateGroup());
   };
 
   return (
@@ -49,7 +56,10 @@ export const CreateMessageModalContent: React.FC = () => {
       <div className="create-message-modal-content-scroll-box">
         <div className="create-message-modal-content-selected-users">
           {messageState.conversationUsers.length < 1 ? (
-            <div className="create-message-modal-content-create-group">
+            <div
+              className="create-message-modal-content-create-group"
+              onClick={handleCreateGroup}
+            >
               <div className="create-message-modal-content-group-icon-wrapper">
                 <CreateGroupSVG
                   height={20}

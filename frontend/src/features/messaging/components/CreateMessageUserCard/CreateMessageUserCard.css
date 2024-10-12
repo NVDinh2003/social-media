@@ -6,8 +6,12 @@
   align-items: center;
 }
 
-.create-message-user-card:hover {
+.create-message-user-card-active:hover {
   cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.create-message-user-card-disabled {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
@@ -18,22 +22,6 @@
   gap: 8px;
 }
 
-.create-message-user-card-pfps-container {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  flex-wrap: wrap;
-  border-radius: 100%;
-  overflow: hidden;
-}
-
-.create-message-user-card-pfp {
-  flex-basis: 50%;
-  flex-grow: 1;
-  background-size: 40px 40px;
-  background-repeat: no-repeat;
-  background-position: center;
-}
 .create-message-user-card-info-nickname {
   margin: 0;
   padding: 0;
