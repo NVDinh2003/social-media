@@ -63,6 +63,7 @@
 
 .sign-in {
   border: 1px solid lightgray;
+  /* width: 75%; */
 }
 
 .sign-in:hover {

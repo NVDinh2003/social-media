@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import blueLogo from "../../assets/fwitter-logo-large-blue.png";
 
 import "./Navigation.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import HomeSVG from "../SVGs/HomeSVG";
 import ExploreSVG from "../SVGs/ExploreSVG";
 import NotificationSVG from "../SVGs/NotificationSVG";
-import MessagesSVG from "../SVGs/MessagesSVG";
 import ListsSVG from "../SVGs/ListsSVG";
 import CommunitiesSVG from "../SVGs/CommunitiesSVG";
 import ProfileSVG from "../SVGs/ProfileSVG";
@@ -16,6 +15,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/Store";
 import Circle from "@mui/icons-material/Circle";
 import CreateMessageSVG from "../SVGs/Messages/CreateMessageSVG";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 interface NavigationProps {
   currentPage: string;
@@ -23,6 +23,8 @@ interface NavigationProps {
 
 export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
   //
+  const [jwt, setJwt, removeJwt] = useLocalStorage("token", "");
+  const navigate = useNavigate();
 
   useEffect(() => {}, [currentPage]);
 
@@ -53,6 +55,14 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
     notifications.newPostNotifications,
     notifications.postActionNotifications,
   ]);
+
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("Bạn có chắc chắn muốn đăng xuất?");
+    if (confirmLogout) {
+      removeJwt(); // Xóa token
+      navigate("/"); // Chuyển hướng về trang chính
+    }
+  };
 
   return (
     <div className="navigation">
@@ -191,7 +201,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
         <button className="navigation-post-button">Post</button>
       </nav>
 
-      <div className="navigation-options">
+      <div className="navigation-options" onClick={handleLogout}>
         <img
           alt=""
           className="navigation-options-pfp"

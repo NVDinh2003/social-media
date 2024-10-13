@@ -14,7 +14,7 @@ export const RegisterFormOne: React.FC = () => {
   return (
     <div className="register-container">
       <div className="register-content">
-        <h1 className="register-header">Create your account</h1>
+        <h1 className="register-header">Tạo tài khoản</h1>
         <RegisterNameInputs
           firstName={registerState.firstName}
           lastName={registerState.lastName}
@@ -23,10 +23,10 @@ export const RegisterFormOne: React.FC = () => {
         <RegisterEmailInput email={registerState.email} />
 
         <div className="register-one-dob-wrapper">
-          <h4 className="register-h4">Date of Birth</h4>
+          <h4 className="register-h4">Ngày sinh</h4>
           <span className="register-text-sm color-gray">
-            This will not be show publicly. Confirm your own age, even if this
-            account is for a business, pet, or something else.
+            Thông tin này sẽ không được hiển thị công khai. Vui lòng xác nhận
+            ngày sinh của bạn !
           </span>
         </div>
         <RegisterDateInput date={registerState.dob} />

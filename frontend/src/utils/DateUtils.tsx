@@ -16,6 +16,22 @@ export const MONTHS: string[] = [
   "December",
 ];
 
+export const VI_MONTHS: string[] = [
+  "",
+  "Tháng 1",
+  "Tháng 2",
+  "Tháng 3",
+  "Tháng 4",
+  "Tháng 5",
+  "Tháng 6",
+  "Tháng 7",
+  "Tháng 8",
+  "Tháng 9",
+  "Tháng 10",
+  "Tháng 11",
+  "Tháng 12",
+];
+
 export const getMonths = (): JSX.Element[] => {
   return MONTHS.map((month, index) => {
     if (index === 0) {
@@ -66,6 +82,20 @@ export const getYears = (): JSX.Element[] => {
 
 export const stringifyDate = (date: Dob): string => {
   return `${MONTHS[date.month].substring(0, 3)} ${date.day}, ${date.year}`;
+};
+
+export const stringifyVNDate = (date: Dob): string => {
+  let result: string = "";
+
+  if (date.day < 10) result = `0${date.day}`;
+  else result = `${date.day}`;
+
+  if (date.month < 10) result += `/0${date.month}`;
+  else result += `/${date.month}`;
+
+  result += `/${date.year}`;
+
+  return result;
 };
 
 export const stringifyTime = (date: Date): string => {

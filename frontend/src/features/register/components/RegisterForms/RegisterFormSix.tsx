@@ -65,9 +65,9 @@ export const RegisterFormSix: React.FC = () => {
   return (
     <div className="register-container">
       <div className="register-content">
-        <h1 className="register-header-2">You'll need a password</h1>
+        <h1 className="register-header-2">Thêm mật khẩu</h1>
         <p className="register-text color-gray">
-          Make sure it's 8 characters or more.
+          Đảm bảo độ dài tối thiểu là 8 ký tự.
         </p>
         <div className="register-six-password">
           <ValidatedTextInput

@@ -51,31 +51,31 @@ export const RegisterDateInput: React.FC<RegisterDateInputProps> = ({
   return (
     <div className="register-date">
       <div className="register-date-content">
-        <div className="register-date-month">
-          <ValidatedDateSelector
-            style={"validated-month"}
-            valid={valid}
-            name={"Month"}
-            dropDown={getMonths}
-            dispatcher={updateState}
-            data={date.month}
-          />
-        </div>
         <div className="register-date-day">
           <ValidatedDateSelector
             style={"validated-day"}
             valid={valid}
-            name={"Day"}
+            name={"Ngày"}
             dropDown={getDays}
             dispatcher={updateState}
             data={date.day}
+          />
+        </div>
+        <div className="register-date-month">
+          <ValidatedDateSelector
+            style={"validated-month"}
+            valid={valid}
+            name={"Tháng"}
+            dropDown={getMonths}
+            dispatcher={updateState}
+            data={date.month}
           />
         </div>
         <div className="register-date-year">
           <ValidatedDateSelector
             style={"validated-year"}
             valid={valid}
-            name={"Year"}
+            name={"Năm"}
             dropDown={getYears}
             dispatcher={updateState}
             data={date.year}
@@ -87,7 +87,7 @@ export const RegisterDateInput: React.FC<RegisterDateInputProps> = ({
         <></>
       ) : (
         <span className="register-date-error">
-          Please in put a valid date. You must be older than 13 years old!
+          Vui lòng nhập ngày sinh hợp lệ! Và bạn phải trên 13 tuổi!
         </span>
       )}
     </div>

@@ -49,10 +49,9 @@ export const RegisterFormFour: React.FC = () => {
   return (
     <div className="register-container">
       <div className="register-content">
-        <h1 className="register-header-2">Add a phone number</h1>
+        <h1 className="register-header-2">Thêm số điện thoại</h1>
         <p className="register-text color-gray">
-          Enter the phone number you would like to associate with your Fwitter
-          account. You won't get a verification code sent here.
+          Nhập số điện thoại bạn muốn liên kết với tài khoản HeartShare của bạn.
         </p>
 
         <div
@@ -66,7 +65,7 @@ export const RegisterFormFour: React.FC = () => {
             content={countryCodeDropDown}
             change={changeCode}
             label={"Country code"}
-            defaultValue={"United States +1"}
+            defaultValue={"Việt Nam +84"}
           />
           <ValidatedTextInput
             valid={true}
@@ -78,27 +77,27 @@ export const RegisterFormFour: React.FC = () => {
             <></>
           ) : (
             <p className="register-error color-red">
-              Please enter a valid 10 digit number
+              Vui lòng nhập số điện thoại hợp lệ!
             </p>
           )}
         </div>
 
         <div className="register-four-checkbox-wrapper">
           <p className="register-text color-gray">
-            Let people who have your phone number find and connect with you on
-            Fwitter. <span className="reg-step-four-link">Learn more</span>.
+            Cho phép người dùng có số điện thoại của bạn tìm và liên kết với bạn
+            trên HeartShare.{" "}
+            <span className="reg-step-four-link">Tìm hiểu thêm</span>.
           </p>
           <Checkbox />
         </div>
-
         <div className="register-four-checkbox-wrapper">
           <p className="register-text color-gray">
-            Let Fwitter use your phone number to personalize our service,
-            including ads (if permitted by Ads preference). If you don't enable
-            this, Fwitter will still use your phone number for purpose including
-            account security, spam, fraud, and abuse prevention.{" "}
+            Cho phép HeartShare sử dụng số điện thoại của bạn để cá nhân hóa
+            dịch vụ, bao gồm quảng cáo (nếu được cho phép theo tùy chọn quảng
+            cáo).
             <span className="register-link color-blue">
-              See our Privacy Policy for more information.
+              Xem Chính sách Quyền riêng tư của chúng tôi để biết thêm thông
+              tin.
             </span>
           </p>
           <Checkbox />

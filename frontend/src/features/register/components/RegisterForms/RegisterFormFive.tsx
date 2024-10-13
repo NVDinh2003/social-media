@@ -35,9 +35,11 @@ export const RegisterFormFive: React.FC = () => {
   return (
     <div className="register-container">
       <div className="register-content">
-        <h1 className="register-header-2">We sent you a code</h1>
+        <h1 className="register-header-2">
+          Chúng tôi đã gửi cho bạn mã xác nhận
+        </h1>
         <p className="register-text color-gray">
-          Enter it below to verify {state.email}
+          Nhập mã xác nhận bên dưới để xác minh cho {state.email}
         </p>
 
         <div className="register-five-input-wrapper">
@@ -48,7 +50,7 @@ export const RegisterFormFive: React.FC = () => {
             changeValue={handleChange}
           />
           <p className="register-five-message color-blue" onClick={resend}>
-            Didn't receive a mail?
+            Không nhận được email?
           </p>
         </div>
       </div>

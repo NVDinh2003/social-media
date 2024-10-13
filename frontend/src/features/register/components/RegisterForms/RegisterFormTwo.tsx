@@ -7,28 +7,31 @@ import { Checkbox } from "../../../../components/Checkbox/Checkbox";
 export const RegisterFormTwo: React.FC = () => {
   return (
     <div className="register-container">
-      <div className="register-content">
-        <h1 className="register-header">Customize your experience</h1>
+      <div className="register-content register-form-two">
+        <h1 className="register-header">Tùy chỉnh trải nghiệm của bạn</h1>
         <h3 className="register-subheader">
-          Track where you see Fwitter content across the web.
+          Theo dõi nơi bạn nhìn thấy nội dung từ HeartShare trên web.
         </h3>
 
         <div className="register-two-checkbox-wrapper">
           <p className="register-text">
-            Fwitter use this data to personalize your experience. This web
-            browsing history will never be stored with your name, email or phone
-            number.
+            HeartShare sử dụng dữ liệu này để cá nhân hóa trải nghiệm của bạn.
+            Lịch sử duyệt web này sẽ không bao giờ được lưu trữ cùng với tên,
+            email hoặc số điện thoại của bạn.
           </p>
           <Checkbox />
         </div>
         <p className="register-text color-gray">
-          By signing up, you agree to our{" "}
-          <span className="register-link color-blue">Terms</span>,
-          <span className="register-link color-blue">Privacy Policy</span> and{" "}
-          <span className="register-link color-blue">Cookie use</span>. Fwitter
-          may use your contact information, including your email address and
-          phone number for the purpose outline in our Privacy Policy.{" "}
-          <span className="register-link color-blue">learn more</span>
+          Bằng cách đăng ký, bạn đồng ý với{" "}
+          <span className="register-link color-blue">Điều khoản</span>,{" "}
+          <span className="register-link color-blue">
+            Chính sách quyền riêng tư
+          </span>{" "}
+          và <span className="register-link color-blue">Sử dụng cookie</span>{" "}
+          của chúng tôi. HeartShare có thể sử dụng thông tin liên hệ của bạn,
+          bao gồm email và số điện thoại cho các mục đích đã nêu trong Chính
+          sách quyền riêng tư.{" "}
+          <span className="register-link color-blue">Tìm hiểu thêm</span>
         </p>
       </div>
     </div>

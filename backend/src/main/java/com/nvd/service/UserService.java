@@ -22,8 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,12 +48,13 @@ public class UserService implements UserDetailsService {
         boolean nameTaken = true;
         String tempName = "";
         while (nameTaken) {
-            tempName = generateUserName(name);
+            tempName = generateUserNameAndNickname(name);
             if (userRepository.findByUsername(tempName).isEmpty()) {
                 nameTaken = false;
             }
         }
         user.setUsername(tempName);
+        user.setNickname(tempName);
 
         Set<Role> roles = user.getAuthorities();
         if (roleRepository.findByAuthority("USER").isPresent()) {
@@ -67,9 +70,17 @@ public class UserService implements UserDetailsService {
 
     }
 
-    private String generateUserName(String name) {
-        long genarateNumber = (long) Math.floor(Math.random() * 1_000_000_000);
-        return name + genarateNumber;
+//    private String generateUserName(String name) {
+//        long genarateNumber = (long) Math.floor(Math.random() * 1_000_000_000);
+//        return name + genarateNumber;
+//    }
+
+    public static String generateUserNameAndNickname(String name) {
+        String temp = Normalizer.normalize(name, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        String[] parts = pattern.matcher(temp).replaceAll("").toLowerCase().replaceAll("đ", "d").split(" ");
+        long generateNumber = (long) Math.floor(Math.random() * 1_000_000);
+        return parts[parts.length - 1] + generateNumber;
     }
 
     public ApplicationUser getUserById(Integer userId) {

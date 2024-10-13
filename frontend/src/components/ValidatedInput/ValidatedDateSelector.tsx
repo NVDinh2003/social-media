@@ -28,9 +28,14 @@ export const ValidatedDateSelector: React.FC<ValidatedDateSelectorProps> = ({
 
   const changeValue = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setValue(+e.target.value);
-    console.log("Dispatch this change to a reducer");
-    console.log("value: ", e.target.value);
-    dispatcher(name.toLowerCase(), +e.target.value);
+    // console.log("Dispatch this change to a reducer");
+    // console.log("value: ", e.target.value);
+    let eName = "";
+    if (name === "Ngày") eName = "day";
+    else if (name === "Tháng") eName = "month";
+    else if (name === "Năm") eName = "year";
+    // console.log("eName: ", eName.toLowerCase());
+    dispatcher(eName, +e.target.value);
   };
 
   const toggleActive = (e: React.FocusEvent<HTMLSelectElement>) => {

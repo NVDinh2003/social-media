@@ -50,7 +50,7 @@ export const RegisterEmailInput: React.FC<RegisterEmailInputProps> = ({
         <></>
       ) : (
         <span className="register-email-error">
-          Please enter a valid email.
+          Vui lòng nhập email hợp lệ!
         </span>
       )}
     </div>

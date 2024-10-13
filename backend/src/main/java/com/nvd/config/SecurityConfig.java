@@ -84,6 +84,7 @@ public class SecurityConfig {
                         .requestMatchers("/users/followers/**").permitAll()
                         .requestMatchers("/users/following/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/posts/{id}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "auth/email/verify").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

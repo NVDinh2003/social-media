@@ -10,18 +10,45 @@
   grid-template-areas: "two" "one" "three";
 }
 
+/* .landing-top-left {
+  grid-area: one;
+  height: 33vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../assets/landing/share-lovesupport-with-heartfilled-handsjar-charitygenerosity-generosity-friendship-solidarity.jpg");
+}
+
+.landing-top-left-logo {
+  max-width: auto;
+  height: 60%;
+} */
+
 .landing-top-left {
   grid-area: one;
   height: 33vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url("../assets/whatshappening.png");
+  position: relative; /* Để chứa lớp phủ */
+}
+
+.landing-top-left::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("../assets/landing/share-lovesupport-with-heartfilled-handsjar-charitygenerosity-generosity-friendship-solidarity.jpg");
+  filter: blur(2px); /* Thêm hiệu ứng mờ */
+  z-index: 0; /* Đặt lớp phủ phía dưới logo */
 }
 
 .landing-top-left-logo {
   max-width: auto;
   height: 60%;
+  position: relative; /* Để logo nằm trên hình nền */
 }
 
 .landing-top-right {

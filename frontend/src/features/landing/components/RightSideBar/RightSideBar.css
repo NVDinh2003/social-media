@@ -13,18 +13,47 @@
   width: 40px;
 }
 
-.right-side-bar-h1 {
+/* .right-side-bar-h1 {
   font-size: 64px;
   font-weight: 700;
   font-family: "Ubuntu", "sans-serif";
+} */
+
+.right-side-bar-h1 {
+  font-size: 64px; /* Kích thước chữ lớn */
+  font-weight: bold; /* Đậm */
+  font-family: "Ubuntu", "sans-serif";
+  background: linear-gradient(45deg, #ff7eb3, #ff65a3);
+  -webkit-background-clip: text; /* Clip nền cho chữ */
+  -webkit-text-fill-color: transparent; /* Làm cho màu chữ trong suốt */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Đổ bóng cho chữ */
+  margin: 0;
+  opacity: 0;
+  animation: fadeIn 1s forwards; /* Thêm hiệu ứng vào */
+}
+
+/* Hiệu ứng vào */
+@keyframes fadeIn {
+  to {
+    opacity: 1; /* Kết thúc với độ mờ 1 */
+    transform: translateY(0); /* Đưa về vị trí ban đầu */
+  }
+}
+
+.right-side-bar-h1 {
+  transform: translateY(-20px); /* Bắt đầu từ vị trí cao hơn */
 }
 
 .right-side-bar-h2 {
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 700;
   font-family: "Ubuntu", "sans-serif";
   margin: 0;
   margin-bottom: 32px;
+}
+
+.h2-sign-in-text {
+  font-size: 20px !important;
 }
 
 .right-side-bar-signup-wrapper {
@@ -61,7 +90,7 @@
 }
 
 .right-side-bar-login-wrapper {
-  width: 300px;
+  /* width: 300px; */
   display: flex;
   flex-direction: column;
   margin: 0;

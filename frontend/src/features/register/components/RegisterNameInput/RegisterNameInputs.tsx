@@ -50,7 +50,7 @@ export const RegisterNameInputs: React.FC<RegisterNameInputProps> = ({
         <ValidatedTextInput
           valid={firstValid}
           name={"firstName"}
-          label={"First"}
+          label={"Họ"}
           changeValue={updateName}
           data={firstName}
           attributes={{
@@ -68,7 +68,7 @@ export const RegisterNameInputs: React.FC<RegisterNameInputProps> = ({
         <ValidatedTextInput
           valid={lastValid}
           name={"lastName"}
-          label={"Last"}
+          label={"Tên"}
           changeValue={updateName}
           data={lastName}
           attributes={{

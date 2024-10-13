@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../redux/Store";
 import { resetUsername } from "../redux/Slices/UserSlice";
 
@@ -9,7 +9,7 @@ import ForgotPasswordModal from "../features/forgotpassword";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
-import whiteLogo from "../assets/fwitter-logo-large-white.png";
+import whiteLogo from "../assets/logo/66e00aa8a33e6.png";
 
 import "./Landing.css";
 import "../assets/global.css";

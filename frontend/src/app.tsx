@@ -4,15 +4,12 @@ import "./assets/global.css";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { Landing } from "./pages/Landing";
 import { Theme } from "./utils/GlobalInterface";
-import { Home } from "./pages/Home";
 import { LayoutPage } from "./pages/LayoutPage";
 import { Feed } from "./features/feed/components/Feed/Feed";
 import { Profile } from "./pages/Profile";
-import { Client, over } from "stompjs";
 import { useSelector } from "react-redux";
 import { RootState } from "./redux/Store";
-import { useEffect, useState } from "react";
-import SockJS from "sockjs-client";
+import { useEffect } from "react";
 import { ViewPost } from "./pages/ViewPost";
 import { useWebsocket } from "./hooks/useWebsocket";
 import NotificationsPage from "./pages/NotificationsPage";
@@ -32,11 +29,11 @@ const theme: Theme = {
 const GlobalStyle = createGlobalStyle`
 *{
   font-family:'IBM Plex Sans', sans-serif;
+  /* font-family:"Ubuntu", "sans-serif"; */
   font-weight: bold;
 }`;
 
 export const App = () => {
-  const API_URL = process.env.REACT_APP_API_URL;
   const user = useSelector((state: RootState) => state.user.loggedIn);
   const { connected, connect } = useWebsocket();
 

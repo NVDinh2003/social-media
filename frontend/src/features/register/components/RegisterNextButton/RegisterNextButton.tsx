@@ -96,21 +96,21 @@ export const RegisterNextButton: React.FC<RegisterNextButtonProps> = ({
             active={stepOneActive}
             onClick={nextStep}
           >
-            Next
+            Tiếp
           </StyledNextButton>
         );
 
       case 2:
         return (
           <StyledNextButton active={true} color={"black"} onClick={nextStep}>
-            Next step
+            Tiếp tục
           </StyledNextButton>
         );
 
       case 3:
         return (
           <StyledNextButton onClick={sendUserInfo} color={"blue"} active={true}>
-            Sign up
+            Đăng ký
           </StyledNextButton>
         );
 
