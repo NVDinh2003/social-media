@@ -13,6 +13,8 @@ import { useEffect } from "react";
 import { ViewPost } from "./pages/ViewPost";
 import { useWebsocket } from "./hooks/useWebsocket";
 import NotificationsPage from "./pages/NotificationsPage";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 
 const theme: Theme = {
   colors: {
@@ -42,6 +44,52 @@ export const App = () => {
       connect();
     }
   }, [user]);
+
+  // Cấu hình interceptor cho axios
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response) {
+          // Xử lý lỗi response
+          let errorMessage = "Đã xảy ra lỗi";
+          if (error.response.data && error.response.data.message) {
+            errorMessage = error.response.data.message; // Lấy thông điệp lỗi từ server
+          } else {
+            // Nếu không có thông điệp lỗi cụ thể từ server
+            switch (error.response.status) {
+              case 401:
+                errorMessage = "Lỗi xác thực. Vui lòng đăng nhập lại.";
+                break;
+              case 404:
+                errorMessage = "Không tìm thấy tài nguyên yêu cầu.";
+                break;
+              case 500:
+                errorMessage = "Lỗi server. Vui lòng thử lại sau.";
+                break;
+              default:
+                errorMessage = `Đã xảy ra lỗi: ${error.message}`;
+            }
+          }
+          toast.error(errorMessage); // Hiển thị thông điệp lỗi
+        } else if (error.request) {
+          // Yêu cầu được gửi nhưng không nhận được phản hồi
+          toast.error(
+            "Không thể kết nối đến server. Vui lòng kiểm tra kết nối của bạn."
+          );
+        } else {
+          // Có lỗi khi thiết lập request
+          toast.error(`Đã xảy ra lỗi: ${error.message}`);
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    // Cleanup interceptor khi component unmount
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>

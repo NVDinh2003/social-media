@@ -96,7 +96,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
                   : "navigation-inactive"
               }`}
             >
-              Home
+              Trang chủ
             </p>
           </Link>
         </div>
@@ -111,7 +111,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
                   : "navigation-inactive"
               }`}
             >
-              Explore
+              Khám phá
             </p>
           </Link>
         </div>
@@ -137,7 +137,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
                     : "navigation-inactive"
                 } `}
             >
-              Notifications
+              Thông báo
             </p>
           </Link>
         </div>
@@ -159,7 +159,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
               )}
               <CreateMessageSVG height={26} width={26} color="none" />
             </div>
-            <p className="navigation-text navigation-inactive">Message</p>
+            <p className="navigation-text navigation-inactive">Tin nhắn</p>
           </Link>
         </div>
 
