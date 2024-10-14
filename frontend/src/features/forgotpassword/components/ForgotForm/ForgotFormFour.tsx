@@ -30,23 +30,23 @@ export const ForgotFormFour: React.FC<ForgotFormFourProps> = ({
 
   return (
     <div className="forgot-form-container">
-      <h1 className="forgot-form-header">Choose a new password</h1>
+      <h1 className="forgot-form-header">Đặt mật khẩu mới</h1>
 
       <p className="forgot-form-text color-gray">
-        Make sure your new password is 8 characters or more. Try including
-        numbers, letters, and punctuation marks for a{" "}
-        <span className="link color-blue">strong password</span>.
+        Đảm bảo rằng mật khẩu mới của bạn có ít nhất 8 ký tự. Hãy thử kết hợp
+        số, chữ cái và dấu câu để có một{" "}
+        <span className="link color-blue">mật khẩu mạnh</span>.
       </p>
 
       <p className="forgot-form-text color-gray">
-        You'll be logged out of all active Fwitter session after your password
-        is change!
+        Bạn sẽ bị đăng xuất khỏi tất cả các phiên làm việc hiện tại trên
+        HeartShare sau khi thay đổi mật khẩu!
       </p>
 
       <div className="forgot-form-four-password-wrapper">
         <ValidatedTextInput
           valid={true}
-          label={"New Password"}
+          label={"Mật khẩu mới"}
           name={"password"}
           attributes={{
             minLength: 8,
@@ -77,7 +77,7 @@ export const ForgotFormFour: React.FC<ForgotFormFourProps> = ({
       <div className="forgot-form-four-password-wrapper">
         <ValidatedTextInput
           valid={matching ? true : false}
-          label={"Confirm New Password"}
+          label={"Xác nhận mật khẩu mới"}
           name={"confirm"}
           attributes={{
             minLength: 8,
@@ -103,7 +103,7 @@ export const ForgotFormFour: React.FC<ForgotFormFourProps> = ({
       </div>
 
       {!matching ? (
-        <p className="login-form-error color-red">Password must match</p>
+        <p className="login-form-error color-red">Mật khẩu không trùng khớp!</p>
       ) : (
         <></>
       )}

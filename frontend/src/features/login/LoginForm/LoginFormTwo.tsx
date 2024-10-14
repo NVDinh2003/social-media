@@ -12,9 +12,13 @@ import "./LoginForms.css";
 
 interface LoginFormTwoProps {
   setPassword: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  forgot: () => void;
 }
 
-export const LoginFormTwo: React.FC<LoginFormTwoProps> = ({ setPassword }) => {
+export const LoginFormTwo: React.FC<LoginFormTwoProps> = ({
+  setPassword,
+  forgot,
+}) => {
   const state = useSelector((state: RootState) => state.user);
 
   const [active, setActive] = useState<boolean>(false);
@@ -26,14 +30,14 @@ export const LoginFormTwo: React.FC<LoginFormTwoProps> = ({ setPassword }) => {
   return (
     <div className="login-form-two-container">
       <div className="login-form-content">
-        <h1 className="login-form-header">Enter your password</h1>
-        <DisableValidatedInput label={"Username"} value={state.username} />
+        <h1 className="login-form-header">Nhập mật khẩu</h1>
+        <DisableValidatedInput label={"username"} value={state.username} />
 
         <div className="login-form-two-password">
           <ValidatedTextInput
             valid={!state.error}
             name={"password"}
-            label={"Password"}
+            label={"password"}
             changeValue={setPassword}
             attributes={{
               minLength: 8,
@@ -58,11 +62,13 @@ export const LoginFormTwo: React.FC<LoginFormTwoProps> = ({ setPassword }) => {
           </div>
 
           {state.error ? (
-            <p className="login-form-error color-red">Password is incorrect!</p>
+            <p className="login-form-error color-red">Mật khẩu không đúng!</p>
           ) : (
             <></>
           )}
-          <p className="login-form-two-forgot color-blue">Forgot Password ?</p>
+          <p className="login-form-two-forgot color-blue" onClick={forgot}>
+            Quên mật khẩu?
+          </p>
         </div>
       </div>
     </div>

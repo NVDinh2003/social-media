@@ -51,7 +51,7 @@ export const LoginFormOne: React.FC<LoginFormOneProps> = ({
   //
   return (
     <div className="login-form-one-container">
-      <h1 className="login-form-header">Sign in to Fwitter</h1>
+      <h1 className="login-form-header">Đăng nhập vào HeartShare</h1>
       <ModalButton
         active={true}
         height={40}
@@ -74,7 +74,7 @@ export const LoginFormOne: React.FC<LoginFormOneProps> = ({
         }}
       >
         <img src={google} alt="" className="login-form-one-buttons-logo" />
-        Sign in with Google
+        Đăng nhập với Google
       </ModalButton>
       <ModalButton
         active={true}
@@ -98,7 +98,7 @@ export const LoginFormOne: React.FC<LoginFormOneProps> = ({
         }}
       >
         <img src={apple} alt="" className="login-form-one-buttons-logo" />
-        Sign in with Apple
+        Đăng nhập với Apple
       </ModalButton>
 
       <div className="login-form-one-divider">
@@ -114,7 +114,9 @@ export const LoginFormOne: React.FC<LoginFormOneProps> = ({
         changeValue={handleChange}
       />
       {state.error ? (
-        <p className="login-form-error color-red">Unable to find User</p>
+        <p className="login-form-error color-red">
+          Không tìm thấy người dùng này!
+        </p>
       ) : (
         <></>
       )}
@@ -133,7 +135,7 @@ export const LoginFormOne: React.FC<LoginFormOneProps> = ({
         }}
         onClick={findUsername}
       >
-        Next
+        Tiếp tục
       </ModalButton>
 
       <ModalButton
@@ -158,12 +160,12 @@ export const LoginFormOne: React.FC<LoginFormOneProps> = ({
         }}
         onClick={forgot}
       >
-        Forgot password ?
+        Quên mật khẩu?
       </ModalButton>
       <p className="login-form-one-text color-gray">
-        Don't have an account?{" "}
+        Chưa có tài khoản?{" "}
         <span className="link color-blue" onClick={noAccount}>
-          Sign up
+          Đăng ký ngay
         </span>
       </p>
     </div>

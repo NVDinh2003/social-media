@@ -48,7 +48,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       topContent={<LoginModalTop closeModal={toggleModal} />}
       content={
         state.username ? (
-          <LoginFormTwo setPassword={handlePassword} />
+          <LoginFormTwo setPassword={handlePassword} forgot={toggleForgot} />
         ) : (
           <LoginFormOne noAccount={openRegister} forgot={toggleForgot} />
         )

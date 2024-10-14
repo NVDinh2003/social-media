@@ -19,15 +19,15 @@ export const ForgotFormThree: React.FC<ForgotFormThreeProps> = ({
   };
   return (
     <div className="forgot-form-container">
-      <h1 className="forgot-form-header">We sent you a code</h1>
+      <h1 className="forgot-form-header">Chúng tôi đã gửi mã cho bạn</h1>
       <p className="forgot-form-text color-gray">
-        Check your email to get your confirmation code. If you need to request a
-        new code, go back and reselect to a confirmation.
+        Kiểm tra email của bạn để nhận mã xác nhận. Nếu bạn cần yêu cầu mã mới,
+        hãy quay lại và chọn lại phương thức xác nhận.
       </p>
       <ValidatedTextInput
         valid={valid}
         name={"code"}
-        label={"Enter your code: "}
+        label={"Nhập mã của bạn: "}
         changeValue={handleChange}
       />
     </div>

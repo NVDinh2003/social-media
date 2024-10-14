@@ -45,11 +45,11 @@ export const LoginButton: React.FC<LoginButtonProps> = ({
           a: 0.8,
         }}
       >
-        Log in
+        Đăng nhập
       </ModalButton>
 
       <div className="login-button-text color-gray">
-        Don't have an account? <span className="link color-blue">Sign up</span>
+        Chưa có tài khoản? <span className="link color-blue">Đăng ký</span>
       </div>
     </div>
   );

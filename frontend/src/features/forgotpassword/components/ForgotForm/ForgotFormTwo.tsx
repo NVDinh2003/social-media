@@ -31,7 +31,7 @@ export const ForgotFormTwo: React.FC<ForgotFormTwoProps> = ({
     let transformed = "";
     let domain = false;
     for (let i = 0; i < email.length; i++) {
-      if (i < 2) transformed += email.charAt(i);
+      if (i < 3) transformed += email.charAt(i);
       else if (email.charAt(i) === "@") {
         transformed += email.charAt(i++);
         transformed += email.charAt(i);
@@ -43,24 +43,21 @@ export const ForgotFormTwo: React.FC<ForgotFormTwoProps> = ({
 
     return transformed;
   };
-
   return (
     <div className="forgot-form-container">
-      <h1 className="forgot-form-header">
-        Where should we send a confirmation code
-      </h1>
+      <h1 className="forgot-form-header">Bạn muốn gửi mã xác nhận đến đâu?</h1>
 
       <p className="forgot-form-text color-gray">
-        Before you can change your password, we need to make sure it's really
-        you.
+        Trước khi thay đổi mật khẩu, chúng tôi cần xác nhận rằng đó thật sự là
+        bạn.
       </p>
       <p className="forgot-form-text color-gray">
-        Start by choosing where to send the confirmation code
+        Hãy chọn nơi bạn muốn gửi mã xác nhận
       </p>
 
       <div className="forgot-form-two-select-group">
         <p className="forgot-form-two-select-text">
-          Send an email to {transformEmail(email)}
+          Gửi email đến {transformEmail(email)}
         </p>
         <ForgotRadioButton
           clicked={emailActive}
@@ -70,8 +67,8 @@ export const ForgotFormTwo: React.FC<ForgotFormTwoProps> = ({
 
       <div className="forgot-form-two-select-group">
         <p className="forgot-form-two-select-text">
-          Text a code to the number ending in{" "}
-          {phone.substring(phone.length - 4, phone.length)}
+          Gửi mã qua số điện thoại có đuôi là{" "}
+          {phone ? phone.substring(phone.length - 4, phone.length) : "N/A"}
         </p>
         <ForgotRadioButton
           clicked={phoneActive}

@@ -19,11 +19,11 @@ export const ForgotFormOne: React.FC<ForgotFormProps> = ({
 
   return (
     <div className="forgot-form-container">
-      <h1 className="forgot-form-header">Find your Fwitter Account</h1>
+      <h1 className="forgot-form-header">Tìm tài khoản HeartShare của bạn</h1>
 
       <p className="forgot-form-text color-gray">
-        Enter your email, phone number, or username associated with your account
-        to change your password
+        Nhập email, số điện thoại hoặc username liên kết với tài khoản của bạn
+        để đổi mật khẩu
       </p>
       <ValidatedTextInput
         valid={!error}
@@ -32,7 +32,11 @@ export const ForgotFormOne: React.FC<ForgotFormProps> = ({
         changeValue={handleChange}
       />
 
-      {error ? <p className="color-red forgot-error">User not found</p> : <></>}
+      {error ? (
+        <p className="color-red forgot-error">Không tìm thấy người dùng này!</p>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

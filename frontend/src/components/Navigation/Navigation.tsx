@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import blueLogo from "../../assets/fwitter-logo-large-blue.png";
+import blueLogo from "../../assets/logo/66e00aa8a33e6.png";
 
 import "./Navigation.css";
 import { Link, useNavigate } from "react-router-dom";
