@@ -7,6 +7,7 @@ import { SchedulePostModal } from "../../features/schedule-post/SchedulePostModa
 import { CreateReply } from "../../features/post/components/CreateReply/CreateReply";
 import { MentionsLearnMoreModal } from "../../features/notification/components/MentionNotification/MentionsLearnMoreModal/MentionsLearnMoreModal";
 import { CreateMessageModal } from "../../features/messaging/components/CreateMessageModal/CreateMessageModal";
+import { FeedPostCreatorLocationModal } from "../../features/feed/components/FeedPostCreatorLocationModal/FeedPostCreatorLocationModal";
 
 export default function ModalContainer() {
   const displayEditImageModal = useSelector(
@@ -30,6 +31,9 @@ export default function ModalContainer() {
   const displayCreateMessage = useSelector(
     (state: RootState) => state.modal.displayCreateMessage
   );
+  const displayLocationModal = useSelector(
+    (state: RootState) => state.modal.displayLocation
+  );
 
   return (
     <>
@@ -37,6 +41,7 @@ export default function ModalContainer() {
       {displayTagPeopleModal && <FeedPostCreatorTagPeopleModal />}
       {displatGifModal && <FeedPostCreatorGifModal />}
       {displayScheduleModal && <SchedulePostModal />}
+      {displayLocationModal && <FeedPostCreatorLocationModal />}
       {displayCreateReply && <CreateReply />}
       {displatMentionLearnMore && <MentionsLearnMoreModal />}
       {displayCreateMessage && <CreateMessageModal />}

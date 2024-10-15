@@ -52,7 +52,7 @@ export const DiscoverySearchDropDown: React.FC<DiscoveryDropDownProps> = ({
         ) : (
           <div className="discovery-search-dropdown-empty-wrapper">
             <p className="discovery-search-dropdown-empty">
-              Try searching for people, lists, or keywords
+              Hãy thử tìm kiếm người, từ khóa, ...
             </p>
           </div>
         )}

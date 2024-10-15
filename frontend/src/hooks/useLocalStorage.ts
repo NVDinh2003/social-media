@@ -11,6 +11,8 @@ export function useLocalStorage(key: string, property: string) {
 
   const removeValue = () => {
     localStorage.removeItem(key);
+    setValue(property); // Cập nhật lại state value
+    console.log(`Removed value for key "${key}". Current value: ${property}`); // Log giá trị hiện tại
   };
 
   useEffect(() => {

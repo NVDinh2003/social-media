@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 import "./CreatePostButtonCluster.css";
 import MediaSVG from "../../../../components/SVGs/MediaSVG";
@@ -15,6 +15,7 @@ import {
 } from "../../../../redux/Slices/PostSlice";
 import {
   updateDisplayGif,
+  updateDisplayLocation,
   updateDisplaySchedule,
 } from "../../../../redux/Slices/ModalSlice";
 
@@ -108,6 +109,14 @@ export const CreatePostButtonCluster: React.FC<
     dispatch(updateDisplaySchedule());
   };
 
+  const openLocationModal = () => {
+    console.log("openLocationModal");
+    dispatch(updateDisplayLocation());
+  };
+
+  // choose emoji
+  const openEmojiPicker = () => {};
+
   return (
     <div className="create-post-button-cluster">
       <div className="create-post-button-cluster-icon-bg-media">
@@ -177,7 +186,10 @@ export const CreatePostButtonCluster: React.FC<
         </div>
       )}
 
-      <div className="create-post-button-cluster-icon-bg icon-active">
+      <div
+        className="create-post-button-cluster-icon-bg icon-active"
+        onClick={openEmojiPicker}
+      >
         <EmojiSVG height={20} width={20} color={"#1DA1F2"} />
       </div>
 
@@ -190,8 +202,11 @@ export const CreatePostButtonCluster: React.FC<
         </div>
       )}
 
-      <div className="create-post-button-cluster-location">
-        <LocationSVG height={20} width={20} color={"rgba(29,161,242,.5)"} />
+      <div
+        className="create-post-button-cluster-location icon-active"
+        onClick={openLocationModal}
+      >
+        <LocationSVG height={20} width={20} color={"#1DA1F2"} />
       </div>
     </div>
   );

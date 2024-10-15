@@ -60,6 +60,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
     const confirmLogout = window.confirm("Bạn có chắc chắn muốn đăng xuất?");
     if (confirmLogout) {
       removeJwt(); // Xóa token
+      console.log("jwt", jwt);
       navigate("/"); // Chuyển hướng về trang chính
     }
   };
@@ -187,7 +188,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
         <div className="navigation-item">
           <Link to="" className="navigation-link">
             <ProfileSVG height={26} width={26} />
-            <p className="navigation-text navigation-inactive">Profile</p>
+            <p className="navigation-text navigation-inactive">Hồ sơ</p>
           </Link>
         </div>
 

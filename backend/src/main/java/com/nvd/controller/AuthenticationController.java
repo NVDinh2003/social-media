@@ -54,7 +54,7 @@ public class AuthenticationController {
     }
 
     @PutMapping("/update/phone")
-    public ApplicationUser updatePhoneNumber(@RequestBody LinkedHashMap<String, String> body) {
+    public ApplicationUser updatePhoneNumber(@RequestBody Map<String, String> body) {
         String username = body.get("username");
         String phone = body.get("phone");
 
@@ -80,7 +80,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/email/verify")
-    public ApplicationUser verifyEmail(@RequestBody LinkedHashMap<String, String> body) {
+    public ApplicationUser verifyEmail(@RequestBody Map<String, String> body) {
         Long code = Long.parseLong(body.get("code"));
         String username = body.get("username");
         return userService.verifyEmail(username, code);
@@ -95,7 +95,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LinkedHashMap<String, String> body) throws InvalidCredentialsException {
+    public LoginResponse login(@RequestBody Map<String, String> body) throws InvalidCredentialsException {
 
         String username = body.get("username");
         String password = body.get("password");

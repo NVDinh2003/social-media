@@ -1,4 +1,3 @@
-import { Gif } from "@mui/icons-material";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ModalSliceState {
@@ -6,6 +5,7 @@ interface ModalSliceState {
   displayTagPeople: boolean;
   displayGif: boolean;
   displaySchedule: boolean;
+  displayLocation: boolean;
   displayCreateReply: boolean;
   displayPostMore: boolean;
   displayMentionLearnMore: boolean;
@@ -18,6 +18,7 @@ const initialState: ModalSliceState = {
   displayTagPeople: false,
   displayGif: false,
   displaySchedule: false,
+  displayLocation: false,
   displayCreateReply: false,
   displayPostMore: false,
   displayMentionLearnMore: false,
@@ -60,6 +61,14 @@ export const ModalSlice = createSlice({
         displaySchedule: !state.displaySchedule,
       };
 
+      return state;
+    },
+
+    updateDisplayLocation(state) {
+      state = {
+        ...state,
+        displayLocation: !state.displayLocation,
+      };
       return state;
     },
 
@@ -112,6 +121,7 @@ export const {
   updateDisplayTagPeople,
   updateDisplayGif,
   updateDisplaySchedule,
+  updateDisplayLocation,
   updateDisplayCreateReply,
   updateDisplayPostMore,
   updateDisplatMentionLearnMore,
