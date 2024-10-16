@@ -14,7 +14,7 @@ import { PostContent } from "../Post/PostContent/PostContent";
 import Circle from "@mui/icons-material/Circle";
 import { PostActionBar } from "../Post/PostActionBar/PostActionBar";
 import { stringifyFullDate, stringifyTime } from "../../../../utils/DateUtils";
-import { convertCount } from "../../utils/PostUtils";
+import { convertCount, renderLocationInfo } from "../../utils/PostUtils";
 
 interface IndividualPostProps {
   post: Post;
@@ -33,6 +33,7 @@ export const IndividualPost: React.FC<IndividualPostProps> = ({ post }) => {
 
   useEffect(() => {
     dispatch(setCurrentPost(post));
+    console.log(post);
     createSingleView(post);
   }, [post]);
 
@@ -83,6 +84,8 @@ export const IndividualPost: React.FC<IndividualPostProps> = ({ post }) => {
       <div className="individual-post-content-wrapper">
         <PostContent post={post} location={"post"} />
       </div>
+
+      {renderLocationInfo(post)}
 
       <div className="individual-post-data-section">
         {post.postedDate && (

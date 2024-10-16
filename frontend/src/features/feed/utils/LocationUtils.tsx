@@ -21,6 +21,13 @@ interface Province {
   full_name: string;
 }
 
+interface LocationData {
+  address?: string;
+  provinceCode: string;
+  districtCode: string;
+  wardCode: string;
+}
+
 // Lấy dữ liệu từ file JSON
 const provinces: Province[] = provincesData.provinces;
 const districts: District[] = provincesData.districts;
@@ -40,7 +47,9 @@ const createOptions = (
 // Hàm lấy danh sách tỉnh
 export const getProvinces = (): JSX.Element[] => {
   return createOptions(
-    provinces.map((province) => ({ key: province.code, value: province.name }))
+    provinces
+      .sort((a, b) => a.name.localeCompare(b.name)) // Sắp xếp theo tên tỉnh
+      .map((province) => ({ key: province.code, value: province.name }))
   );
 };
 
@@ -51,10 +60,12 @@ export const getDistricts = (provinceCode: string): JSX.Element[] => {
   );
   // console.log("filteredDistricts: ", filteredDistricts);
   return createOptions(
-    filteredDistricts.map((district) => ({
-      key: district.code,
-      value: district.name,
-    }))
+    filteredDistricts
+      .sort((a, b) => a.name.localeCompare(b.name)) // Sắp xếp theo tên quận
+      .map((district) => ({
+        key: district.code,
+        value: district.name,
+      }))
   );
 };
 
@@ -65,7 +76,9 @@ export const getWards = (districtCode: string): JSX.Element[] => {
   );
   // console.log("filteredWards: ", filteredWards);
   return createOptions(
-    filteredWards.map((ward) => ({ key: ward.code, value: ward.name }))
+    filteredWards
+      .sort((a, b) => a.name.localeCompare(b.name)) // Sắp xếp theo tên phường
+      .map((ward) => ({ key: ward.code, value: ward.name }))
   );
 };
 
@@ -85,6 +98,18 @@ export const getDistrictFullName = (districtCode: string): string => {
 export const getWardFullName = (wardCode: string): string => {
   const ward = wards.find((ward) => ward.code === wardCode);
   return ward ? ward.full_name : "";
+};
+
+export const getDisplayLocationInfo = (locationData: LocationData): string => {
+  const { address, provinceCode, districtCode, wardCode } = locationData;
+
+  if (!provinceCode || !districtCode || !wardCode) {
+    return "";
+  }
+
+  const locationDetails = getLocationInfo(provinceCode, districtCode, wardCode);
+
+  return address ? `${address}, ${locationDetails}` : locationDetails;
 };
 
 export const getLocationInfo = (

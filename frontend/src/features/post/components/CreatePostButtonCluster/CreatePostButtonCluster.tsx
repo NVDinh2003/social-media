@@ -110,7 +110,8 @@ export const CreatePostButtonCluster: React.FC<
   };
 
   const openLocationModal = () => {
-    console.log("openLocationModal");
+    // console.log("type: ", type);
+    // console.log("openLocationModal");
     dispatch(updateDisplayLocation());
   };
 
@@ -202,12 +203,14 @@ export const CreatePostButtonCluster: React.FC<
         </div>
       )}
 
-      <div
-        className="create-post-button-cluster-location icon-active"
-        onClick={openLocationModal}
-      >
-        <LocationSVG height={20} width={20} color={"#1DA1F2"} />
-      </div>
+      {type !== "reply" && (
+        <div
+          className="create-post-button-cluster-location icon-active"
+          onClick={openLocationModal}
+        >
+          <LocationSVG height={20} width={20} color={"#1DA1F2"} />
+        </div>
+      )}
     </div>
   );
 };

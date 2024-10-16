@@ -1,4 +1,7 @@
+import LocationSVG from "../../../components/SVGs/LocationSVG";
 import { MONTHS } from "../../../utils/DateUtils";
+import { Post } from "../../../utils/GlobalInterface";
+import { getDisplayLocationInfo } from "../../feed/utils/LocationUtils";
 
 export const convertPostedDateToString = (postedDate: Date): string => {
   const postedDateString = `${postedDate}`;
@@ -148,4 +151,27 @@ export const getMarginLeft = (count: number) => {
   // if (count < 100) return "10px";
   if (count < 1000) return "28px";
   return "28px";
+};
+
+export const renderLocationInfo = (post: Post) => {
+  if (!post) return null;
+
+  const { districtCode, provinceCode, wardCode, address } = post;
+  const isLocationValid = districtCode && provinceCode && wardCode;
+
+  if (!isLocationValid) return null;
+
+  const locationInfo = getDisplayLocationInfo({
+    address,
+    provinceCode,
+    districtCode,
+    wardCode,
+  });
+
+  return (
+    <div className="location-modal-content-address-info">
+      <LocationSVG height={20} width={20} color={"#1da1f2"} />
+      <p className="location-modal-content-address-info-text">{locationInfo}</p>
+    </div>
+  );
 };

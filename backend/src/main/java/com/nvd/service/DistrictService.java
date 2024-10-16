@@ -18,6 +18,11 @@ public class DistrictService {
         return districtRepository.findDistrictByID(code);
     }
 
+    //tìm quận/huyện theo mã và mã tỉnh
+    public District findByCodeAndProvinceCode(String code, String provinceCode) {
+        return districtRepository.findByCodeAndProvinceCode(code, provinceCode);
+    }
+
     //lấy tất cả tên quận/huyện
     public List<Object[]> getAllDistrictName(String code) {
         return districtRepository.getAllDistrictName(code);

@@ -8,13 +8,18 @@ import "./Post.css";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePost } from "../../../../redux/Slices/FeedSlice";
-import { convertPostedDateToString } from "../../utils/PostUtils";
+import {
+  convertPostedDateToString,
+  renderLocationInfo,
+} from "../../utils/PostUtils";
 import { batchPostView } from "../../../../redux/Slices/PostSlice";
 import { useNavigate } from "react-router-dom";
 import { PostMore } from "../PostMore/PostMore";
 import { PostUsername } from "./PostUsername/PostUsername";
 import { PostContent } from "./PostContent/PostContent";
 import { PostActionBar } from "./PostActionBar/PostActionBar";
+import { getDisplayLocationInfo } from "../../../feed/utils/LocationUtils";
+import LocationSVG from "../../../../components/SVGs/LocationSVG";
 
 interface PostProps {
   feedPost: FeedPost;
@@ -172,6 +177,8 @@ export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
           >
             <PostContent post={feedPost.post} location={"post"} />
           </div>
+
+          {renderLocationInfo(feedPost.post)}
 
           <PostActionBar post={feedPost.post} isIndividual={false} />
         </div>

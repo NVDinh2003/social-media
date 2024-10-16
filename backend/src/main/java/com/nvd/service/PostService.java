@@ -3,8 +3,10 @@ package com.nvd.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nvd.dto.CreatePostDTO;
 import com.nvd.dto.CreateReplyDTO;
+import com.nvd.dto.response.PostDTO;
 import com.nvd.exceptions.PostDoesNotExistException;
 import com.nvd.exceptions.UnableToCreatePostException;
+import com.nvd.mappers.PostMapper;
 import com.nvd.models.*;
 import com.nvd.models.enums.Audience;
 import com.nvd.models.enums.NotificationType;
@@ -34,9 +36,13 @@ public class PostService {
     private final PollService pollService;
     private final TokenService tokenService;
     private final UserService userService;
+    private final ProvinceService provinceService;
+    private final DistrictService districtService;
+    private final WardService wardService;
     protected final NotificationService notificationService;
+    private final PostMapper postMapper;
 
-    public Post createPost(CreatePostDTO dto) {
+    public PostDTO createPost(CreatePostDTO dto) {
 
         Image savedGif;
 
@@ -97,6 +103,14 @@ public class PostService {
         else
             post.setPostedDate(LocalDateTime.now());
 
+        // location details in post
+        if (dto.getAddress() != null || dto.getProvinceCode() != null) {
+            post.setAddress(dto.getAddress());
+            post.setProvince(provinceService.findProvinceByID(dto.getProvinceCode()));
+            post.setDistrict(districtService.findByCodeAndProvinceCode(dto.getDistrictCode(), dto.getProvinceCode()));
+            post.setWard(wardService.findByCodeAndDistrictCode(dto.getWardCode(), dto.getDistrictCode()));
+        }
+
         post.setAuthor(dto.getAuthor());
         post.setReplies(dto.getReplies());
         post.setScheduled(dto.getScheduled());
@@ -112,14 +126,14 @@ public class PostService {
             mentionedUsers.forEach(mentionUser
                     -> notificationService.createAndSendNotifications(NotificationType.MENTION,
                     mentionUser, posted.getAuthor(), posted, null));
-            return posted;
+//            return posted;
+            return postMapper.convertToDTO(posted);
         } catch (Exception e) {
-            //TODO: setup custom exception
             throw new UnableToCreatePostException();
         }
     }
 
-    public Post createMediaPost(String post, List<MultipartFile> files) {
+    public PostDTO createMediaPost(String post, List<MultipartFile> files) {
         CreatePostDTO dto = new CreatePostDTO();
 
         try {
@@ -148,6 +162,14 @@ public class PostService {
             else
                 p.setPostedDate(LocalDateTime.now());
 
+            // location details in post
+            if (dto.getAddress() != null || dto.getProvinceCode() != null) {
+                p.setAddress(dto.getAddress());
+                p.setProvince(provinceService.findProvinceByID(dto.getProvinceCode()));
+                p.setDistrict(districtService.findByCodeAndProvinceCode(dto.getDistrictCode(), dto.getProvinceCode()));
+                p.setWard(wardService.findByCodeAndDistrictCode(dto.getWardCode(), dto.getDistrictCode()));
+            }
+
             p.setAuthor(dto.getAuthor());
             p.setReplies(dto.getReplies());
             p.setScheduled(dto.getScheduled());
@@ -169,7 +191,8 @@ public class PostService {
             mentionedUsers.forEach(mentionUser
                     -> notificationService.createAndSendNotifications(NotificationType.MENTION,
                     mentionUser, posted.getAuthor(), posted, null));
-            return posted;
+//            return posted;
+            return postMapper.convertToDTO(posted);
         } catch (Exception e) {
             throw new UnableToCreatePostException();
         }
@@ -179,9 +202,10 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public Post getPostById(Integer id) {
+    public PostDTO getPostById(Integer id) {
         //TODO: setup custom exception for post that does not exist
-        return postRepository.findById(id).orElseThrow(PostDoesNotExistException::new);
+        Post post = postRepository.findById(id).orElseThrow(PostDoesNotExistException::new);
+        return postMapper.convertToDTO(post);
     }
 
     public Set<Post> getAllPostsByAuthor(ApplicationUser author) {
@@ -211,7 +235,8 @@ public class PostService {
                 .poll(replyDTO.getPoll())
                 .build();
 
-        Post reply = createPost(postDTO);
+//        Post reply = createPost(postDTO);
+        Post reply = postMapper.convertToEntity(createPost(postDTO));
         reply.setReply(true);
         reply.setReplyTo(replyDTO.getOriginalPost());
 
@@ -247,7 +272,8 @@ public class PostService {
                     .poll(dto.getPoll())
                     .build();
 
-            Post replyPost = createPost(postDTO);
+//            Post replyPost = createPost(postDTO);
+            Post replyPost = postMapper.convertToEntity(createPost(postDTO));
             replyPost.setReply(true);
             replyPost.setReplyTo(dto.getOriginalPost());
 
@@ -274,7 +300,7 @@ public class PostService {
         }
     }
 
-    public Post repostPost(Integer postId, String token) {
+    public PostDTO repostPost(Integer postId, String token) {
         Post post = postRepository.findById(postId).orElseThrow(PostDoesNotExistException::new);
         String username = tokenService.getUsernameFromToken(token);
         ApplicationUser user = userService.getUserByUsername(username);
@@ -287,10 +313,11 @@ public class PostService {
         }
         post.setReposts(reposts);
         notificationService.createAndSendNotifications(NotificationType.REPOST, post.getAuthor(), user, post, null);
-        return postRepository.save(post);
+        post = postRepository.save(post);
+        return postMapper.convertToDTO(post);
     }
 
-    public Post likePost(Integer postId, String token) {
+    public PostDTO likePost(Integer postId, String token) {
         Post post = postRepository.findById(postId).orElseThrow(PostDoesNotExistException::new);
         String username = tokenService.getUsernameFromToken(token);
         ApplicationUser user = userService.getUserByUsername(username);
@@ -303,10 +330,11 @@ public class PostService {
         }
         post.setLikes(likes);
         notificationService.createAndSendNotifications(NotificationType.LIKE, post.getAuthor(), user, post, null);
-        return postRepository.save(post);
+        post = postRepository.save(post);
+        return postMapper.convertToDTO(post);
     }
 
-    public Post bookmarkPost(Integer postId, String token) {
+    public PostDTO bookmarkPost(Integer postId, String token) {
         Post post = postRepository.findById(postId).orElseThrow(PostDoesNotExistException::new);
         String username = tokenService.getUsernameFromToken(token);
         ApplicationUser user = userService.getUserByUsername(username);
@@ -319,11 +347,12 @@ public class PostService {
         }
         post.setBookmarks(bookmarks);
         notificationService.createAndSendNotifications(NotificationType.BOOKMARK, post.getAuthor(), user, post, null);
-        return postRepository.save(post);
+        post = postRepository.save(post);
+        return postMapper.convertToDTO(post);
     }
 
     @Transactional
-    public synchronized Post viewPost(Integer postId, String token) {
+    public synchronized PostDTO viewPost(Integer postId, String token) {
         String username = tokenService.getUsernameFromToken(token);
         ApplicationUser user = userService.getUserByUsername(username);
 
@@ -335,9 +364,10 @@ public class PostService {
         if (!hasViewed) {
             views.add(user);
             post.setViews(views);
-            return postRepository.save(post);
+            post = postRepository.save(post);
+            return postMapper.convertToDTO(post);
         }
-        return post;
+        return postMapper.convertToDTO(post);
     }
 
     public List<Post> viewPosts(List<Integer> postIds, String token) {

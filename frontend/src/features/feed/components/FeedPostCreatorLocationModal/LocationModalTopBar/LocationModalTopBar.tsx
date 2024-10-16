@@ -4,9 +4,15 @@ import "./LocationModalTopBar.css";
 import { AppDispatch } from "../../../../../redux/Store";
 import { useDispatch } from "react-redux";
 import { updateDisplayLocation } from "../../../../../redux/Slices/ModalSlice";
-export const LocationModalTopBar: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
 
+interface LocationModalTopBarProps {
+  onConfirm: () => void;
+}
+
+export const LocationModalTopBar: React.FC<LocationModalTopBarProps> = ({
+  onConfirm,
+}) => {
+  const dispatch: AppDispatch = useDispatch();
   function closeModal() {
     dispatch(updateDisplayLocation());
   }
@@ -31,7 +37,10 @@ export const LocationModalTopBar: React.FC = () => {
       <div className="location-post-modal-top-bar-right">
         <button
           className="location-post-modal-top-bar-confirm"
-          onClick={() => {}}
+          onClick={() => {
+            onConfirm();
+            closeModal();
+          }}
         >
           Xác nhận
         </button>

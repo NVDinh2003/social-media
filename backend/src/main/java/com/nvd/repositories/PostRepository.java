@@ -24,17 +24,13 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     // union
     // lấy tất cả các bài đăng mà user đó đang theo dõi (có following)
     String FEED_QUERY = "SELECT * FROM (\n" +
-            "        SELECT \n" +
-            "            post_id, audience, content, posted_date, is_reply, reply_restriction, reply_to, \n" +
-            "            scheduled, scheduled_date, author_id, poll_id, post_province_id, post_district_id, post_ward_id\n" +
+            "        SELECT *\n" +
             "        FROM posts \n" +
             "        WHERE author_id = :id\n" +
             "\n" +
             "        UNION\n" +
             "\n" +
-            "        SELECT \n" +
-            "            p.post_id, p.audience, p.content, p.posted_date, p.is_reply, p.reply_restriction, p.reply_to, \n" +
-            "            p.scheduled, p.scheduled_date, p.author_id, p.poll_id, p.post_province_id, p.post_district_id, p.post_ward_id\n" +
+            "        SELECT p.*\n" +
             "        FROM posts p\n" +
             "        INNER JOIN post_repost_juntion prj ON p.post_id = prj.post_id\n" +
             "        WHERE prj.user_id IN (\n" +
@@ -46,9 +42,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "\n" +
             "        UNION\n" +
             "\n" +
-            "        SELECT \n" +
-            "            p.post_id, p.audience, p.content, p.posted_date, p.is_reply, p.reply_restriction, p.reply_to, \n" +
-            "            p.scheduled, p.scheduled_date, p.author_id, p.poll_id, p.post_province_id, p.post_district_id, p.post_ward_id\n" +
+            "        SELECT p.*\n" +
             "        FROM posts p\n" +
             "        WHERE p.author_id IN (\n" +
             "            SELECT u.user_id AS following_id\n" +

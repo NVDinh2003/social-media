@@ -24,6 +24,10 @@ public class CreatePostDTO {
     private List<Image> images;
     private Boolean scheduled;
     private LocalDateTime scheduledDate;
+    private String address;
+    private String provinceCode;
+    private String districtCode;
+    private String wardCode;
     private Audience audience;
     private ReplyRestriction replyRestriction;
     private Poll poll;

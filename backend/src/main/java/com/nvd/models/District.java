@@ -1,6 +1,8 @@
 package com.nvd.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,8 +15,10 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "districts")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class District {
     @Id
+    @JsonProperty("districtCode")
     private String code;
     @JsonIgnore
     private String name;

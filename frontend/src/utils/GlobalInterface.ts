@@ -117,6 +117,10 @@ export interface Post {
   bookmarks: User[];
   scheduled: boolean;
   scheduledDate?: Date;
+  address?: string;
+  provinceCode?: string;
+  districtCode?: string;
+  wardCode?: string;
   audience: "EVERYONE" | "CIRCLE";
   replyRestriction: "EVERYONE" | "FOLLOW" | "CIRCLE" | "MENTION";
 }

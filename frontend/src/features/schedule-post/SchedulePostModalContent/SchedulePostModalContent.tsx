@@ -12,13 +12,14 @@ import {
   getScheduleMinutes,
   getScheduleYears,
 } from "../SchedulePostUtils/SchedulePostUtils";
-import { AppDispatch } from "../../../redux/Store";
-import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../../redux/Store";
+import { useDispatch, useSelector } from "react-redux";
 import { setScheduleDate } from "../../../redux/Slices/PostSlice";
 import { validateFutureDate } from "../../../services/Validator";
 
 export const SchedulePostModalContent: React.FC = () => {
   //
+  const postState = useSelector((state: RootState) => state.post);
   const dateSelectorRef = useRef<HTMLInputElement>(null);
   const [scheduledDate, setScheduledDate] = useState<Date>(() => new Date());
   const [amPm, setAmPm] = useState<number>(() =>
@@ -83,7 +84,10 @@ export const SchedulePostModalContent: React.FC = () => {
       setAmPm(value);
     }
 
-    if (validateFutureDate(dateCopy)) dispatch(setScheduleDate(dateCopy));
+    if (validateFutureDate(dateCopy)) {
+      // console.log("scheduled post!");
+      dispatch(setScheduleDate(dateCopy));
+    }
   };
 
   const selectDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,15 +107,13 @@ export const SchedulePostModalContent: React.FC = () => {
   };
 
   const generateDateString = () => {
-    const month = MONTHS[
-      scheduledDate.getMonth() === new Date().getMonth()
-        ? scheduledDate.getMonth() + 1
-        : scheduledDate.getMonth()
-    ].slice(0, 3);
-    const day = DAYS[scheduledDate.getDay()];
-    const dayOfMonth = scheduledDate.getDate();
-    const year = scheduledDate.getFullYear();
-    const time = scheduledDate.toLocaleTimeString();
+    // Kiểm tra xem postState có giá trị đã lên lịch không
+    const dateToUse = postState.currentPost?.scheduledDate || scheduledDate; // Sử dụng scheduledDate nếu không có trong postState
+    const month = MONTHS[dateToUse.getMonth()].slice(0, 3);
+    const day = DAYS[dateToUse.getDay()];
+    const dayOfMonth = dateToUse.getDate();
+    const year = dateToUse.getFullYear();
+    const time = dateToUse.toLocaleTimeString();
     return `${day}, ${month} ${dayOfMonth}, ${year} at ${time.split(":")[0]}:${
       time.split(":")[1]
     } ${time.split(" ")[1]}`;
@@ -123,14 +125,16 @@ export const SchedulePostModalContent: React.FC = () => {
         <div className="schedule-post-modal-content-scheduled-info">
           <ScheduleTimeSVG height={20} width={20} color={"#657786"} />
           <p className="schedule-post-modal-content-scheduled-date">
-            Will send on {generateDateString()}
+            {!postState.currentPost?.scheduledDate
+              ? "Sẽ được đăng vào " + generateDateString()
+              : "Đã được lên lịch đăng vào " + generateDateString()}
           </p>
         </div>
         <p className="schedule-post-modal-content-label">Date</p>
         <div className="schedule-post-modal-content-date-group">
           <div className="schedule-post-modal-month-selector-wrapper">
             <ValidatedDateSelector
-              name={"Month"}
+              name={"Tháng"}
               valid={validateFutureDate(scheduledDate)}
               dropDown={getMonths}
               dispatcher={updateScheduledDate}
@@ -140,7 +144,7 @@ export const SchedulePostModalContent: React.FC = () => {
 
           <div className="schedule-post-modal-day-selector-wrapper">
             <ValidatedDateSelector
-              name={"Day"}
+              name={"Ngày"}
               valid={validateFutureDate(scheduledDate)}
               dropDown={getDays}
               dispatcher={updateScheduledDate}
@@ -150,7 +154,7 @@ export const SchedulePostModalContent: React.FC = () => {
 
           <div className="schedule-post-modal-year-selector-wrapper">
             <ValidatedDateSelector
-              name={"Year"}
+              name={"Năm"}
               valid={validateFutureDate(scheduledDate)}
               dropDown={getScheduleYears}
               dispatcher={updateScheduledDate}

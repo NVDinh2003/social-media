@@ -11,7 +11,7 @@
   padding-bottom: 24px;
 }
 
-.location-modal-content-scheduled-info {
+.location-modal-content-address-info {
   width: 100%;
   height: fit-content;
   display: flex;
@@ -20,8 +20,8 @@
   column-gap: 12px;
 }
 
-.location-modal-content-scheduled-date {
-  font-size: 13px;
+.location-modal-content-address-info-text {
+  font-size: 14px;
   color: #657786;
   font-weight: 400;
   margin-left: 12px;
@@ -34,7 +34,7 @@
   margin-bottom: 0;
 }
 
-.location-modal-content-date-group {
+.location-modal-content-address-group {
   width: 100%;
   height: fit-content;
   /* display: flex; */
@@ -42,16 +42,9 @@
   align-items: center;
 }
 
-.schedule-post-modal-month-selector-wrapper {
+/* .location-modal-content-address-input-wrapper {
   width: 42%;
-}
-
-.schedule-post-modal-day-selector-wrapper {
-  width: 18%;
-}
-.schedule-post-modal-year-selector-wrapper {
-  width: 22%;
-}
+} */
 
 .schedule-post-modal-calendar-selector-wrapper {
   width: 18%;
@@ -61,7 +54,7 @@
   align-items: center;
 }
 
-.location-modal-content-time-group {
+.location-modal-content-detail-group {
   width: 100%;
   height: fit-content;
   display: flex;
@@ -71,14 +64,14 @@
   margin-bottom: 8px;
 }
 
-.location-modal-content-hour-selector-wrapper {
+.location-modal-content-province-selector-wrapper {
   width: 33%;
 }
 
-.location-modal-content-minute-selector-wrapper {
+.location-modal-content-district-selector-wrapper {
   width: 33%;
 }
-.location-modal-content-ampm-selector-wrapper {
+.location-modal-content-ward-selector-wrapper {
   width: 33%;
 }
 
@@ -117,26 +110,4 @@
   color: #1da1f2;
   font-size: 14px;
   font-weight: 400;
-}
-
-#date-selector {
-  position: absolute;
-  left: 82%;
-  top: 65%;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-  box-sizing: border-box;
-}
-
-#date-selector::-webkit-calendar-picker-indicator {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
 }

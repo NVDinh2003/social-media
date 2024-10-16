@@ -1,38 +1,52 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  Dispatch,
+  SetStateAction,
+} from "react";
 
 import "./LocationModalContent.css";
 import LocationSVG from "../../../../../components/SVGs/LocationSVG";
 import { ValidatedLocationSelector } from "../../../../../components/ValidatedInput/ValidatedLocationSelector";
-import { validateFutureDate } from "../../../../../services/Validator";
 import {
+  getDisplayLocationInfo,
   getDistricts,
   getLocationInfo,
   getProvinces,
   getWards,
 } from "../../../utils/LocationUtils";
 import { ValidatedTextInput } from "../../../../../components/ValidatedInput/ValidatedTextInput";
+import { AppDispatch, RootState } from "../../../../../redux/Store";
+import { useDispatch, useSelector } from "react-redux";
+import { setLocationDetail } from "../../../../../redux/Slices/PostSlice";
 
-export const LocationModalContent: React.FC = () => {
-  const [selectedProvince, setSelectedProvince] =
-    useState<string>("Chọn tỉnh/TP");
-  const [selectedDistrict, setSelectedDistrict] =
-    useState<string>("Chọn quận/huyện");
-  const [selectedWard, setSelectedWard] = useState<string>("Chọn phường/xã"); // Thêm state cho phường
+interface LocationModalContentProps {
+  setDispatchLocationDetail: Dispatch<SetStateAction<() => void>>;
+}
+
+export const LocationModalContent: React.FC<LocationModalContentProps> = ({
+  setDispatchLocationDetail,
+}) => {
+  const [selectedProvince, setSelectedProvince] = useState<string>("");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>("");
+  const [selectedWard, setSelectedWard] = useState<string>("");
   const [districtOptions, setDistrictOptions] = useState<JSX.Element[]>([]);
   const [wardOptions, setWardOptions] = useState<JSX.Element[]>([]);
-
   const [addressDetail, setAddressDetail] = useState<string>("");
+
+  const postState = useSelector((state: RootState) => state.post.currentPost);
+
+  const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
     if (selectedProvince) {
       const districts = getDistricts(selectedProvince);
       setDistrictOptions(districts);
-      setSelectedDistrict(""); // Reset district when province changes
-      setSelectedWard(""); // Reset ward when province changes
     } else {
-      setDistrictOptions([]); // Reset district options if no province is selected
-      setSelectedDistrict(""); // Reset district if no province is selected
-      setSelectedWard(""); // Reset ward if no province is selected
+      setDistrictOptions([]);
+      setSelectedDistrict("");
+      setSelectedWard("");
     }
   }, [selectedProvince]);
 
@@ -41,10 +55,21 @@ export const LocationModalContent: React.FC = () => {
       const wards = getWards(selectedDistrict);
       setWardOptions(wards);
     } else {
-      setWardOptions([]); // Reset ward options if no district is selected
-      setSelectedWard(""); // Reset ward if no district is selected
+      setWardOptions([]);
+      setSelectedWard("");
     }
   }, [selectedDistrict]);
+
+  // Thêm useEffect mới để khôi phục dữ liệu từ postState
+  useEffect(() => {
+    if (postState) {
+      // console.log("postState: ", postState);
+      setSelectedProvince(postState.provinceCode || "");
+      setSelectedDistrict(postState.districtCode || "");
+      setSelectedWard(postState.wardCode || "");
+      setAddressDetail(postState.address || "");
+    }
+  }, [postState]);
 
   const updateLocationSelector = (
     name: string,
@@ -64,44 +89,68 @@ export const LocationModalContent: React.FC = () => {
     }
   };
 
+  const dispatchLocationDetail = useCallback(() => {
+    if (selectedProvince && selectedDistrict && selectedWard) {
+      // console.log("dispatchLocationDetail");
+      dispatch(
+        setLocationDetail({
+          address: addressDetail,
+          provinceCode: selectedProvince,
+          districtCode: selectedDistrict,
+          wardCode: selectedWard,
+        })
+      );
+    }
+  }, [
+    dispatch,
+    addressDetail,
+    selectedProvince,
+    selectedDistrict,
+    selectedWard,
+  ]);
+
+  useEffect(() => {
+    setDispatchLocationDetail(() => dispatchLocationDetail);
+  }, [setDispatchLocationDetail, dispatchLocationDetail]);
+
   const handleAddressChange = (value: string) => {
     setAddressDetail(value); // Cập nhật địa chỉ chi tiết
   };
 
   const displayLocationInfo = () => {
-    let locationInfo = "";
-    if (selectedProvince && selectedDistrict && selectedWard) {
-      if (addressDetail) {
-        locationInfo = `: ${addressDetail}, ${getLocationInfo(
-          selectedProvince,
-          selectedDistrict,
-          selectedWard
-        )}`;
-      } else {
-        locationInfo = `: ${getLocationInfo(
-          selectedProvince,
-          selectedDistrict,
-          selectedWard
-        )}`;
-      }
-      return locationInfo;
-    } else {
+    const { districtCode, provinceCode, wardCode, address } = postState || {};
+    const isPostStateValid = districtCode && provinceCode && wardCode;
+    const isSelectionValid =
+      selectedProvince && selectedDistrict && selectedWard;
+
+    if (!isPostStateValid && !isSelectionValid) {
       return "...";
     }
+
+    const locationData = isPostStateValid
+      ? { address, provinceCode, districtCode, wardCode }
+      : {
+          address: addressDetail,
+          provinceCode: selectedProvince,
+          districtCode: selectedDistrict,
+          wardCode: selectedWard,
+        };
+
+    return `: ${getDisplayLocationInfo(locationData)}`;
   };
 
   return (
     <div className="location-modal-content">
       <div className="location-modal-content-top">
-        <div className="location-modal-content-scheduled-info">
+        <div className="location-modal-content-address-info">
           <LocationSVG height={20} width={20} color={"#1da1f2"} />
-          <p className="location-modal-content-scheduled-date">
-            Địa chỉ đang chọn {displayLocationInfo()}
+          <p className="location-modal-content-address-info-text">
+            Địa chỉ đã chọn {displayLocationInfo()}
           </p>
         </div>
         <p className="location-modal-content-label">Địa chỉ chi tiết</p>
-        <div className="location-modal-content-date-group">
-          <div className="location-modal-content-month-selector-wrapper">
+        <div className="location-modal-content-address-group">
+          <div className="location-modal-content-address-input-wrapper">
             <ValidatedTextInput
               valid={true}
               name={"addressDetail"}
@@ -113,8 +162,8 @@ export const LocationModalContent: React.FC = () => {
         </div>
 
         <p className="location-modal-content-label">Chọn địa chỉ</p>
-        <div className="location-modal-content-time-group">
-          <div className="location-modal-content-hour-selector-wrapper">
+        <div className="location-modal-content-detail-group">
+          <div className="location-modal-content-province-selector-wrapper">
             <ValidatedLocationSelector
               name={"Tỉnh/TP"}
               valid={true}
@@ -124,7 +173,7 @@ export const LocationModalContent: React.FC = () => {
             />
           </div>
 
-          <div className="location-modal-content-minute-selector-wrapper">
+          <div className="location-modal-content-district-selector-wrapper">
             <ValidatedLocationSelector
               name={"Quận/Huyện"}
               valid={true}
@@ -134,7 +183,7 @@ export const LocationModalContent: React.FC = () => {
             />
           </div>
 
-          <div className="location-modal-content-ampm-selector-wrapper">
+          <div className="location-modal-content-ward-selector-wrapper">
             <ValidatedLocationSelector
               name={"Phường/Xã"}
               valid={true}

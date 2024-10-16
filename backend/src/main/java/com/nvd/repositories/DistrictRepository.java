@@ -16,6 +16,10 @@ public interface DistrictRepository extends JpaRepository<District, String> {
     @Query(value = "SELECT * FROM districts WHERE code=:code", nativeQuery = true)
     District findDistrictByID(String code);
 
+    //tìm quận/huyện theo mã và mã tỉnh
+    @Query(value = "SELECT * FROM districts WHERE code=:code AND province_code=:provinceCode", nativeQuery = true)
+    District findByCodeAndProvinceCode(String code, String provinceCode);
+
     //lấy tất cả tên quận/huyện
     @Query(value = "SELECT full_name FROM districts WHERE province_code=:code", nativeQuery = true)
     List<Object[]> getAllDistrictName(String code);

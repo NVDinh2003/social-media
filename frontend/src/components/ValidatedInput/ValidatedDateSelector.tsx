@@ -34,6 +34,9 @@ export const ValidatedDateSelector: React.FC<ValidatedDateSelectorProps> = ({
     if (name === "Ngày") eName = "day";
     else if (name === "Tháng") eName = "month";
     else if (name === "Năm") eName = "year";
+    else {
+      eName = name.toLowerCase();
+    }
     // console.log("eName: ", eName.toLowerCase());
     dispatcher(eName, +e.target.value);
   };

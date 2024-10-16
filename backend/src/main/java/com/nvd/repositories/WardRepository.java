@@ -15,6 +15,10 @@ public interface WardRepository extends JpaRepository<Ward, String> {
     @Query(value = "SELECT * FROM wards WHERE code=:code", nativeQuery = true)
     Ward findWardByID(String code);
 
+    // tìm xã/phường theo code và mã quận/huyện
+    @Query(value = "SELECT * FROM wards WHERE code=:code AND district_code=:districtCode", nativeQuery = true)
+    Ward findByCodeAndDistrictCode(String code, String districtCode);
+
     // lấy tất cả tên xã/phường
     @Query(value = "SELECT full_name FROM wards WHERE district_code=:code", nativeQuery = true)
     List<Object[]> getAllWardName(String code);
@@ -32,4 +36,6 @@ public interface WardRepository extends JpaRepository<Ward, String> {
 
     @Query(value = "SELECT * FROM wards WHERE full_name =:wardName AND district_code=:districtCode", nativeQuery = true)
     Ward ward(String wardName, String districtCode);
+
+
 }

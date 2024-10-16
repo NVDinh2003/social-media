@@ -3,6 +3,7 @@ package com.nvd.controller;
 import com.nvd.dto.CreatePostDTO;
 import com.nvd.dto.CreateReplyDTO;
 import com.nvd.dto.CreateViewsDTO;
+import com.nvd.dto.response.PostDTO;
 import com.nvd.exceptions.PostDoesNotExistException;
 import com.nvd.exceptions.UnableToCreatePostException;
 import com.nvd.models.ApplicationUser;
@@ -26,7 +27,7 @@ import java.util.Set;
 public class PostController {
     private final PostService postService;
     private final UserService userService;
-    
+
 
     @ExceptionHandler({UnableToCreatePostException.class})
     public ResponseEntity<String> handleUnableToCreatePost() {
@@ -44,7 +45,7 @@ public class PostController {
     }
 
     @PostMapping
-    public Post createPost(@RequestBody CreatePostDTO postDTO) {
+    public PostDTO createPost(@RequestBody CreatePostDTO postDTO) {
         return postService.createPost(postDTO);
     }
 
@@ -59,12 +60,12 @@ public class PostController {
     }
 
     @PostMapping(value = "/media", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Post createMediaPost(@RequestPart("post") String post, @RequestPart("files") List<MultipartFile> files) {
+    public PostDTO createMediaPost(@RequestPart("post") String post, @RequestPart("files") List<MultipartFile> files) {
         return postService.createMediaPost(post, files);
     }
 
     @GetMapping("/{id}")
-    public Post getPostById(@PathVariable int id) {
+    public PostDTO getPostById(@PathVariable int id) {
         return postService.getPostById(id);
     }
 
@@ -82,22 +83,22 @@ public class PostController {
     }
 
     @PutMapping("/repost/{id}")
-    public Post repostPost(@PathVariable int id, @RequestHeader(value = "Authorization") String token) {
+    public PostDTO repostPost(@PathVariable int id, @RequestHeader(value = "Authorization") String token) {
         return postService.repostPost(id, token);
     }
 
     @PutMapping("/like/{id}")
-    public Post likePost(@PathVariable int id, @RequestHeader(value = "Authorization") String token) {
+    public PostDTO likePost(@PathVariable int id, @RequestHeader(value = "Authorization") String token) {
         return postService.likePost(id, token);
     }
 
     @PutMapping("/bookmark/{id}")
-    public Post bookmarkPost(@PathVariable int id, @RequestHeader(value = "Authorization") String token) {
+    public PostDTO bookmarkPost(@PathVariable int id, @RequestHeader(value = "Authorization") String token) {
         return postService.bookmarkPost(id, token);
     }
 
     @PutMapping("/view/{id}")
-    public Post viewPost(@PathVariable("id") int id, @RequestHeader(value = "Authorization") String token) {
+    public PostDTO viewPost(@PathVariable("id") int id, @RequestHeader(value = "Authorization") String token) {
         return postService.viewPost(id, token);
     }
 

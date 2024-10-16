@@ -17,6 +17,9 @@ import { FeedPostCreatorImages } from "../FeedPostCreatorImages/FeedPostCreatorI
 import { FeedPostCreatorPoll } from "../FeedPostCreatorPoll/FeedPostCreatorPoll";
 import { CreatePostTextArea } from "../../../post/components/CreatePostTextArea/CreatePostTextArea";
 import { CreatePostButtonCluster } from "../../../post/components/CreatePostButtonCluster/CreatePostButtonCluster";
+import LocationSVG from "../../../../components/SVGs/LocationSVG";
+import { getDisplayLocationInfo } from "../../utils/LocationUtils";
+import { renderLocationInfo } from "../../../post/utils/PostUtils";
 
 export const FeedPostCreator: React.FC = () => {
   //
@@ -88,6 +91,10 @@ export const FeedPostCreator: React.FC = () => {
           replyRestriction: state.post.currentPost.replyRestriction,
           scheduled: state.post.currentPost.scheduled,
           scheduledDate: state.post.currentPost.scheduledDate,
+          provinceCode: state.post.currentPost.provinceCode,
+          districtCode: state.post.currentPost.districtCode,
+          wardCode: state.post.currentPost.wardCode,
+          address: state.post.currentPost.address,
           token: state.user.token,
         };
         dispatch(createPost(body));
@@ -101,6 +108,10 @@ export const FeedPostCreator: React.FC = () => {
           replyRestriction: state.post.currentPost.replyRestriction,
           scheduled: state.post.currentPost.scheduled,
           scheduledDate: state.post.currentPost.scheduledDate,
+          provinceCode: state.post.currentPost.provinceCode,
+          districtCode: state.post.currentPost.districtCode,
+          wardCode: state.post.currentPost.wardCode,
+          address: state.post.currentPost.address,
           token: state.user.token,
           images: [],
           poll: undefined,
@@ -167,6 +178,8 @@ export const FeedPostCreator: React.FC = () => {
             state.post.currentPost.images.length > 0)) && (
           <FeedPostCreatorImages />
         )}
+
+        {state.post.currentPost && renderLocationInfo(state.post.currentPost)}
 
         {state.post.currentPost && state.post.currentPost?.poll && (
           <FeedPostCreatorPoll />

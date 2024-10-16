@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FeedPostDTO {
 
-    private Post post;
+    private PostDTO post;
     private Post replyTo;
     private boolean repost;
     private ApplicationUser repostUser;

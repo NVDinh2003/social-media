@@ -19,6 +19,11 @@ public class WardService {
         return wardRepository.findWardByID(code);
     }
 
+    // tìm xã/phường theo code và mã quận/huyện
+    public Ward findByCodeAndDistrictCode(String code, String districtCode) {
+        return wardRepository.findByCodeAndDistrictCode(code, districtCode);
+    }
+
     //lấy tất cả tên xã/phường
     public List<Object[]> getAllWardName(String code) {
         return wardRepository.getAllWardName(code);

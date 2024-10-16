@@ -39,6 +39,10 @@ interface createPostBody {
   replies: Post[];
   scheduled: boolean;
   scheduledDate: Date | undefined;
+  address?: string;
+  provinceCode?: string;
+  districtCode?: string;
+  wardCode?: string;
   audience: "EVERYONE" | "CIRCLE";
   replyRestriction: "EVERYONE" | "FOLLOW" | "CIRCLE" | "MENTION";
   token: string;
@@ -80,6 +84,13 @@ interface BatchedPostViewsBody {
   token: string;
 }
 
+export interface LocationDetail {
+  address: string;
+  provinceCode: string;
+  districtCode: string;
+  wardCode: string;
+}
+
 const initialState: PostSliceState = {
   loading: false,
   error: false,
@@ -104,6 +115,10 @@ export const createPost = createAsyncThunk(
         replies: [],
         scheduled: body.scheduled,
         scheduledDate: body.scheduledDate,
+        address: body.address,
+        provinceCode: body.provinceCode,
+        districtCode: body.districtCode,
+        wardCode: body.wardCode,
         audience: body.audience,
         replyRestriction: body.replyRestriction,
       };
@@ -184,6 +199,10 @@ export const createPostWithMedia = createAsyncThunk(
         replies: body.replies,
         scheduled: body.scheduled,
         scheduledDate: body.scheduledDate,
+        address: body.address,
+        provinceCode: body.provinceCode,
+        districtCode: body.districtCode,
+        wardCode: body.wardCode,
         audience: body.audience,
         replyRestriction: body.replyRestriction,
       };
@@ -591,6 +610,7 @@ export const PostSlice = createSlice({
     },
 
     setScheduleDate(state, action: PayloadAction<Date>) {
+      console.log("scheduled action!");
       if (state.currentPost) {
         let post: Post = JSON.parse(JSON.stringify(state.currentPost));
 
@@ -618,6 +638,25 @@ export const PostSlice = createSlice({
           currentReply: reply,
         };
       }
+
+      return state;
+    },
+
+    setLocationDetail(state, action: PayloadAction<LocationDetail>) {
+      if (state.currentPost) {
+        let post = JSON.parse(JSON.stringify(state.currentPost));
+        post = {
+          ...post,
+          address: action.payload.address,
+          provinceCode: action.payload.provinceCode,
+          districtCode: action.payload.districtCode,
+          wardCode: action.payload.wardCode,
+        };
+
+        state.currentPost = post; // Cập nhật currentPost trực tiếp
+      }
+
+      console.log("state.currentPost: ", state.currentPost);
 
       return state;
     },
@@ -794,6 +833,7 @@ export const {
   removePoll,
   setPollDate,
   setScheduleDate,
+  setLocationDetail,
   initializeCurrentReply,
   // updateCurrentReply,
   batchPostView,

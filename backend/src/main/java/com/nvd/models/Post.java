@@ -1,6 +1,6 @@
 package com.nvd.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nvd.models.enums.Audience;
 import com.nvd.models.enums.ReplyRestriction;
 import jakarta.persistence.*;
@@ -106,19 +106,23 @@ public class Post implements Comparable<Post> {
     @JoinColumn(name = "poll_id", referencedColumnName = "poll_id")
     private Poll poll;
 
-    @JsonIgnore
+    private String address;
+    //    @JsonIgnore
+    @JsonProperty("provinceCode")
     @ManyToOne
-    @JoinColumn(name = "post_province_id", unique = true)
+    @JoinColumn(name = "post_province_id")
     Province province;
 
-    @JsonIgnore
+    //    @JsonIgnore
+    @JsonProperty("districtCode")
     @ManyToOne
-    @JoinColumn(name = "post_district_id", unique = true)
+    @JoinColumn(name = "post_district_id")
     District district;
 
-    @JsonIgnore
+    //    @JsonIgnore
+    @JsonProperty("wardCode")
     @ManyToOne
-    @JoinColumn(name = "post_ward_id", unique = true)
+    @JoinColumn(name = "post_ward_id")
     Ward ward;
 
     public Post() {

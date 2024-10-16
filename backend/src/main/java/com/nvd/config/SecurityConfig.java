@@ -34,6 +34,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
+    private static final String[] WHITE_LIST_URL = {
+            "/auth/**",
+            "/images/**",
+            "/ws/**",
+            "/users/followers/**",
+            "/users/following/**",
+            "/posts/view/all"
+    };
+
 
     private final RSAKeyProperties keys;
 
@@ -78,11 +87,7 @@ public class SecurityConfig {
                         .contentSecurityPolicy(csp -> csp.policyDirectives("frame-ancestors 'self'"))
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/images/**").permitAll()
-                        .requestMatchers("/ws/**").permitAll()
-                        .requestMatchers("/users/followers/**").permitAll()
-                        .requestMatchers("/users/following/**").permitAll()
+                        .requestMatchers(WHITE_LIST_URL).permitAll()
                         .requestMatchers(HttpMethod.GET, "/posts/{id}").permitAll()
                         .requestMatchers(HttpMethod.POST, "auth/email/verify").permitAll()
                         .anyRequest().authenticated()
