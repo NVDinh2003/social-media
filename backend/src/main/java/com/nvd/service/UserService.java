@@ -150,9 +150,7 @@ public class UserService implements UserDetailsService {
                 .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
                 .collect(Collectors.toSet());
 
-        UserDetails userDetails = new User(u.getUsername(), u.getPassword(), authorities);
-
-        return userDetails;
+        return new User(u.getUsername(), u.getPassword(), authorities);
     }
 
     public ApplicationUser setProfileOrBannerPicture(String username, MultipartFile file, String prefix)

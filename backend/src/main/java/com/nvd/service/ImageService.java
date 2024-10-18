@@ -1,10 +1,13 @@
 package com.nvd.service;
 
+import com.nvd.dto.response.cloud.CloudinaryResponse;
 import com.nvd.exceptions.UnableToResolvePhotoException;
 import com.nvd.exceptions.UnableToSavePhotoException;
 import com.nvd.models.Image;
 import com.nvd.repositories.ImageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.nvd.service.cloud.CloudinaryService;
+import com.nvd.utils.FileUploadUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,10 +19,11 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ImageService {
 
-    @Autowired
-    private ImageRepository imageRepository;
+    private final ImageRepository imageRepository;
+    private final CloudinaryService cloudinaryService;
 
     private static final File DIRECTORY = new File("D:\\WorkSpace\\Spring_Project\\social-media\\backend\\img");
     private static final String URL = "http://localhost:8000/images/";
@@ -33,32 +37,28 @@ public class ImageService {
         return imageRepository.save(image);
     }
 
+
     public Image uploadImage(MultipartFile file, String prefix) throws UnableToSavePhotoException {
         try {
-            // the content type form the request looks something like this img/jpeg
-            String extention = "." + file.getContentType().split("/")[1];
+            FileUploadUtil.assertAllowed(file, FileUploadUtil.IMAGE_PATTERN);
+            String tempFileName = file.getOriginalFilename();
+            if (tempFileName == null || tempFileName.isEmpty())
+                throw new UnableToSavePhotoException();
 
-            if (!DIRECTORY.exists()) {
-                DIRECTORY.mkdirs(); // tạo thư mục nếu chưa tồn tại
-            }
+            int index = tempFileName.lastIndexOf(".");
+            if (index > 0)
+                tempFileName = tempFileName.substring(0, index);
+            final String fileName = prefix + FileUploadUtil.getFileName(tempFileName);
 
-            File img = File.createTempFile(prefix, extention, DIRECTORY);
-
-            file.transferTo(img);
-
-            String imageURL = URL + img.getName();
-
-            Image i = new Image(img.getName(), file.getContentType(), img.getPath(), imageURL);
-
-            Image saved = imageRepository.save(i);
-
-//            return "file uploaded successfully: " + img.getName();
-            return saved;
-        } catch (IOException e) {
+            // Upload ảnh lên Cloudinary
+            final CloudinaryResponse response = cloudinaryService.uploadImage(file, fileName);
+            Image image = new Image(fileName, file.getContentType(), null, response.getUrl());
+            return imageRepository.save(image);
+        } catch (Exception e) {
             throw new UnableToSavePhotoException();
-
         }
     }
+
 
     public Image createOrganization(MultipartFile file, String organizationName) throws UnableToSavePhotoException {
         try {

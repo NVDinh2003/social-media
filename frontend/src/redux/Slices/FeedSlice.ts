@@ -61,7 +61,7 @@ export const loadFeedPage = createAsyncThunk(
       );
 
       let posts = req.data;
-      // console.log("posts: ", posts);
+      console.log("posts: ", posts);
 
       return posts;
       //
