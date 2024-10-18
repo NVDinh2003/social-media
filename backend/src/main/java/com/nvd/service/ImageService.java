@@ -25,10 +25,6 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final CloudinaryService cloudinaryService;
 
-    private static final File DIRECTORY = new File("D:\\WorkSpace\\Spring_Project\\social-media\\backend\\img");
-    private static final String URL = "http://localhost:8000/images/";
-
-
     public Optional<Image> getImageByImageName(String name) {
         return imageRepository.findByImageName(name);
     }
@@ -63,25 +59,17 @@ public class ImageService {
     public Image createOrganization(MultipartFile file, String organizationName) throws UnableToSavePhotoException {
         try {
             String extention = "." + file.getContentType().split("/")[1];
+            String fileName = organizationName + extention;
+            CloudinaryResponse response = cloudinaryService.uploadImage(file, fileName);
+            Image image = new Image(fileName, file.getContentType(), null, response.getUrl());
+            return imageRepository.save(image);
 
-            if (!DIRECTORY.exists()) {
-                DIRECTORY.mkdirs();
-            }
-
-            File orgImg = new File(DIRECTORY + "\\" + organizationName + extention);
-            orgImg.createNewFile();
-            file.transferTo(orgImg);
-
-            String imageURL = URL + orgImg.getName();
-
-            Image i = new Image(orgImg.getName(), file.getContentType(), orgImg.getPath(), imageURL);
-            return imageRepository.save(i);
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new UnableToSavePhotoException();
         }
     }
+
 
     public byte[] downloadImage(String filename) throws UnableToResolvePhotoException {
         try {
@@ -102,4 +90,5 @@ public class ImageService {
 
         return image.getImageType();
     }
+
 }

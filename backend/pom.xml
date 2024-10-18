@@ -105,6 +105,13 @@
         </dependency>
 
         <dependency>
+            <groupId>me.paulschwarz</groupId>
+            <artifactId>spring-dotenv</artifactId>
+            <version>2.5.4</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
@@ -153,6 +160,7 @@
             <artifactId>commons-io</artifactId>
             <version>2.16.1</version>
         </dependency>
+
 
     </dependencies>
 

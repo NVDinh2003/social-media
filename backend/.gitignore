@@ -11,7 +11,7 @@ src/main/resources/credentials.json
 tokens/**
 tokens/StoredCredential
 tokens/gmail_token
-local.env
+.env
 
 # Để đảm bảo, thêm các pattern tổng quát
 **/credentials.json
