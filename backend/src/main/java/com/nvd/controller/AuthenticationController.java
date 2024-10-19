@@ -12,6 +12,7 @@ import com.nvd.models.RegistrationObject;
 import com.nvd.service.MailService;
 import com.nvd.service.TokenService;
 import com.nvd.service.UserService;
+import com.nvd.utils.Constants;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.auth.InvalidCredentialsException;
 import org.springframework.http.HttpHeaders;
@@ -50,7 +51,7 @@ public class AuthenticationController {
 
     @ExceptionHandler({UserDoesNotExistException.class})
     public ResponseEntity<String> handleUserDoesntExist() {
-        return new ResponseEntity<>("The user you are looking for does not exist!", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(Constants.USER_DOES_NOT_EXIST_EXC, HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/update/phone")
@@ -65,7 +66,7 @@ public class AuthenticationController {
 
     @ExceptionHandler({EmailFaildToSendException.class})
     public ResponseEntity<String> handleFaildEmail() {
-        return new ResponseEntity<>("Email failed to send, try again in a moment!", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(Constants.EMAIL_FAILED_TO_SEND_EXC, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/email/code")
@@ -76,7 +77,7 @@ public class AuthenticationController {
 
     @ExceptionHandler({IncorrectVerificationCodeException.class})
     public ResponseEntity<String> incorrectCodeHandler() {
-        return new ResponseEntity<>("The verification code provided is incorrect! ", HttpStatus.CONFLICT);
+        return new ResponseEntity<>(Constants.INCORRECT_VERIFICATION_CODE_EXC, HttpStatus.CONFLICT);
     }
 
     @PostMapping("/email/verify")
