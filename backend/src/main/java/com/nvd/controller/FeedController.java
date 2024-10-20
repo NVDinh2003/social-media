@@ -1,6 +1,6 @@
 package com.nvd.controller;
 
-import com.nvd.dto.FeedRequestDTO;
+import com.nvd.dto.request.FeedRequestDTO;
 import com.nvd.dto.response.FetchFeedResponseDTO;
 import com.nvd.service.FeedService;
 import lombok.RequiredArgsConstructor;

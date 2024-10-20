@@ -1,4 +1,4 @@
-package com.nvd.dto;
+package com.nvd.dto.request;
 
 import com.nvd.models.Notification;
 import lombok.AllArgsConstructor;

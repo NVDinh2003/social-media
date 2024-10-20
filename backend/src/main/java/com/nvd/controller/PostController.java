@@ -1,8 +1,8 @@
 package com.nvd.controller;
 
-import com.nvd.dto.CreatePostDTO;
-import com.nvd.dto.CreateReplyDTO;
-import com.nvd.dto.CreateViewsDTO;
+import com.nvd.dto.request.CreatePostDTO;
+import com.nvd.dto.request.CreateReplyDTO;
+import com.nvd.dto.request.CreateViewsDTO;
 import com.nvd.dto.response.PostDTO;
 import com.nvd.exceptions.PostDoesNotExistException;
 import com.nvd.exceptions.UnableToCreatePostException;

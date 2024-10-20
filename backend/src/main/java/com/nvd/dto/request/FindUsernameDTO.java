@@ -1,4 +1,4 @@
-package com.nvd.dto;
+package com.nvd.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PasswordCodeDTO {
-    private int code;
+public class FindUsernameDTO {
     private String email;
+    private String phone;
+    private String username;
 }

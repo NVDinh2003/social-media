@@ -1,4 +1,4 @@
-package com.nvd.dto;
+package com.nvd.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

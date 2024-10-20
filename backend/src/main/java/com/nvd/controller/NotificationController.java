@@ -1,6 +1,6 @@
 package com.nvd.controller;
 
-import com.nvd.dto.AcknowledgeNotificationsDTO;
+import com.nvd.dto.request.AcknowledgeNotificationsDTO;
 import com.nvd.models.Notification;
 import com.nvd.service.NotificationService;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,8 @@
 package com.nvd.controller;
 
-import com.nvd.dto.FindUsernameDTO;
-import com.nvd.dto.PasswordCodeDTO;
+
+import com.nvd.dto.request.FindUsernameDTO;
+import com.nvd.dto.request.PasswordCodeDTO;
 import com.nvd.exceptions.EmailAlreadyTakenException;
 import com.nvd.exceptions.EmailFaildToSendException;
 import com.nvd.exceptions.IncorrectVerificationCodeException;

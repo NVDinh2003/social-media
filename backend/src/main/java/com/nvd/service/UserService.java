@@ -1,6 +1,6 @@
 package com.nvd.service;
 
-import com.nvd.dto.FindUsernameDTO;
+import com.nvd.dto.request.FindUsernameDTO;
 import com.nvd.exceptions.*;
 import com.nvd.models.ApplicationUser;
 import com.nvd.models.Image;

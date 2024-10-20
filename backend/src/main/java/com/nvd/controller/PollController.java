@@ -1,6 +1,6 @@
 package com.nvd.controller;
 
-import com.nvd.dto.PollVoteDTO;
+import com.nvd.dto.request.PollVoteDTO;
 import com.nvd.models.Poll;
 import com.nvd.service.PollService;
 import lombok.RequiredArgsConstructor;
