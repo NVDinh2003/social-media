@@ -19,4 +19,5 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Integer> 
 
     List<ApplicationUser> findByBioLikeIgnoreCase(String bio);
 
+    Optional<ApplicationUser> findByEmail(String email);
 }

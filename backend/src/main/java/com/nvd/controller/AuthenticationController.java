@@ -24,14 +24,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:3000") // Chỉ định nguồn được phép
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -39,6 +42,30 @@ public class AuthenticationController {
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
     private final MailService mailService;
+
+    @PostMapping("/login/oauth2/code/google")
+    public ResponseEntity<?> handleGoogleLogin(@RequestBody Map<String, String> requestBody) {
+        String token = requestBody.get("token");
+
+        try {
+            // Verify the Google token and create or retrieve the user
+            ApplicationUser user = userService.verifyGoogleTokenAndCreateUser(token);
+
+            // Convert Set<Role> to Collection<? extends GrantedAuthority>
+            Collection<? extends GrantedAuthority> authorities = user.getAuthorities().stream()
+                    .map(GrantedAuthority.class::cast)
+                    .collect(Collectors.toList());
+
+            // Authenticate the user
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities));
+            String jwtToken = tokenService.generateToken(auth);
+
+            return new ResponseEntity<>(new LoginResponse(user, jwtToken), HttpStatus.OK);
+        } catch (AuthenticationException e) {
+            return new ResponseEntity<>("Authentication failed", HttpStatus.UNAUTHORIZED);
+        }
+    }
 
     @ExceptionHandler({EmailAlreadyTakenException.class})
     public ResponseEntity<String> handleEmailTaken() {
@@ -139,5 +166,6 @@ public class AuthenticationController {
         mailService.sendMail(email, "Your password reset code", "Here is your password reset code: " + code);
         return new ResponseEntity<>("Code sent to email", HttpStatus.OK);
     }
+
 
 }

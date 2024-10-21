@@ -6,6 +6,7 @@ declare namespace NodeJS {
     REACT_APP_TENOR_KEY: string;
     REACT_APP_CLIENT_KEY: string;
     REACT_APP_FETCH_FEED_POST_PAGE_SIZE: string;
+    REACT_APP_GOOGLE_CLIENT_ID: string;
     // Thêm các biến môi trường khác ở đây
   }
 }

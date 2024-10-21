@@ -132,6 +132,21 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const loginWithGoogle = createAsyncThunk(
+  "user/loginWithGoogle",
+  async (token: string, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        `${baseURL}/auth/login/oauth2/code/google`,
+        { token }
+      );
+      return response.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
 export const UserSlice = createSlice({
   name: "user",
   initialState,
@@ -276,6 +291,12 @@ export const UserSlice = createSlice({
         };
         return state;
       });
+
+    builder.addCase(loginWithGoogle.fulfilled, (state, action) => {
+      state.token = action.payload.token;
+      state.loggedIn = action.payload.loggedIn;
+      // Cập nhật các thông tin người dùng khác nếu cần
+    });
     //
   },
 });

@@ -1,5 +1,6 @@
 package com.nvd.service;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.nvd.dto.request.FindUsernameDTO;
 import com.nvd.exceptions.*;
 import com.nvd.models.ApplicationUser;
@@ -36,6 +37,8 @@ public class UserService implements UserDetailsService {
     private final MailService mailService;
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
+    private final GoogleTokenVerifier googleTokenVerifier;
+
 
     public ApplicationUser registerUser(RegistrationObject ro) {
         ApplicationUser user = new ApplicationUser();
@@ -287,4 +290,27 @@ public class UserService implements UserDetailsService {
         return followUser(user1, followToUser);
     }
 
+
+    public ApplicationUser verifyGoogleTokenAndCreateUser(String token) {
+        GoogleIdToken.Payload payload = googleTokenVerifier.verify(token);
+        if (payload == null) {
+            throw new InvalidGoogleTokenException();
+        }
+
+        String email = payload.getEmail();
+        ApplicationUser user = userRepository.findByEmail(email).orElse(null);
+
+        if (user == null) {
+            user = new ApplicationUser();
+            user.setEmail(email);
+            user.setFirstName((String) payload.get("given_name"));
+            user.setLastName((String) payload.get("family_name"));
+            user.setUsername(email);
+            user.setEnabled(true);
+            user.setAuthorities(Set.of(roleRepository.findByAuthority("USER").orElseThrow(RoleNotFoundException::new)));
+            userRepository.save(user);
+        }
+
+        return user;
+    }
 }
