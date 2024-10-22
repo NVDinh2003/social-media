@@ -1,6 +1,7 @@
 package com.nvd.controller;
 
 
+import com.nvd.dto.oauth.AuthenticationResponse;
 import com.nvd.dto.request.FindUsernameDTO;
 import com.nvd.dto.request.PasswordCodeDTO;
 import com.nvd.exceptions.EmailAlreadyTakenException;
@@ -13,8 +14,10 @@ import com.nvd.models.RegistrationObject;
 import com.nvd.service.MailService;
 import com.nvd.service.TokenService;
 import com.nvd.service.UserService;
+import com.nvd.service.gg.AuthenticationService;
 import com.nvd.utils.Constants;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.auth.InvalidCredentialsException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,18 +27,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000") // Chỉ định nguồn được phép
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationController {
 
     private final UserService userService;
@@ -43,29 +44,15 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final MailService mailService;
 
-    @PostMapping("/login/oauth2/code/google")
-    public ResponseEntity<?> handleGoogleLogin(@RequestBody Map<String, String> requestBody) {
-        String token = requestBody.get("token");
+    // Google login
+    private final AuthenticationService authenticationService;
 
-        try {
-            // Verify the Google token and create or retrieve the user
-            ApplicationUser user = userService.verifyGoogleTokenAndCreateUser(token);
-
-            // Convert Set<Role> to Collection<? extends GrantedAuthority>
-            Collection<? extends GrantedAuthority> authorities = user.getAuthorities().stream()
-                    .map(GrantedAuthority.class::cast)
-                    .collect(Collectors.toList());
-
-            // Authenticate the user
-            Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities));
-            String jwtToken = tokenService.generateToken(auth);
-
-            return new ResponseEntity<>(new LoginResponse(user, jwtToken), HttpStatus.OK);
-        } catch (AuthenticationException e) {
-            return new ResponseEntity<>("Authentication failed", HttpStatus.UNAUTHORIZED);
-        }
+    @PostMapping("/outbound/authentication")
+    ResponseEntity<AuthenticationResponse> outboundAuthenticate(@RequestParam("code") String code) {
+        var result = authenticationService.outboundAuthenticate(code);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
 
     @ExceptionHandler({EmailAlreadyTakenException.class})
     public ResponseEntity<String> handleEmailTaken() {
@@ -167,5 +154,5 @@ public class AuthenticationController {
         return new ResponseEntity<>("Code sent to email", HttpStatus.OK);
     }
 
-
 }
+

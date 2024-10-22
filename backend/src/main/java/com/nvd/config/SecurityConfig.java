@@ -23,18 +23,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
-import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -47,13 +41,15 @@ import java.util.List;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
     private static final String[] WHITE_LIST_URL = {
             "/auth/**",
             "/images/**",
             "/ws/**",
             "/users/followers/**",
             "/users/following/**",
-            "/posts/view/all"
+            "/posts/view/all",
+            "/auth/outbound/authentication"
     };
 
 
@@ -81,7 +77,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://accounts.google.com"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
@@ -105,33 +101,18 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "auth/email/verify").permitAll()
                         .anyRequest().authenticated()
                 )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                )
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                        )
-                )
-                .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("http://localhost:3000/home", true)
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .oidcUserService(oidcUserService())
-                                .userService(oAuth2UserService())
-                        )
-                )
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .jwt(jwtConfigurer -> jwtConfigurer
+                                .decoder(jwtDecoder())
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 
-
-    @Bean
-    public OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
-        return new OidcUserService();
-    }
-
-    @Bean
-    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService() {
-        return new DefaultOAuth2UserService();
-    }
 
     @Bean
     JwtDecoder jwtDecoder() {
@@ -146,11 +127,22 @@ public class SecurityConfig {
     }
 
 
+//    @Bean
+//    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+//        // Cấu hình JwtAuthenticationConverter tùy chỉnh của bạn
+//        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+//        // ...
+//        return converter;
+//    }
+
     @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        // Cấu hình JwtAuthenticationConverter tùy chỉnh của bạn
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        // ...
-        return converter;
+    JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
+
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+
+        return jwtAuthenticationConverter;
     }
 }

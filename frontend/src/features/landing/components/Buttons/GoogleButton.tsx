@@ -1,30 +1,28 @@
 import React from "react";
-import { useGoogleLogin } from "@react-oauth/google";
-import { useDispatch } from "react-redux";
-import { loginWithGoogle } from "../../../../redux/Slices/UserSlice";
 import google from "../../../../assets/google.png";
 import "../../../../assets/global.css";
 import "./Buttons.css";
-import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
+import { OAuthConfig } from "../../../auth/configuration";
 
 export const GoogleButton: React.FC = () => {
-  const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch();
+  const handleClick = () => {
+    const callbackUrl = OAuthConfig.redirectUri;
+    const authUrl = OAuthConfig.authUri;
+    const googleClientId = OAuthConfig.clientId;
 
-  const login = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        await dispatch(loginWithGoogle(tokenResponse.access_token));
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    onError: (errorResponse) => console.error(errorResponse),
-  });
+    const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
+      callbackUrl
+    )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
+
+    console.log(targetUrl);
+
+    window.location.href = targetUrl;
+  };
 
   return (
-    <div className="landing-button color-gray google" onClick={() => login()}>
+    <div className="landing-button color-gray google" onClick={handleClick}>
       <img src={google} alt="google-icon" className="landing-button-logo" />
-      <p className="google-text">Đăng nhập bằng Google !</p>
+      <p className="google-text">Đăng nhập bằng Google</p>
     </div>
   );
 };

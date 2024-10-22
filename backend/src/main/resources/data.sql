@@ -49,18 +49,18 @@ values ('rick@gmail.com', true, 'Rick', 'Sanchez', 'rick',
 --         'abradolflincler', 'I am a hybrid of good and evil');
 
 
-insert into users(email, enabled, first_name, last_name, nickname, password, username, bio, verified_account,
-                  private_account)
-values ('iamdinhhtvq@gmail.com', true, 'Định', 'Nguyễn Văn', 'Leon',
-        '$2a$10$RgKj7kNuA6TNvGdrF0.Kt.h0BQF7IR66naQw6YBU3h/2YSzt2OG6C',
-        'dinhhtvq123', 'Software Engineer', true, true);
+-- insert into users(email, enabled, first_name, last_name, nickname, password, username, bio, verified_account,
+--                   private_account)
+-- values ('iamdinhhtvq@gmail.com', true, 'Định', 'Nguyễn Văn', 'Leon',
+--         '$2a$10$RgKj7kNuA6TNvGdrF0.Kt.h0BQF7IR66naQw6YBU3h/2YSzt2OG6C',
+--         'dinhhtvq123', 'Software Engineer', true, true);
 
 insert into user_roles_junction(role_id, user_id)
-values (1, 5),
-       (1, 4),
+values (1, 4),
        (1, 3),
        (1, 2),
        (1, 1);
+-- (1, 5),
 
 -- insert into posts (audience, content, posted_date, reply_restriction, scheduled, author_id)
 -- values (0,

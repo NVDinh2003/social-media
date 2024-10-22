@@ -13,9 +13,9 @@ import { useEffect } from "react";
 import { ViewPost } from "./pages/ViewPost";
 import { useWebsocket } from "./hooks/useWebsocket";
 import NotificationsPage from "./pages/NotificationsPage";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import axios from "axios";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import { Authenticate } from "./features/auth/Authenticate";
 
 const theme: Theme = {
   colors: {
@@ -39,7 +39,6 @@ const GlobalStyle = createGlobalStyle`
 export const App = () => {
   const user = useSelector((state: RootState) => state.user.loggedIn);
   const { connected, connect } = useWebsocket();
-  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
   useEffect(() => {
     if (user && !connected) {
@@ -94,35 +93,32 @@ export const App = () => {
   }, []);
 
   return (
-    <GoogleOAuthProvider clientId={googleClientId}>
-      {/* Các component khác của ứng dụng */}
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Landing></Landing>} />
+          <Route path="/authenticate" element={<Authenticate />} />
 
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <Router>
-          <Routes>
-            <Route path="/" element={<Landing></Landing>} />
+          <Route path="" element={<LayoutPage />}>
+            <Route path="/home" element={<Feed />} />
+            <Route path="/explore" element={<>Explore</>} />
+            <Route path="/:username" element={<Profile />} />
+            <Route path="/post/:postId" element={<ViewPost />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route
+              path="/notifications/verified"
+              element={<NotificationsPage />}
+            />
+            <Route
+              path="/notifications/mentions"
+              element={<NotificationsPage />}
+            />
+          </Route>
 
-            <Route path="" element={<LayoutPage />}>
-              <Route path="/home" element={<Feed />} />
-              <Route path="/explore" element={<>Explore</>} />
-              <Route path="/:username" element={<Profile />} />
-              <Route path="/post/:postId" element={<ViewPost />} />
-              <Route path="/notifications" element={<NotificationsPage />} />
-              <Route
-                path="/notifications/verified"
-                element={<NotificationsPage />}
-              />
-              <Route
-                path="/notifications/mentions"
-                element={<NotificationsPage />}
-              />
-            </Route>
-
-            {/* <Route path="/home" element={<Home></Home>} /> */}
-          </Routes>
-        </Router>
-      </ThemeProvider>
-    </GoogleOAuthProvider>
+          {/* <Route path="/home" element={<Home></Home>} /> */}
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 };

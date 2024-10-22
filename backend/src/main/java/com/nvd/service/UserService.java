@@ -1,6 +1,5 @@
 package com.nvd.service;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.nvd.dto.request.FindUsernameDTO;
 import com.nvd.exceptions.*;
 import com.nvd.models.ApplicationUser;
@@ -10,6 +9,7 @@ import com.nvd.models.Role;
 import com.nvd.repositories.RoleRepository;
 import com.nvd.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -31,13 +31,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final MailService mailService;
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
-    private final GoogleTokenVerifier googleTokenVerifier;
 
 
     public ApplicationUser registerUser(RegistrationObject ro) {
@@ -291,26 +291,4 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public ApplicationUser verifyGoogleTokenAndCreateUser(String token) {
-        GoogleIdToken.Payload payload = googleTokenVerifier.verify(token);
-        if (payload == null) {
-            throw new InvalidGoogleTokenException();
-        }
-
-        String email = payload.getEmail();
-        ApplicationUser user = userRepository.findByEmail(email).orElse(null);
-
-        if (user == null) {
-            user = new ApplicationUser();
-            user.setEmail(email);
-            user.setFirstName((String) payload.get("given_name"));
-            user.setLastName((String) payload.get("family_name"));
-            user.setUsername(email);
-            user.setEnabled(true);
-            user.setAuthorities(Set.of(roleRepository.findByAuthority("USER").orElseThrow(RoleNotFoundException::new)));
-            userRepository.save(user);
-        }
-
-        return user;
-    }
 }

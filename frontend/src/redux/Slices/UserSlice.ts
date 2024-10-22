@@ -136,11 +136,25 @@ export const loginWithGoogle = createAsyncThunk(
   "user/loginWithGoogle",
   async (token: string, thunkAPI) => {
     try {
-      const response = await axios.post(
-        `${baseURL}/auth/login/oauth2/code/google`,
-        { token }
-      );
-      return response.data;
+      const req = await axios.get(`${baseURL}/users/verify`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const user = req.data;
+
+      const followers = getFollowers(user.username);
+      const following = getFollowing(user.username);
+
+      let followingAndFollowers = await Promise.all([followers, following]);
+
+      return {
+        loggedIn: user,
+        followers: followingAndFollowers[0],
+        following: followingAndFollowers[1],
+        token: token,
+      };
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
     }
@@ -293,9 +307,14 @@ export const UserSlice = createSlice({
       });
 
     builder.addCase(loginWithGoogle.fulfilled, (state, action) => {
-      state.token = action.payload.token;
-      state.loggedIn = action.payload.loggedIn;
-      // Cập nhật các thông tin người dùng khác nếu cần
+      state = {
+        ...state,
+        loggedIn: action.payload.loggedIn,
+        token: action.payload.token,
+        followers: action.payload.followers,
+        following: action.payload.following,
+      };
+      return state;
     });
     //
   },
