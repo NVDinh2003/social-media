@@ -10,6 +10,8 @@ export const GoogleButton: React.FC = () => {
     const authUrl = OAuthConfig.authUri;
     const googleClientId = OAuthConfig.clientId;
 
+    console.log(OAuthConfig);
+
     const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
       callbackUrl
     )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;

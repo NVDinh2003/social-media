@@ -1,7 +1,6 @@
 package com.nvd.controller;
 
 
-import com.nvd.dto.oauth.AuthenticationResponse;
 import com.nvd.dto.request.FindUsernameDTO;
 import com.nvd.dto.request.PasswordCodeDTO;
 import com.nvd.exceptions.EmailAlreadyTakenException;
@@ -47,10 +46,16 @@ public class AuthenticationController {
     // Google login
     private final AuthenticationService authenticationService;
 
+//    @PostMapping("/outbound/authentication")
+//    ResponseEntity<AuthenticationResponse> outboundAuthenticate(@RequestParam("code") String code) {
+//        var result = authenticationService.outboundAuthenticate(code);
+//        return new ResponseEntity<>(result, HttpStatus.OK);
+//    }
+
     @PostMapping("/outbound/authentication")
-    ResponseEntity<AuthenticationResponse> outboundAuthenticate(@RequestParam("code") String code) {
+    public ResponseEntity<LoginResponse> outboundAuthenticate(@RequestParam("code") String code) {
         var result = authenticationService.outboundAuthenticate(code);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return ResponseEntity.ok(result);
     }
 
 
@@ -120,7 +125,10 @@ public class AuthenticationController {
             Authentication auth = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(username, password));
             String token = tokenService.generateToken(auth);
-            return new LoginResponse(userService.getUserByUsername(username), token);
+            return LoginResponse.builder()
+                    .token(token)
+                    .user(userService.getUserByUsername(username))
+                    .build();
         } catch (AuthenticationException e) {
             throw new InvalidCredentialsException();
         }

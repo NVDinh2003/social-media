@@ -1,16 +1,16 @@
 package com.nvd.service.gg;
 
-import com.nvd.dto.oauth.AuthenticationResponse;
 import com.nvd.dto.oauth.ExchangeTokenRequest;
 import com.nvd.dto.oauth.ExchangeTokenResponse;
 import com.nvd.dto.oauth.UserInfoResponse;
 import com.nvd.models.ApplicationUser;
-import com.nvd.models.Role;
+import com.nvd.models.LoginResponse;
 import com.nvd.repositories.RoleRepository;
 import com.nvd.repositories.UserRepository;
 import com.nvd.repositories.gg.GoogleUserInfoClient;
 import com.nvd.repositories.gg.OutboundIdentityClient;
 import com.nvd.service.TokenService;
+import com.nvd.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 public class AuthenticationService {
     OutboundIdentityClient outboundIdentityClient;
     GoogleUserInfoClient googleUserInfoClient;
+    UserService userService;
     UserRepository userRepository;
     TokenService tokenService;
     RoleRepository roleRepository;
@@ -49,65 +50,41 @@ public class AuthenticationService {
     @NonFinal
     protected final String GRANT_TYPE = "authorization_code";
 
-    public AuthenticationResponse outboundAuthenticate(String code) {
-        ExchangeTokenRequest exchangeTokenRequest = ExchangeTokenRequest.builder()
+    public LoginResponse outboundAuthenticate(String code) {
+        if (code == null || code.isEmpty()) {
+            throw new IllegalArgumentException("Authorization code is required");
+        }
+
+        ExchangeTokenResponse response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
                 .code(code)
                 .clientId(CLIENT_ID)
                 .clientSecret(CLIENT_SECRET)
                 .redirectUri(REDIRECT_URI)
                 .grantType(GRANT_TYPE)
-                .build();
-        ExchangeTokenResponse response = outboundIdentityClient.exchangeToken(exchangeTokenRequest);
+                .build());
 
-        log.info("RAW GOOGLE TOKEN RESPONSE: {}", response);
+        log.info("RAW TOKEN RESPONSE: {}", response);
 
-        // Bước 2: Lấy thông tin người dùng qua API Google UserInfo
+        // Lấy thông tin người dùng qua Google UserInfo API
         UserInfoResponse userInfo = googleUserInfoClient.getUserInfo(response.getAccessToken());
 
         log.info("USER INFO RESPONSE {}", userInfo);
 
-        String email = userInfo.getEmail();
-        String name = userInfo.getName();
+        ApplicationUser user = userService.getOrCreateGoogleUser(userInfo);
 
-
-        ApplicationUser user = userRepository.findByEmail(email).orElse(null);
-
-        if (user == null) {
-            ApplicationUser newUser = new ApplicationUser();
-            newUser.setEmail(email);
-            newUser.setUsername(email);
-            newUser.setFirstName(name);
-
-            // Gán role cho người dùng mới
-            Role userRole = roleRepository.findByAuthority("USER").orElseThrow(() -> new RuntimeException("Role not found"));
-            newUser.getAuthorities().add(userRole);
-
-            user = userRepository.save(newUser);
-        }
-
-        // Chuyển đổi Set<Role> thành Collection<? extends GrantedAuthority>
+        // Tạo token mà không cần xác thực mật khẩu
         var authorities = user.getAuthorities().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
                 .collect(Collectors.toList());
 
-        // Tạo token mà không cần xác thực mật khẩu
-        String token = tokenService.generateToken(new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities));
-        String t = response.getAccessToken();
-        return AuthenticationResponse.builder().token(response.getAccessToken()).build();
+        String token = tokenService.generateToken(
+                new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities));
+
+        // Trả về LoginResponse chứa người dùng và token
+        return LoginResponse.builder()
+                .token(token)
+                .user(user)
+                .build();
     }
 
-
-//    public AuthenticationResponse outboundAuthenticate(String code) {
-//        var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
-//                .code(code)
-//                .clientId(CLIENT_ID)
-//                .clientSecret(CLIENT_SECRET)
-//                .redirectUri(REDIRECT_URI)
-//                .grantType(GRANT_TYPE)
-//                .build());
-//
-//        log.info("TOKEN RESPONSE {}", response);
-//
-//        return AuthenticationResponse.builder().token(response.getAccessToken()).build();
-//    }
 }

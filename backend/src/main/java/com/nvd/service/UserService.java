@@ -1,5 +1,6 @@
 package com.nvd.service;
 
+import com.nvd.dto.oauth.UserInfoResponse;
 import com.nvd.dto.request.FindUsernameDTO;
 import com.nvd.exceptions.*;
 import com.nvd.models.ApplicationUser;
@@ -290,5 +291,34 @@ public class UserService implements UserDetailsService {
         return followUser(user1, followToUser);
     }
 
+    public ApplicationUser getOrCreateGoogleUser(UserInfoResponse userInfo) {
+        String email = userInfo.getEmail();
+        String name = userInfo.getName();
+        return userRepository.findByEmail(email).orElseGet(() -> {
+            // Tạo người dùng mới nếu user lần đầu đăng nhập
+            ApplicationUser newUser = new ApplicationUser();
+            newUser.setEmail(email);
+            String username = email.substring(0, email.indexOf('@'));
+            newUser.setUsername(username);
+            newUser.setNickname(username);
+            newUser.setProfilePicture(Image.builder().imageURL(userInfo.getPicture()).imageName(email + "-google-profile-picture").build());
+
+            // Split the full name into first name and last name
+            String[] nameParts = name.split(" ", 2);
+            if (nameParts.length == 2) {
+                newUser.setFirstName(nameParts[0]);
+                newUser.setLastName(nameParts[1]);
+            } else {
+                newUser.setFirstName(name);
+                newUser.setLastName("");
+            }
+
+            Role userRole = roleRepository.findByAuthority("USER")
+                    .orElseThrow(() -> new RuntimeException("Role not found"));
+            newUser.getAuthorities().add(userRole);
+
+            return userRepository.save(newUser);
+        });
+    }
 
 }

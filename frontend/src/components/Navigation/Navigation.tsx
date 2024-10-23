@@ -206,7 +206,11 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
         <img
           alt=""
           className="navigation-options-pfp"
-          src={process.env.REACT_APP_PFP}
+          src={
+            state.loggedIn?.profilePicture
+              ? state.loggedIn.profilePicture.imageURL
+              : process.env.REACT_APP_PFP
+          }
         />
 
         <div className="navigation-options-info">
