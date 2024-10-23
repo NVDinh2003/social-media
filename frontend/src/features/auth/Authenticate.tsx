@@ -16,19 +16,17 @@ export const Authenticate: React.FC = () => {
   useEffect(() => {
     console.log(window.location.href);
 
+    const baseUrl = process.env.REACT_APP_API_URL;
     const authCodeRegex = /code=([^&]+)/;
     const isMatch = window.location.href.match(authCodeRegex);
 
     if (isMatch) {
       const authCode = isMatch[1];
-      console.log(authCode);
+      // console.log(authCode);
 
-      fetch(
-        `http://localhost:8000/auth/outbound/authentication?code=${authCode}`,
-        {
-          method: "POST",
-        }
-      )
+      fetch(`${baseUrl}/auth/outbound/authentication?code=${authCode}`, {
+        method: "POST",
+      })
         .then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
@@ -36,12 +34,12 @@ export const Authenticate: React.FC = () => {
           return response.json();
         })
         .then((data) => {
-          console.log(data);
+          // console.log(data);
 
           if (data?.token) {
-            console.log(data);
+            // console.log(data);
             setJwt(data.token);
-            console.log(jwt);
+            // console.log(jwt);
             setIsLoggedin(true); // Đăng nhập thành công
           } else {
             console.error("Token is missing in response");

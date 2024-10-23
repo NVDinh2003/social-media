@@ -23,4 +23,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws").setAllowedOrigins(Constants.FRONTEND_URL).withSockJS();
     }
+
+
+//    @Bean
+//    public ThreadPoolTaskExecutor webSocketTaskExecutor() {
+//        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+//        taskExecutor.setCorePoolSize(10);
+//        taskExecutor.setMaxPoolSize(50);
+//        taskExecutor.setQueueCapacity(100);
+//        taskExecutor.setThreadNamePrefix("websocket-task-");
+//        taskExecutor.initialize();
+//        return taskExecutor;
+//    }
 }

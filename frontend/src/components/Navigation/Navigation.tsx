@@ -11,11 +11,12 @@ import CommunitiesSVG from "../SVGs/CommunitiesSVG";
 import ProfileSVG from "../SVGs/ProfileSVG";
 import MoreSVG from "../SVGs/MoreSVG";
 import BookmarksSVG from "../SVGs/BookmarksSVG";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/Store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/Store";
 import Circle from "@mui/icons-material/Circle";
 import CreateMessageSVG from "../SVGs/Messages/CreateMessageSVG";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { resetUserState } from "../../redux/Slices/UserSlice";
 
 interface NavigationProps {
   currentPage: string;
@@ -28,6 +29,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
 
   useEffect(() => {}, [currentPage]);
 
+  const dispatch: AppDispatch = useDispatch();
   const state = useSelector((state: RootState) => state.user);
   const notifications = useSelector((state: RootState) => state.notification);
 
@@ -60,7 +62,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
     const confirmLogout = window.confirm("Bạn có chắc chắn muốn đăng xuất?");
     if (confirmLogout) {
       removeJwt(); // Xóa token
-      console.log("jwt", jwt);
+      dispatch(resetUserState()); // Reset state của người dùng
       navigate("/"); // Chuyển hướng về trang chính
     }
   };

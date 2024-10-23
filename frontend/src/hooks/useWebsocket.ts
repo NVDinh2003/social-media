@@ -17,6 +17,7 @@ export function useWebsocket() {
   const [connected, setConnected] = useState<boolean>(false);
 
   function connect() {
+    console.log(user, token);
     if (user) {
       const socket = new SockJS(`${API_URL}/ws`);
       stompClient = over(socket);

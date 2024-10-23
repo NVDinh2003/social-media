@@ -19,6 +19,7 @@ export const ForgotPasswordModal: React.FC<{ toggleModal: () => void }> = ({
   toggleModal,
 }) => {
   //
+  const baseUrl = process.env.REACT_APP_API_URL;
   const [credential, setCredential] = useState<string>("");
   const [userInfo, setUserInfo] = useState<UserInfo>({
     email: "",
@@ -76,10 +77,7 @@ export const ForgotPasswordModal: React.FC<{ toggleModal: () => void }> = ({
 
     try {
       setError(false);
-      let req = await axios.post(
-        "http://localhost:8000/auth/identifiers",
-        findUserDTO
-      );
+      let req = await axios.post(`${baseUrl}/auth/identifiers`, findUserDTO);
       let data = await req.data;
       setUserInfo({
         email: data.email,
@@ -98,7 +96,7 @@ export const ForgotPasswordModal: React.FC<{ toggleModal: () => void }> = ({
     setResetCode(code);
 
     try {
-      let req = await axios.post("http://localhost:8000/auth/password/code", {
+      let req = await axios.post(`${baseUrl}/auth/password/code`, {
         email: userInfo.email,
         code,
       });
@@ -123,10 +121,7 @@ export const ForgotPasswordModal: React.FC<{ toggleModal: () => void }> = ({
     };
 
     try {
-      let req = await axios.put(
-        "http://localhost:8000/auth/update/password",
-        body
-      );
+      let req = await axios.put(`${baseUrl}/auth/update/password`, body);
       let res = await req.data;
       toggleModal();
     } catch (e) {

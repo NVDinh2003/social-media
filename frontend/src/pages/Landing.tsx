@@ -31,6 +31,7 @@ export const Landing: React.FC = () => {
   };
 
   const toggleLogin = () => {
+    console.log(jwt, login);
     setLogin(!login);
     dispatch(resetUsername());
   };
@@ -41,6 +42,7 @@ export const Landing: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log(jwt);
     if (jwt !== "") navigate("/home");
   }, [jwt]);
 

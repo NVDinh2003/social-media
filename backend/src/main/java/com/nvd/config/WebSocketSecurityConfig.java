@@ -19,3 +19,17 @@ public class WebSocketSecurityConfig extends
                 .anyMessage().permitAll();
     }
 }
+
+//@Configuration
+//@EnableWebSocketSecurity
+//public class WebSocketSecurityConfig {
+//
+//    @Bean
+//    MessageMatcherDelegatingAuthorizationManager.Builder messageAuthorizationManager(
+//            MessageMatcherDelegatingAuthorizationManager.Builder messages) {
+//        messages
+//                .simpDestMatchers("/ws").permitAll()
+//                .anyMessage().permitAll();
+//        return messages;
+//    }
+//}

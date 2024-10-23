@@ -5,8 +5,6 @@ import com.nvd.dto.oauth.ExchangeTokenResponse;
 import com.nvd.dto.oauth.UserInfoResponse;
 import com.nvd.models.ApplicationUser;
 import com.nvd.models.LoginResponse;
-import com.nvd.repositories.RoleRepository;
-import com.nvd.repositories.UserRepository;
 import com.nvd.repositories.gg.GoogleUserInfoClient;
 import com.nvd.repositories.gg.OutboundIdentityClient;
 import com.nvd.service.TokenService;
@@ -31,9 +29,7 @@ public class AuthenticationService {
     OutboundIdentityClient outboundIdentityClient;
     GoogleUserInfoClient googleUserInfoClient;
     UserService userService;
-    UserRepository userRepository;
     TokenService tokenService;
-    RoleRepository roleRepository;
 
     @NonFinal
     @Value("${outbound.identity.client-id}")

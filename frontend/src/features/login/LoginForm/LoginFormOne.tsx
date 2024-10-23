@@ -13,6 +13,7 @@ import apple from "../../../assets/apple.png";
 
 import "../../../assets/global.css";
 import "./LoginForms.css";
+import { GoogleButton } from "../../landing/components/Buttons/GoogleButton";
 
 interface LoginFormOneProps {
   noAccount: () => void;
@@ -52,7 +53,7 @@ export const LoginFormOne: React.FC<LoginFormOneProps> = ({
   return (
     <div className="login-form-one-container">
       <h1 className="login-form-header">Đăng nhập vào HeartShare</h1>
-      <ModalButton
+      {/* <ModalButton
         active={true}
         height={40}
         fontColor={"#536471"}
@@ -75,7 +76,8 @@ export const LoginFormOne: React.FC<LoginFormOneProps> = ({
       >
         <img src={google} alt="" className="login-form-one-buttons-logo" />
         Đăng nhập với Google
-      </ModalButton>
+      </ModalButton> */}
+      <GoogleButton />
       <ModalButton
         active={true}
         height={40}

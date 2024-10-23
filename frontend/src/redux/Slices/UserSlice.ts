@@ -132,35 +132,6 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-export const loginWithGoogle = createAsyncThunk(
-  "user/loginWithGoogle",
-  async (token: string, thunkAPI) => {
-    try {
-      const req = await axios.get(`${baseURL}/users/verify`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const user = req.data;
-
-      const followers = getFollowers(user.username);
-      const following = getFollowing(user.username);
-
-      let followingAndFollowers = await Promise.all([followers, following]);
-
-      return {
-        loggedIn: user,
-        followers: followingAndFollowers[0],
-        following: followingAndFollowers[1],
-        token: token,
-      };
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e);
-    }
-  }
-);
-
 export const UserSlice = createSlice({
   name: "user",
   initialState,
@@ -185,6 +156,17 @@ export const UserSlice = createSlice({
 
     setToken(state, action: PayloadAction<string>) {
       state.token = action.payload;
+    },
+
+    // Thêm action để reset state
+    resetUserState(state) {
+      state.loggedIn = undefined;
+      state.following = [];
+      state.followers = [];
+      state.username = "";
+      state.token = "";
+      state.fromRegister = false;
+      state.error = false;
     },
 
     //
@@ -306,20 +288,11 @@ export const UserSlice = createSlice({
         return state;
       });
 
-    builder.addCase(loginWithGoogle.fulfilled, (state, action) => {
-      state = {
-        ...state,
-        loggedIn: action.payload.loggedIn,
-        token: action.payload.token,
-        followers: action.payload.followers,
-        following: action.payload.following,
-      };
-      return state;
-    });
     //
   },
 });
 
-export const { setFromRegister, resetUsername, setToken } = UserSlice.actions;
+export const { setFromRegister, resetUsername, setToken, resetUserState } =
+  UserSlice.actions;
 
 export default UserSlice.reducer;
