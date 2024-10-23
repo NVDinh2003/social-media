@@ -1,10 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import "./MessagesBar.css";
-import {
-  MessagingContext,
-  MessagingContextType,
-} from "../../context/MessagingContext";
 import Circle from "@mui/icons-material/Circle";
 import CreateMessageSVG from "../../../../components/SVGs/Messages/CreateMessageSVG";
 import CloseMessageSVG from "../../../../components/SVGs/Messages/CloseMessageSVG";
@@ -32,7 +28,7 @@ export const MessagesBar: React.FC = () => {
     <div
       className={`messages-bar${
         messageState.unreadMessages.length > 0 ? " unread-messages" : ""
-      }`}
+      } ${messageState.popupOpen ? "message-bar-open" : "message-bar-closed"}`}
       onClick={toggle}
     >
       <div className="messages-bar-header-group">

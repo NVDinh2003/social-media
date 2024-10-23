@@ -1,0 +1,85 @@
+.message-conversation-card {
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.message-conversation-card:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.message-conversation-card-user {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.message-conversation-card-info-bar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+}
+
+.message-conversation-card-name {
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  display: inline;
+  width: fit-content;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.message-conversation-card-nickname {
+  max-width: 25%;
+}
+
+.message-conversation-card-group-name {
+  max-width: 75%;
+}
+
+.message-conversation-card-text {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 400;
+  color: #657786;
+}
+
+.message-conversation-card-username {
+  width: fit-content;
+  max-width: 33%;
+  white-space: nowrap;
+  display: inline;
+  overflow: hidden;
+}
+
+.message-conversation-card-content {
+  width: fit-content;
+  min-width: 100%;
+  white-space: nowrap;
+  display: inline;
+  overflow: hidden;
+}
+
+.message-conversation-card-options-wrapper {
+  margin-top: -8px;
+  height: 32px;
+  width: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 100%;
+}
+
+.message-conversation-card-options-wrapper:hover {
+  cursor: pointer;
+  background-color: rgba(29, 161, 242, 0.2);
+}

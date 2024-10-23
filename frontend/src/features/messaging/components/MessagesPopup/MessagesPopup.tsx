@@ -9,6 +9,7 @@ import { MessagesBar } from "../MessagesBar/MessagesBar";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { loadConversations } from "../../../../redux/Slices/MessagesSlice";
+import { MessageConversationCard } from "../MessageConversationCard/MessageConversationCard";
 
 export const MessagesPopup: React.FC = () => {
   //
@@ -42,7 +43,13 @@ export const MessagesPopup: React.FC = () => {
             {messageState.conversationOpen ? (
               <>MessagingConversationComponent</>
             ) : (
-              <>MessagingOverviewComponent</>
+              <>
+                {messageState.conversations.map((conversation) => {
+                  return (
+                    <MessageConversationCard conversation={conversation} />
+                  );
+                })}
+              </>
             )}
           </div>
         )}

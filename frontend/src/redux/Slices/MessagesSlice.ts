@@ -146,6 +146,15 @@ export const MessageSlice = createSlice({
       };
       return state;
     },
+    selectConversation(state, action: PayloadAction<Conversation>) {
+      state = {
+        ...state,
+        conversationOpen: true,
+        conversation: action.payload,
+      };
+
+      return state;
+    },
   },
 
   extraReducers: (builder) => {
@@ -222,6 +231,7 @@ export const {
   toggleCreateGroup,
   updateUnreadMessages,
   updateConversationUsers,
+  selectConversation,
 } = MessageSlice.actions;
 
 export default MessageSlice.reducer;
