@@ -9,6 +9,7 @@ import com.nvd.models.RegistrationObject;
 import com.nvd.models.Role;
 import com.nvd.repositories.RoleRepository;
 import com.nvd.repositories.UserRepository;
+import com.nvd.utils.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -301,7 +302,8 @@ public class UserService implements UserDetailsService {
             String username = email.substring(0, email.indexOf('@'));
             newUser.setUsername(username);
             newUser.setNickname(username);
-            newUser.setProfilePicture(Image.builder().imageURL(userInfo.getPicture()).imageName(email + "-google-profile-picture").build());
+            String imageName = FileUploadUtil.getFileName(username + "-google-profile-picture");
+            newUser.setProfilePicture(Image.builder().imageURL(userInfo.getPicture()).imageName(imageName).build());
 
             // Split the full name into first name and last name
             String[] nameParts = name.split(" ", 2);

@@ -38,7 +38,6 @@ public class FileUploadUtil {
     public static String getFileName(final String name) {
         final DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         final String date = dateFormat.format(System.currentTimeMillis());
-        String r = String.format(FILE_NAME_FORMAT, name, date);
-        return r;
+        return String.format(FILE_NAME_FORMAT, name, date);
     }
 }

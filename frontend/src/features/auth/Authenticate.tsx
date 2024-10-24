@@ -14,7 +14,7 @@ export const Authenticate: React.FC = () => {
   const [jwt, setJwt, removeJwt] = useLocalStorage("token", "");
 
   useEffect(() => {
-    console.log(window.location.href);
+    // console.log(window.location.href);
 
     const baseUrl = process.env.REACT_APP_API_URL;
     const authCodeRegex = /code=([^&]+)/;

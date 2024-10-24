@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "./redux/Store";
 import { useEffect } from "react";
 import { ViewPost } from "./pages/ViewPost";
-import { useWebsocket } from "./hooks/useWebsocket";
+import { useWebSocket } from "./hooks/useWebsocket";
 import NotificationsPage from "./pages/NotificationsPage";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -38,13 +38,16 @@ const GlobalStyle = createGlobalStyle`
 
 export const App = () => {
   const user = useSelector((state: RootState) => state.user.loggedIn);
-  const { connected, connect } = useWebsocket();
+  const conversations = useSelector(
+    (state: RootState) => state.message.conversations
+  );
+  const { connected, connect } = useWebSocket();
 
   useEffect(() => {
     if (user && !connected) {
       connect();
     }
-  }, [user]);
+  }, [user, conversations]);
 
   // Cấu hình interceptor cho axios
   useEffect(() => {

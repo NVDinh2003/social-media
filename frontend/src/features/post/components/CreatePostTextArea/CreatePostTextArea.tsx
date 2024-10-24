@@ -3,10 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./CreatePostTextArea.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
-import {
-  updateCurrentPost,
-  // updateCurrentReply,
-} from "../../../../redux/Slices/PostSlice";
+import { updateCurrentPost } from "../../../../redux/Slices/PostSlice";
 import { convertPostContentToElements } from "../../utils/PostUtils";
 import { updateDisplayPostMention } from "../../../../redux/Slices/ModalSlice";
 import DiscoveryProvider from "../../../discovery/context/DiscoveryContext";
@@ -21,7 +18,10 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
   location,
   placeholder,
 }) => {
-  const state = useSelector((state: RootState) => state);
+  const currentPost = useSelector((state: RootState) => state.post.currentPost);
+  const currentReply = useSelector(
+    (state: RootState) => state.post.currentReply
+  );
   const mentioning = useSelector(
     (state: RootState) => state.modal.displayPostMention
   );
@@ -40,9 +40,9 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
     // Đồng bộ hóa state local với state Redux
     let newContent = "";
     if (location === "post") {
-      newContent = state.post.currentPost?.content || "";
+      newContent = currentPost?.content || "";
     } else if (location === "reply") {
-      newContent = state.post.currentReply?.replyContent || "";
+      newContent = currentReply?.replyContent || "";
     }
     setContent(newContent);
 
@@ -50,7 +50,7 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
     if (newContent === "") {
       resetTextAreaHeight();
     }
-  }, [state.post.currentPost, state.post.currentReply, location]);
+  }, [currentPost, currentReply, location]);
 
   const autoGrow = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (textAreaRef && textAreaRef.current) {
@@ -78,24 +78,11 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
     setContent(newContent);
 
     if (location === "post") {
-      dispatch(
-        updateCurrentPost({
-          name: "content",
-          value: newContent,
-        })
-      );
-      // console.log(newContent);
+      dispatch(updateCurrentPost({ name: "content", value: newContent }));
     }
 
     if (location === "reply") {
-      dispatch(
-        updateCurrentPost({
-          name: "replyContent",
-          value: newContent,
-        })
-      );
-
-      // console.log(newContent);
+      dispatch(updateCurrentPost({ name: "replyContent", value: newContent }));
     }
   };
 
@@ -104,23 +91,20 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
   };
 
   const textContent = (): { elements: JSX.Element[]; content: string } => {
-    if (location === "post" && state.post.currentPost) {
+    if (location === "post" && currentPost) {
       return {
-        elements: convertPostContentToElements(
-          state.post.currentPost.content,
-          "creator"
-        ),
-        content: state.post.currentPost.content,
+        elements: convertPostContentToElements(currentPost.content, "creator"),
+        content: currentPost.content,
       };
     }
 
-    if (location === "reply" && state.post.currentReply) {
+    if (location === "reply" && currentReply) {
       return {
         elements: convertPostContentToElements(
-          state.post.currentReply.replyContent,
+          currentReply.replyContent,
           "creator"
         ),
-        content: state.post.currentReply.replyContent,
+        content: currentReply.replyContent,
       };
     }
 
@@ -147,19 +131,13 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
             content.substring(0, content.lastIndexOf("@") + 1) + username + " ",
         })
       );
-
       setMentionedUser(username);
-      setContent((content) => {
-        return (
+      setContent(
+        (content) =>
           content.substring(0, content.lastIndexOf("@") + 1) + username + " "
-        );
-      });
+      );
     }
   };
-
-  useEffect(() => {
-    // console.log(mentioning, content);
-  }, [content, mentionedUser]);
 
   return (
     <DiscoveryProvider>
@@ -178,7 +156,7 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
 
         <textarea
           className={
-            state.post.currentPost || state.post.currentReply
+            currentPost || currentReply
               ? "create-post-text-area-creator-input input-active"
               : "create-post-text-area-creator-input"
           }

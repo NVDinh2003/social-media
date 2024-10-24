@@ -5,8 +5,7 @@ import org.springframework.security.config.annotation.web.messaging.MessageSecur
 import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
 
 @Configuration
-public class WebSocketSecurityConfig extends
-        AbstractSecurityWebSocketMessageBrokerConfigurer {
+public class WebSocketSecurityConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
     @Override
     protected boolean sameOriginDisabled() {
@@ -15,21 +14,9 @@ public class WebSocketSecurityConfig extends
 
     @Override
     protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
-        messages.simpDestMatchers("/ws").permitAll()
+        messages
+                .simpDestMatchers("/ws").permitAll()
                 .anyMessage().permitAll();
     }
-}
 
-//@Configuration
-//@EnableWebSocketSecurity
-//public class WebSocketSecurityConfig {
-//
-//    @Bean
-//    MessageMatcherDelegatingAuthorizationManager.Builder messageAuthorizationManager(
-//            MessageMatcherDelegatingAuthorizationManager.Builder messages) {
-//        messages
-//                .simpDestMatchers("/ws").permitAll()
-//                .anyMessage().permitAll();
-//        return messages;
-//    }
-//}
+}

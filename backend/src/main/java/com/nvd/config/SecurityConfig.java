@@ -34,9 +34,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -48,11 +45,8 @@ public class SecurityConfig {
             "/ws/**",
             "/users/followers/**",
             "/users/following/**",
-            "/posts/view/all",
-            "/auth/outbound/authentication"
+            "/auth/outbound/authentication",
     };
-
-
     private final RSAKeyProperties keys;
 
 
@@ -77,9 +71,9 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -90,28 +84,58 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .headers(headers -> headers
-                        .xssProtection(HeadersConfigurer.XXssConfig::disable)
-                        .contentSecurityPolicy(csp -> csp.policyDirectives("frame-ancestors 'self'"))
-                )
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(WHITE_LIST_URL).permitAll()
                         .requestMatchers(HttpMethod.GET, "/posts/{id}").permitAll()
-                        .requestMatchers(HttpMethod.POST, "auth/email/verify").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/email/verify").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/outbound/authentication").permitAll()
                         .anyRequest().authenticated()
-                )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwtConfigurer -> jwtConfigurer
                                 .decoder(jwtDecoder())
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
-                .httpBasic(Customizer.withDefaults());
+                .httpBasic(Customizer.withDefaults())
+//                .oauth2ResourceServer(oauth2 -> oauth2
+//                        .jwt(Customizer.withDefaults())
+//                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
+
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .cors(AbstractHttpConfigurer::disable)
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+////                .headers(headers -> headers
+////                        .xssProtection(HeadersConfigurer.XXssConfig::disable)
+////                        .contentSecurityPolicy(csp -> csp.policyDirectives("frame-ancestors 'self'"))
+////                )
+//                .headers(headers -> headers.frameOptions().sameOrigin())
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/ws/**").permitAll()
+//                        .requestMatchers(WHITE_LIST_URL).permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/posts/{id}").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/auth/email/verify").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/auth/outbound/authentication").permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                )
+//                .oauth2ResourceServer(oauth2 -> oauth2
+//                        .jwt(jwtConfigurer -> jwtConfigurer
+//                                .decoder(jwtDecoder())
+//                                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+//                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
+//                .httpBasic(Customizer.withDefaults());
+//        return http.build();
+//    }
 
 
     @Bean

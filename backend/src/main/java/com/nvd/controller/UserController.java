@@ -26,12 +26,13 @@ public class UserController {
     private final TokenService tokenService;
     private final NotificationService notificationService;
 
+    @SpamRrequestCheck // Áp dụng kiểm tra Redis trước khi xử lý method này
     @GetMapping("/{username}")
     public ApplicationUser getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username);
     }
 
-    @SpamRrequestCheck // Áp dụng kiểm tra Redis trước khi xử lý method này
+
     @GetMapping("/verify")
     public ApplicationUser verifyIdentity(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         String username = tokenService.getUsernameFromToken(token);

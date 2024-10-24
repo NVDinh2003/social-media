@@ -26,19 +26,26 @@ interface CreatePostButtonClusterProps {
 export const CreatePostButtonCluster: React.FC<
   CreatePostButtonClusterProps
 > = ({ type }) => {
-  //
-  const state = useSelector((state: RootState) => state);
+  const currentPostImages = useSelector(
+    (state: RootState) => state.post.currentPostImages
+  );
+  const currentReplyImages = useSelector(
+    (state: RootState) => state.post.currentReplyImages
+  );
+  const currentPost = useSelector((state: RootState) => state.post.currentPost);
+  const currentReply = useSelector(
+    (state: RootState) => state.post.currentReply
+  );
   const dispatch: AppDispatch = useDispatch();
 
   const imageSelectorRef = useRef<HTMLInputElement>(null);
 
   const handleGetImages = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Lấy danh sách images hiện tại từ state
-    const imageList: File[] = state.post.currentPostImages;
+    const imageList: File[] = currentPostImages;
 
     if (imageSelectorRef.current && e.target.files) {
       if (e.target.files.length + imageList.length > 4) {
-        console.log("Selected to many files");
+        console.log("Selected too many files");
         imageSelectorRef.current.value = "";
         return;
       }
@@ -71,25 +78,22 @@ export const CreatePostButtonCluster: React.FC<
   };
 
   const determineFull = (): boolean => {
-    if (state.post.currentPostImages.length === 4) return true;
-
-    if (state.post.currentPostImages[0]?.type === "image/gif") return true;
-
+    if (currentPostImages.length === 4) return true;
+    if (currentPostImages[0]?.type === "image/gif") return true;
     if (
-      (state.post.currentReply && state.post.currentReply.images.length > 0) ||
-      (state.post.currentPost && state.post.currentPost.images.length > 0)
+      (currentReply && currentReply.images.length > 0) ||
+      (currentPost && currentPost.images.length > 0)
     )
       return true;
-
     return false;
   };
 
   const disableGif = (): boolean => {
     if (
-      state.post.currentPostImages.length > 0 ||
-      state.post.currentReplyImages.length > 0 ||
-      (state.post.currentPost && state.post.currentPost.images.length > 0) ||
-      (state.post.currentReply && state.post.currentReply.images.length > 0)
+      currentPostImages.length > 0 ||
+      currentReplyImages.length > 0 ||
+      (currentPost && currentPost.images.length > 0) ||
+      (currentReply && currentReply.images.length > 0)
     )
       return true;
     return false;
@@ -100,7 +104,7 @@ export const CreatePostButtonCluster: React.FC<
   };
 
   const generatePoll = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (state.post.currentPost || state.post.currentReply) {
+    if (currentPost || currentReply) {
       dispatch(createPoll());
     }
   };
@@ -110,8 +114,6 @@ export const CreatePostButtonCluster: React.FC<
   };
 
   const openLocationModal = () => {
-    // console.log("type: ", type);
-    // console.log("openLocationModal");
     dispatch(updateDisplayLocation());
   };
 
@@ -159,9 +161,7 @@ export const CreatePostButtonCluster: React.FC<
           height={20}
           width={20}
           color={
-            state.post.currentPostImages.length > 0
-              ? "rgba(19,161,242,.5)"
-              : "#1DA1F2"
+            currentPostImages.length > 0 ? "rgba(19,161,242,.5)" : "#1DA1F2"
           }
         />
       </div>
@@ -169,7 +169,7 @@ export const CreatePostButtonCluster: React.FC<
       {type === "post" && (
         <div
           className={
-            state.post.currentPostImages.length > 0
+            currentPostImages.length > 0
               ? "create-post-button-cluster-icon-bg"
               : "create-post-button-cluster-icon-bg icon-active"
           }
@@ -179,9 +179,7 @@ export const CreatePostButtonCluster: React.FC<
             height={20}
             width={20}
             color={
-              state.post.currentPostImages.length > 0
-                ? "rgba(19,161,242,.5)"
-                : "#1DA1F2"
+              currentPostImages.length > 0 ? "rgba(19,161,242,.5)" : "#1DA1F2"
             }
           />
         </div>

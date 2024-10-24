@@ -188,7 +188,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
         </div>
 
         <div className="navigation-item">
-          <Link to="" className="navigation-link">
+          <Link to={`/${state.username}`} className="navigation-link">
             <ProfileSVG height={26} width={26} />
             <p className="navigation-text navigation-inactive">Hồ sơ</p>
           </Link>

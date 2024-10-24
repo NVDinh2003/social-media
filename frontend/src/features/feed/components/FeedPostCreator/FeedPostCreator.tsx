@@ -1,5 +1,4 @@
 import React from "react";
-
 import "./FeedPostCreator.css";
 import { Link } from "react-router-dom";
 import { FeedPostCreatorProgress } from "../FeedPostCreatorProgress/FeedPostCreatorProgress";
@@ -17,23 +16,25 @@ import { FeedPostCreatorImages } from "../FeedPostCreatorImages/FeedPostCreatorI
 import { FeedPostCreatorPoll } from "../FeedPostCreatorPoll/FeedPostCreatorPoll";
 import { CreatePostTextArea } from "../../../post/components/CreatePostTextArea/CreatePostTextArea";
 import { CreatePostButtonCluster } from "../../../post/components/CreatePostButtonCluster/CreatePostButtonCluster";
-import LocationSVG from "../../../../components/SVGs/LocationSVG";
-import { getDisplayLocationInfo } from "../../utils/LocationUtils";
 import { renderLocationInfo } from "../../../post/utils/PostUtils";
 
 export const FeedPostCreator: React.FC = () => {
-  //
-  const state = useSelector((state: RootState) => state);
+  // Chỉ lấy các phần cần thiết từ state
+  const currentPost = useSelector((state: RootState) => state.post.currentPost);
+  const currentPostImages = useSelector(
+    (state: RootState) => state.post.currentPostImages
+  );
+  const loggedInUser = useSelector((state: RootState) => state.user.loggedIn);
+  const token = useSelector((state: RootState) => state.user.token);
+
   const dispatch: AppDispatch = useDispatch();
 
   const activate = (e: React.MouseEvent<HTMLDivElement>) => {
-    // console.log(e.target);
-
-    if (!state.post.currentPost && state.user.loggedIn) {
+    if (!currentPost && loggedInUser) {
       let p: Post = {
         postId: 0,
         content: "",
-        author: state.user.loggedIn,
+        author: loggedInUser,
         likes: [],
         replies: [],
         images: [],
@@ -50,88 +51,40 @@ export const FeedPostCreator: React.FC = () => {
   };
 
   const submitPost = () => {
-    if (state.post.currentPost && state.user.loggedIn) {
-      if (state.post.currentPostImages.length === 0) {
-        //
-        let poll = undefined;
-        if (
-          state.post.currentPost.poll !== undefined &&
-          state.post.currentPost.images.length < 1
-        ) {
-          poll = JSON.parse(JSON.stringify(state.post.currentPost.poll));
-          console.log("There is a poll in post!");
-          let timeString = state.post.currentPost.poll.endTime;
+    if (currentPost && loggedInUser) {
+      let body = {
+        content: currentPost.content,
+        author: currentPost.author,
+        replies: [],
+        audience: currentPost.audience,
+        replyRestriction: currentPost.replyRestriction,
+        scheduled: currentPost.scheduled,
+        scheduledDate: currentPost.scheduledDate,
+        provinceCode: currentPost.provinceCode,
+        districtCode: currentPost.districtCode,
+        wardCode: currentPost.wardCode,
+        address: currentPost.address,
+        token: token,
+        images: currentPostImages.length > 0 ? [] : currentPost.images,
+        poll: currentPost.poll,
+        imageFiles: currentPostImages,
+      };
 
-          let days = timeString.split(":")[0];
-          let hours = timeString.split(":")[1];
-          let minutes = timeString.split(":")[2];
-
-          let endTime = new Date();
-          // console.log("Time: ", endTime.toUTCString());
-          endTime.setDate(endTime.getDate() + +days);
-          endTime.setHours(endTime.getHours() + +hours);
-          endTime.setMinutes(endTime.getMinutes() + +minutes);
-
-          // console.log("Time +: ", endTime.toUTCString());
-          // console.log({ days, hours, minutes });
-
-          poll = {
-            ...poll,
-            endTime: `${endTime.getFullYear()}-${endTime.getMonth()}-${endTime.getDate()} ${endTime.getHours()}:${endTime.getMinutes()}`,
-          };
-        }
-
-        let body = {
-          content: state.post.currentPost.content,
-          author: state.post.currentPost.author,
-          images: state.post.currentPost.images,
-          poll,
-          replies: [],
-          audience: state.post.currentPost.audience,
-          replyRestriction: state.post.currentPost.replyRestriction,
-          scheduled: state.post.currentPost.scheduled,
-          scheduledDate: state.post.currentPost.scheduledDate,
-          provinceCode: state.post.currentPost.provinceCode,
-          districtCode: state.post.currentPost.districtCode,
-          wardCode: state.post.currentPost.wardCode,
-          address: state.post.currentPost.address,
-          token: state.user.token,
-        };
+      if (currentPostImages.length === 0) {
         dispatch(createPost(body));
-        // console.log(body);
       } else {
-        let body = {
-          content: state.post.currentPost.content,
-          author: state.post.currentPost.author,
-          replies: [],
-          audience: state.post.currentPost.audience,
-          replyRestriction: state.post.currentPost.replyRestriction,
-          scheduled: state.post.currentPost.scheduled,
-          scheduledDate: state.post.currentPost.scheduledDate,
-          provinceCode: state.post.currentPost.provinceCode,
-          districtCode: state.post.currentPost.districtCode,
-          wardCode: state.post.currentPost.wardCode,
-          address: state.post.currentPost.address,
-          token: state.user.token,
-          images: [],
-          poll: undefined,
-          imageFiles: state.post.currentPostImages,
-        };
-
         dispatch(createPostWithMedia(body));
       }
-
-      // console.log("check-creator: ", state.post.currentPost.content);
     }
   };
 
   const generateButtonClass = (): string => {
-    if (state.post.currentPost) {
-      let content: string = state.post.currentPost.content;
+    if (currentPost) {
+      let content: string = currentPost.content;
       return content !== "" ||
-        state.post.currentPostImages.length > 0 ||
-        (state.post.currentPost && state.post.currentPost.images.length >= 1) ||
-        (state.post.currentPost && state.post.currentPost.poll !== undefined)
+        currentPostImages.length > 0 ||
+        currentPost.images.length >= 1 ||
+        currentPost.poll !== undefined
         ? "feed-post-creator-post-button post-active"
         : "feed-post-creator-post-button";
     }
@@ -139,13 +92,13 @@ export const FeedPostCreator: React.FC = () => {
   };
 
   const activateButton = (): boolean => {
-    if (state.post.currentPost) {
-      let content: string = state.post.currentPost.content;
+    if (currentPost) {
+      let content: string = currentPost.content;
       return !(
         content !== "" ||
-        state.post.currentPostImages.length > 0 ||
-        (state.post.currentPost && state.post.currentPost.images.length >= 1) ||
-        (state.post.currentPost && state.post.currentPost.poll !== undefined)
+        currentPostImages.length > 0 ||
+        currentPost.images.length >= 1 ||
+        currentPost.poll !== undefined
       );
     }
     return false;
@@ -156,8 +109,8 @@ export const FeedPostCreator: React.FC = () => {
       <Link to="">
         <img
           src={
-            state.user.loggedIn && state.user.loggedIn.profilePicture
-              ? state.user.loggedIn.profilePicture.imageURL
+            loggedInUser && loggedInUser.profilePicture
+              ? loggedInUser.profilePicture.imageURL
               : process.env.REACT_APP_PFP
           }
           alt="User's avatar"
@@ -166,30 +119,27 @@ export const FeedPostCreator: React.FC = () => {
       </Link>
 
       <div className="feed-post-creator-right">
-        {state.post.currentPost ? <FeedPostAudienceDropDown /> : <></>}
+        {currentPost ? <FeedPostAudienceDropDown /> : <></>}
 
         <CreatePostTextArea
           location="post"
           placeholder="What is happening !?"
         />
 
-        {(state.post.currentPostImages.length > 0 ||
-          (state.post.currentPost &&
-            state.post.currentPost.images.length > 0)) && (
+        {(currentPostImages.length > 0 ||
+          (currentPost && currentPost.images.length > 0)) && (
           <FeedPostCreatorImages />
         )}
 
-        {state.post.currentPost && renderLocationInfo(state.post.currentPost)}
+        {currentPost && renderLocationInfo(currentPost)}
 
-        {state.post.currentPost && state.post.currentPost?.poll && (
-          <FeedPostCreatorPoll />
-        )}
+        {currentPost && currentPost.poll && <FeedPostCreatorPoll />}
 
-        {state.post.currentPost ? <FeedPostReplyRestrictionDropDown /> : <></>}
+        {currentPost ? <FeedPostReplyRestrictionDropDown /> : <></>}
 
         <div
           className={
-            state.post.currentPost
+            currentPost
               ? "feed-post-creator-bottom-icon icons-border"
               : "feed-post-creator-bottom-icon"
           }
@@ -198,14 +148,10 @@ export const FeedPostCreator: React.FC = () => {
             <CreatePostButtonCluster type="post" />
           </div>
           <div className="feed-post-creator-submit-cluster">
-            {state.post.currentPost && state.post.currentPost.content !== "" ? (
+            {currentPost && currentPost.content !== "" ? (
               <div className="feed-post-creator-submit-cluster-left">
                 <FeedPostCreatorProgress
-                  percent={
-                    (state.post.currentPost
-                      ? state.post.currentPost.content.length / 256
-                      : 0) * 100
-                  }
+                  percent={(currentPost.content.length / 256) * 100}
                 />
                 <span className="feed-post-creator-submit-cluster-divider"></span>
                 <div className="feed-post-creator-submit-cluster-add">+</div>
@@ -224,8 +170,6 @@ export const FeedPostCreator: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* <EmojiDropDown /> */}
     </div>
   );
 };

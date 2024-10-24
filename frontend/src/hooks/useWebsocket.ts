@@ -8,16 +8,20 @@ import {
   recievedNotification,
 } from "../redux/Slices/NotificationSlice";
 
-export function useWebsocket() {
+export function useWebSocket() {
   const API_URL = process.env.REACT_APP_API_URL;
   let stompClient: Client | null = null;
   const user = useSelector((state: RootState) => state.user.loggedIn);
   const token = useSelector((state: RootState) => state.user.token);
+  const conversations = useSelector(
+    (state: RootState) => state.message.conversations
+  );
   const dispatch: AppDispatch = useDispatch();
+
   const [connected, setConnected] = useState<boolean>(false);
 
   function connect() {
-    console.log(user, token);
+    // console.log(user, token);
     if (user) {
       const socket = new SockJS(`${API_URL}/ws`);
       stompClient = over(socket);
@@ -35,17 +39,19 @@ export function useWebsocket() {
   }
 
   function onConnected() {
-    // console.log("Connected to websocket server");
+    console.log("Connected to websocket server");
     setConnected(true);
     if (stompClient) {
       stompClient.subscribe(
         `/user/${user?.username}/notifications`,
         onMessageReceived
       );
+      console.log("Subscribed to notifications");
     }
   }
 
-  function onError() {
+  function onError(error: any) {
+    console.error("WebSocket error:", error);
     setConnected(false);
   }
 

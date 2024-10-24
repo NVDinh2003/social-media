@@ -367,6 +367,10 @@ export const viewPost = createAsyncThunk(
 export const sendBatchedPostViews = createAsyncThunk(
   "post/batchedPostViews",
   async (body: BatchedPostViewsBody, thunkAPI) => {
+    if (!body.ids || body.ids.length === 0) {
+      return;
+    }
+
     try {
       let ids = {
         ids: body.ids,

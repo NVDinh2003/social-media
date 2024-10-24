@@ -33,7 +33,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:3000") // Chỉ định nguồn được phép
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class AuthenticationController {
@@ -45,12 +45,6 @@ public class AuthenticationController {
 
     // Google login
     private final AuthenticationService authenticationService;
-
-//    @PostMapping("/outbound/authentication")
-//    ResponseEntity<AuthenticationResponse> outboundAuthenticate(@RequestParam("code") String code) {
-//        var result = authenticationService.outboundAuthenticate(code);
-//        return new ResponseEntity<>(result, HttpStatus.OK);
-//    }
 
     @PostMapping("/outbound/authentication")
     public ResponseEntity<LoginResponse> outboundAuthenticate(@RequestParam("code") String code) {

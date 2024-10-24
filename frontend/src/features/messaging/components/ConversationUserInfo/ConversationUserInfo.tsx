@@ -45,7 +45,7 @@ export const ConversationUserInfo: React.FC<{ user: User }> = ({ user }) => {
   useEffect(() => {
     const fetchUsersFollowers = async () => {
       const fetchedFollowers = await getFollowers(user.username);
-      console.log(fetchedFollowers.length);
+      //   console.log(fetchedFollowers.length);
       setFollowers(fetchedFollowers.length);
       setSharedFollowers(() => {
         return fetchedFollowers.filter((user: User) => {
@@ -56,7 +56,7 @@ export const ConversationUserInfo: React.FC<{ user: User }> = ({ user }) => {
       });
     };
 
-    console.log(sharedFollowers.length);
+    // console.log(sharedFollowers.length);
 
     if (loggedIn) {
       fetchUsersFollowers();
