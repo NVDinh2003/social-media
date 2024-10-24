@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import "./MessagesPopup.css";
 import {
@@ -11,11 +11,13 @@ import { AppDispatch, RootState } from "../../../../redux/Store";
 import { loadConversations } from "../../../../redux/Slices/MessagesSlice";
 import { MessageConversationCard } from "../MessageConversationCard/MessageConversationCard";
 import { ConversationContainer } from "../ConversationContainer/ConversationContainer";
+import { CreateMessageBar } from "../CreateMessageBar/CreateMessageBar";
 
 export const MessagesPopup: React.FC = () => {
   //
   const userState = useSelector((state: RootState) => state.user);
   const messageState = useSelector((state: RootState) => state.message);
+  const [height, setHeight] = useState<string>("50px");
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -30,13 +32,17 @@ export const MessagesPopup: React.FC = () => {
     }
   }, [userState.token, userState.loggedIn]);
 
+  useEffect(() => {
+    if (messageState.popupOpen) {
+      setHeight("480px");
+    } else {
+      setHeight("50px");
+    }
+  }, [messageState.popupOpen]);
+
   return (
-    <div className="messages-popup-container">
-      <div
-        className={`messages-popup ${
-          messageState.popupOpen ? "messages-open" : "messages-closed"
-        }`}
-      >
+    <div className="messages-popup-container" style={{ height }}>
+      <div className={`messages-popup`}>
         <MessagesBar />
 
         {messageState.popupOpen && (
@@ -53,6 +59,11 @@ export const MessagesPopup: React.FC = () => {
               </>
             )}
           </div>
+        )}
+
+        {/* input message area  */}
+        {messageState.conversationOpen && messageState.popupOpen && (
+          <CreateMessageBar />
         )}
       </div>
     </div>

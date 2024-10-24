@@ -8,6 +8,8 @@
   backdrop-filter: blur(10px);
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
+  position: sticky;
+  top: 0;
 }
 
 .messages-bar-open {

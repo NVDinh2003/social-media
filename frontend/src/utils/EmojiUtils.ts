@@ -245,3 +245,26 @@ export const convertPostContentToElementForNotifications = (
     return element;
   });
 };
+
+export const convertElementsToMessageText = (elements: JSX.Element[]) => {
+  return elements.map((element) => {
+    if (element.type === "img") {
+      element = {
+        ...element,
+        props: {
+          ...element.props,
+          className: "message-text-emoji",
+        },
+      };
+    } else {
+      element = {
+        ...element,
+        props: {
+          ...element.props,
+          className: "message-text",
+        },
+      };
+    }
+    return element;
+  });
+};

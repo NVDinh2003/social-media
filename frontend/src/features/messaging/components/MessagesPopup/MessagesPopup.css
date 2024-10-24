@@ -19,16 +19,9 @@
   background-color: white;
 }
 
-.messages-closed {
-  height: 50px;
-}
-
-.messages-open {
-  height: 480px;
-  overflow-y: scroll;
-}
-
 .messages-popup-content {
   width: 100%;
   height: fit-content;
+  min-height: 375px;
+  overflow-y: scroll;
 }
