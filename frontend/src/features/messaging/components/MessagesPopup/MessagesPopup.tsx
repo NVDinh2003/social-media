@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { loadConversations } from "../../../../redux/Slices/MessagesSlice";
 import { MessageConversationCard } from "../MessageConversationCard/MessageConversationCard";
+import { ConversationContainer } from "../ConversationContainer/ConversationContainer";
 
 export const MessagesPopup: React.FC = () => {
   //
@@ -40,8 +41,8 @@ export const MessagesPopup: React.FC = () => {
 
         {messageState.popupOpen && (
           <div className="messages-popup-content">
-            {messageState.conversationOpen ? (
-              <>MessagingConversationComponent</>
+            {messageState.conversationOpen && messageState.conversation ? (
+              <ConversationContainer conversation={messageState.conversation} />
             ) : (
               <>
                 {messageState.conversations.map((conversation) => {

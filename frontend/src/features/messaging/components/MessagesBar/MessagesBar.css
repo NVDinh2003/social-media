@@ -26,7 +26,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 4px;
+  gap: 16px;
 }
 
 .messages-bar-header {
@@ -34,6 +34,21 @@
   padding: 0;
   font-size: 20px;
   font-weight: 900;
+}
+
+.messages-bar-conversation-name {
+  width: fit-content;
+  max-width: 240px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.messages-bar-username {
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: #657786;
 }
 
 .messages-bar-icon-group {

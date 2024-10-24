@@ -1,0 +1,70 @@
+.conversation-user-info {
+  width: 100%;
+  padding: 20px 16px 76px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid #aab8c2;
+}
+
+.conversation-user-info:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.conversation-user-info-nickname {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.conversation-user-info-username {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 400;
+  color: #657786;
+}
+
+.conversation-user-info-bio-container {
+  width: 287px;
+  word-wrap: break-word;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 12px;
+}
+
+.conversation-user-info-stats {
+  margin: 12px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #657786;
+}
+
+.conversation-user-info-followed-by {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.conversation-user-info-followed-by-pfps {
+  width: 48px;
+  height: 24px;
+}
+
+.conversation-user-info-followed-by-text {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: #657786;
+  word-wrap: break-word;
+}

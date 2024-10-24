@@ -146,10 +146,10 @@ export const MessageSlice = createSlice({
       };
       return state;
     },
-    selectConversation(state, action: PayloadAction<Conversation>) {
+    selectConversation(state, action: PayloadAction<Conversation | undefined>) {
       state = {
         ...state,
-        conversationOpen: true,
+        conversationOpen: action.payload !== undefined,
         conversation: action.payload,
       };
 

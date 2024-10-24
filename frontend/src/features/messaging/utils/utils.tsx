@@ -38,3 +38,8 @@ export function generateConversationName(
 
   return "";
 }
+
+// trả về mảng users mới chứa tất cả user trừ user được lọc
+export function filterConversationUsers(users: User[], filtered: User): User[] {
+  return users.filter((u) => u.userId !== filtered.userId);
+}
