@@ -13,6 +13,7 @@ interface MessagesSliceState {
   popupOpen: boolean;
   conversationOpen: boolean;
   createGroup: boolean;
+  gifUrl: string;
   conversationUsers: ConversationUser[];
   conversations: Conversation[];
   conversation: Conversation | undefined;
@@ -34,6 +35,7 @@ const initialState: MessagesSliceState = {
   unreadMessages: [],
   popupOpen: false,
   createGroup: false,
+  gifUrl: "",
   conversationOpen: false,
   conversationUsers: [],
   conversations: [],
@@ -125,6 +127,13 @@ export const MessageSlice = createSlice({
       state = {
         ...state,
         createGroup: !state.createGroup,
+      };
+      return state;
+    },
+    updateGifUrl(state, action: PayloadAction<string>) {
+      state = {
+        ...state,
+        gifUrl: action.payload,
       };
       return state;
     },
@@ -232,6 +241,7 @@ export const {
   updateUnreadMessages,
   updateConversationUsers,
   selectConversation,
+  updateGifUrl,
 } = MessageSlice.actions;
 
 export default MessageSlice.reducer;

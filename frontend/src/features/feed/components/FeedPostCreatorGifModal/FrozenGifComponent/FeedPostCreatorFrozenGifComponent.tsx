@@ -10,11 +10,13 @@ import { updateDisplayGif } from "../../../../../redux/Slices/ModalSlice";
 interface FrozenGifProps {
   image: string;
   text: string;
+  handleClick?: (gif: string) => void;
 }
 
 export const FeedPostCreatorFrozenGif: React.FC<FrozenGifProps> = ({
   image,
   text,
+  handleClick,
 }) => {
   const preview = useSelector((state: RootState) => state.gif.preview);
   const dispatch: AppDispatch = useDispatch();
@@ -54,10 +56,12 @@ export const FeedPostCreatorFrozenGif: React.FC<FrozenGifProps> = ({
     }
   };
 
-  const handleCanvasClicked = () => {
+  const handleCanvasClicked = (e: React.MouseEvent<HTMLCanvasElement>) => {
     //TODO once we have it setup
     if (preview) {
       dispatch(fetchGifByTerm(text));
+    } else if (handleClick) {
+      handleClick(e.currentTarget.id);
     } else {
       let postImage: PostImage = {
         imageId: 0,

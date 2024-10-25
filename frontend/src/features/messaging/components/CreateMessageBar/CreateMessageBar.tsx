@@ -8,11 +8,21 @@ import { ArrowForwardIos } from "@mui/icons-material";
 import { convertPostContentToElements } from "../../../post/utils/PostUtils";
 import { convertElementsToMessageText } from "../../../../utils/EmojiUtils";
 import SendMessageSVG from "../../../../components/SVGs/Messages/SendMessageSVG";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../redux/Store";
+import { updateDisplayMessageGif } from "../../../../redux/Slices/ModalSlice";
+import { MessageImage } from "../MessageImage/MessageImage";
+import { updateGifUrl } from "../../../../redux/Slices/MessagesSlice";
 
 export const CreateMessageBar: React.FC = () => {
   //
   const [showActions, setShowActions] = useState<boolean>(true);
   const [messageContent, setMessageContent] = useState<string>("");
+
+  const messageGif = useSelector((state: RootState) => state.message.gifUrl);
+  const [messageImage, setMessageImage] = useState<File | null>(null);
+
+  const dispatch: AppDispatch = useDispatch();
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -22,7 +32,7 @@ export const CreateMessageBar: React.FC = () => {
     return messageElement;
   };
 
-  const focusOntext = () => {
+  const focusOnText = () => {
     if (textAreaRef && textAreaRef.current) textAreaRef.current.focus();
   };
 
@@ -37,14 +47,21 @@ export const CreateMessageBar: React.FC = () => {
     }
   };
 
-  //   const handleTextChange = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-  //     calculateLineHeight();
-  //     setMessageContent((e.target as HTMLTextAreaElement).value); // Chuyển đổi kiểu để truy cập thuộc tính value
-  //   };
-
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     calculateLineHeight();
     setMessageContent(e.target.value);
+  };
+
+  const handleGetImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setMessageImage(e.target.files[0]);
+    }
+  };
+  const sendActive = () => {
+    return messageContent !== "" || messageImage || messageGif !== "";
+  };
+  const displayGif = () => {
+    dispatch(updateDisplayMessageGif());
   };
 
   useEffect(() => {
@@ -54,63 +71,96 @@ export const CreateMessageBar: React.FC = () => {
   return (
     <div className="create-message-bar">
       <div className="create-message-bar-bg">
-        {showActions ? (
-          <div className="create-message-bar-action-wrapper">
-            <div className="create-message-bar-icon-wrapper">
-              <MediaSVG height={20} width={20} color="rgb(29, 155, 240)" />
-            </div>
-            <div className="create-message-bar-icon-wrapper">
-              <GIFSVG height={20} width={20} color="rgb(29, 155, 240)" />
-            </div>
-            <div className="create-message-bar-icon-wrapper">
-              <EmojiSVG height={20} width={20} color="rgb(29, 155, 240)" />
-            </div>
-          </div>
-        ) : (
-          <div className="create-message-bar-icon-wrapper">
-            <ArrowForwardIos
-              sx={{ height: "20px", width: "20px", color: "rgb(29, 155, 240)" }}
-            />
+        {!messageImage && messageGif === "" && (
+          <div>
+            {showActions ? (
+              <div className="create-message-bar-action-wrapper">
+                <div>
+                  <input
+                    onChange={handleGetImage}
+                    type="file"
+                    id="message-image"
+                    accept="image/*"
+                    hidden
+                  />
+                  <label
+                    htmlFor="message-image"
+                    className="create-message-bar-icon-wrapper"
+                  >
+                    <MediaSVG
+                      height={20}
+                      width={20}
+                      color="rgb(29, 155, 240)"
+                    />
+                  </label>
+                </div>
+                <div
+                  className="create-message-bar-icon-wrapper"
+                  onClick={displayGif}
+                >
+                  <GIFSVG height={20} width={20} color="rgb(29, 155, 240)" />
+                </div>
+                <div className="create-message-bar-icon-wrapper">
+                  <EmojiSVG height={20} width={20} color="rgb(29, 155, 240)" />
+                </div>
+              </div>
+            ) : (
+              <div className="create-message-bar-icon-wrapper">
+                <ArrowForwardIos
+                  sx={{
+                    height: "20px",
+                    width: "20px",
+                    color: "rgb(29, 155, 240)",
+                  }}
+                />
+              </div>
+            )}
           </div>
         )}
-        {/* Message text area  */}
-        <div className="create-message-bar-text-area">
-          {messageContent !== "" && (
-            <div
-              className="create-message-bar-text-area-content"
-              onClick={focusOntext}
-            >
-              {textContent()}
-            </div>
+        <div style={{ marginLeft: `${messageImage ? "12px" : "0px"}` }}>
+          {messageImage && (
+            <MessageImage
+              image={messageImage}
+              removeImage={() => setMessageImage(null)}
+            />
           )}
-
-          {/* text area  */}
-          <textarea
-            className={`create-message-bar-text-area-input ${
-              showActions
-                ? "create-message-bar-text-input-deactive"
-                : "create-message-bar-text-input-active"
-            }`}
-            placeholder="Bắt đầu chat nào !"
-            ref={textAreaRef}
-            onChange={handleTextChange}
-            onFocus={() => setShowActions(false)}
-            onBlur={() => setShowActions(true)}
-            value={messageContent}
-          />
+          {messageGif !== "" && (
+            <MessageImage removeImage={() => dispatch(updateGifUrl(""))} />
+          )}
+          <div className="create-message-bar-text-area">
+            {messageContent !== "" && (
+              <div
+                className="create-message-bar-text-area-content"
+                onClick={focusOnText}
+              >
+                {textContent()}
+              </div>
+            )}
+            <textarea
+              className={`create-message-bar-text-area-input ${
+                showActions
+                  ? "create-message-bar-text-input-deactive"
+                  : "create-message-bar-text-input-active"
+              }`}
+              placeholder="Start a new message"
+              ref={textAreaRef}
+              onChange={handleTextChange}
+              onFocus={() => setShowActions(false)}
+              onBlur={() => setShowActions(true)}
+              value={messageContent}
+            />
+          </div>
         </div>
         <div
           className={`create-message-bar-send-icon ${
-            messageContent !== "" ? "send-icon-active" : ""
+            sendActive() ? "send-icon-active" : ""
           }`}
         >
           <SendMessageSVG
             height={20}
             width={20}
             color={
-              messageContent !== ""
-                ? "rgb(29, 155, 240)"
-                : "rgba(29, 155, 240, .5)"
+              sendActive() ? "rgb(29, 155, 240)" : "rgba(29, 155, 240, .5)"
             }
           />
         </div>

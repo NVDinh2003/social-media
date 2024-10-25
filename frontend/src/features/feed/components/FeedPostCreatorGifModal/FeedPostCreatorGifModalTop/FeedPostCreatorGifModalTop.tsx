@@ -3,7 +3,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { Close, Search } from "@mui/icons-material";
 import { AppDispatch, RootState } from "../../../../../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
-import { updateDisplayGif } from "../../../../../redux/Slices/ModalSlice";
+import {
+  updateDisplayGif,
+  updateDisplayMessageGif,
+} from "../../../../../redux/Slices/ModalSlice";
 
 import "./FeedPostCreatorGifModalTop.css";
 import {
@@ -15,6 +18,7 @@ import {
 export const FeedPostCreatorGifModalTop: React.FC = () => {
   //
   const searchTerm = useSelector((state: RootState) => state.gif.searchTerm);
+  const modalState = useSelector((state: RootState) => state.modal);
   const dispatch: AppDispatch = useDispatch();
 
   const [inputFocused, setInputFocused] = useState<boolean>(false);
@@ -55,7 +59,8 @@ export const FeedPostCreatorGifModalTop: React.FC = () => {
   };
 
   const handleCloseModal = () => {
-    dispatch(updateDisplayGif());
+    if (modalState.displayGif) dispatch(updateDisplayGif());
+    if (modalState.displayMessageGif) dispatch(updateDisplayMessageGif());
   };
 
   const clearInput = () => {

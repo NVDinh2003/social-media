@@ -31,7 +31,7 @@ export interface NextGifPayload {
 
 const initialState: GifSliceState = {
   searchTerm: "",
-  preview: false,
+  preview: true,
   next: "",
   gifs: [],
   gifCategories: [],

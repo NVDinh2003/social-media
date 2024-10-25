@@ -11,11 +11,12 @@ import { updateDisplayGif } from "../../../../../redux/Slices/ModalSlice";
 
 interface FeedPostCreatorGifModalDisplayProps {
   gifs: string[];
+  handleClick?: (gif: string) => void;
 }
 
 export const FeedPostCreatorGifModalDisplay: React.FC<
   FeedPostCreatorGifModalDisplayProps
-> = ({ gifs }) => {
+> = ({ gifs, handleClick }) => {
   //
   const state = useSelector((state: RootState) => state.gif);
   const dispatch: AppDispatch = useDispatch();
@@ -37,6 +38,14 @@ export const FeedPostCreatorGifModalDisplay: React.FC<
       }
       // else console.log("not visible");
     });
+  };
+
+  const addGif = (e: React.MouseEvent<HTMLImageElement>) => {
+    if (!handleClick) {
+      attachGifToPost(e);
+    } else {
+      handleClick(e.currentTarget.id);
+    }
   };
 
   const toggleAutoPlay = () => {
@@ -96,11 +105,15 @@ export const FeedPostCreatorGifModalDisplay: React.FC<
                 src={gif}
                 className="feed-post-creator-gif-modal-display-gif"
                 id={gif}
-                onClick={attachGifToPost}
+                onClick={addGif}
               />
             ))
           : gifs.map((gif) => (
-              <FeedPostCreatorFrozenGif image={gif} text={state.searchTerm} />
+              <FeedPostCreatorFrozenGif
+                image={gif}
+                text={state.searchTerm}
+                handleClick={handleClick}
+              />
             ))}
       </div>
 

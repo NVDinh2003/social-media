@@ -1,0 +1,63 @@
+.message-image {
+  height: 150px;
+  width: 150px;
+  position: relative;
+  border: none;
+  border-radius: 12px;
+  background-size: 150px 150px;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+.message-image-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.message-image-edit {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+}
+.message-image-icon-hover:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.message-image-remove {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+.message-gif-play {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.message-gif-play:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.message-gif-bottom-text {
+  padding: 4px 0 12px 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 15px;
+  font-weight: 400;
+  color: #657786;
+}
+.message-gif-tenor-text {
+  margin: 0;
+  padding: 0;
+  font-weight: 800;
+}

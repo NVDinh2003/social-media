@@ -1,5 +1,5 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/Store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/Store";
 import { FeedPostCreatorEditImageModal } from "../../features/feed/components/FeedPostCreatorEditImageModal/FeedPostCreatorEditImageModal";
 import { FeedPostCreatorTagPeopleModal } from "../../features/feed/components/FeedPostCreatorTagPeopleModal/FeedPostCreatorTagPeopleModal";
 import { FeedPostCreatorGifModal } from "../../features/feed/components/FeedPostCreatorGifModal/FeedPostCreatorGifModal";
@@ -8,6 +8,8 @@ import { CreateReply } from "../../features/post/components/CreateReply/CreateRe
 import { MentionsLearnMoreModal } from "../../features/notification/components/MentionNotification/MentionsLearnMoreModal/MentionsLearnMoreModal";
 import { CreateMessageModal } from "../../features/messaging/components/CreateMessageModal/CreateMessageModal";
 import { FeedPostCreatorLocationModal } from "../../features/feed/components/FeedPostCreatorLocationModal/FeedPostCreatorLocationModal";
+import { updateGifUrl } from "../../redux/Slices/MessagesSlice";
+import { updateDisplayMessageGif } from "../../redux/Slices/ModalSlice";
 
 export default function ModalContainer() {
   const displayEditImageModal = useSelector(
@@ -34,6 +36,16 @@ export default function ModalContainer() {
   const displayLocationModal = useSelector(
     (state: RootState) => state.modal.displayLocation
   );
+  const displayMessageGif = useSelector(
+    (state: RootState) => state.modal.displayMessageGif
+  );
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const addGifToMessage = (url: string) => {
+    dispatch(updateGifUrl(url));
+    dispatch(updateDisplayMessageGif());
+  };
 
   return (
     <>
@@ -45,6 +57,9 @@ export default function ModalContainer() {
       {displayCreateReply && <CreateReply />}
       {displatMentionLearnMore && <MentionsLearnMoreModal />}
       {displayCreateMessage && <CreateMessageModal />}
+      {displayMessageGif && (
+        <FeedPostCreatorGifModal handleClick={addGifToMessage} />
+      )}
     </>
   );
 }

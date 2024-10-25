@@ -12,7 +12,13 @@ import {
 import { FeedPostCreatorGifModalPreview } from "./FeedPostCreatorGifModalPreview/FeedPostCreatorGifModalPreview";
 import { FeedPostCreatorGifModalDisplay } from "./FeedPostCreatorGifModalDisplay/FeedPostCreatorGifModalDisplay";
 
-export const FeedPostCreatorGifModal: React.FC = () => {
+interface FeedPostCreatorGifModalProps {
+  handleClick?: (gif: string) => void;
+}
+
+export const FeedPostCreatorGifModal: React.FC<
+  FeedPostCreatorGifModalProps
+> = ({ handleClick }) => {
   //
   const state = useSelector((state: RootState) => state.gif);
   const dispatch: AppDispatch = useDispatch();
@@ -38,7 +44,10 @@ export const FeedPostCreatorGifModal: React.FC = () => {
         state.preview || state.gifs.length === 0 ? (
           <FeedPostCreatorGifModalPreview categories={state.gifCategories} />
         ) : (
-          <FeedPostCreatorGifModalDisplay gifs={state.gifs} />
+          <FeedPostCreatorGifModalDisplay
+            gifs={state.gifs}
+            handleClick={handleClick}
+          />
         )
       }
     />
