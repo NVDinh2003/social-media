@@ -2,65 +2,42 @@ insert into roles
 values (1, 'USER'),
        (2, 'ADMIN');
 
-insert into users(email, enabled, first_name, last_name, nickname, password, username, bio)
-values ('rick@gmail.com', true, 'Rick', 'Sanchez', 'rick',
-        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
-        'ricksanchez', 'Im Rick'),
-       ('morty@gmail.com', true, 'Morty', 'Smith', 'morty',
-        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
-        'mortysmith', 'Oh jeez, Rick'),
-       ('summer@gmail.com', true, 'Summer', 'Smith', 'summer',
-        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
-        'summersmith', 'Ugh, whatever'),
-       ('beth@gmail.com', true, 'Beth', 'Smith', 'beth',
-        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
-        'bethsmith', 'I am a horse surgeon');
+insert into users(email, enabled, first_name, last_name, nickname, password, username, bio, create_ts)
+values ('rick@mail.com', true, 'Rick', 'Sanchez', 'Rick',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba', 'RickSanchez', 'Im pickle rick', now()),
+       ('morty@mail.com', true, 'Morty', 'Smith', 'MortDawg',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba', 'MortySmith', 'Rick is my grandpa', now()),
+       ('summer@mail.com', true, 'Summer', 'Smith', 'Summer',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba', 'SSSummertime',
+        'My brother Morty is so annoying, he never lets me join adventures with my Grandpa Rick', now()),
+       ('birdperson@mail.com', true, 'Bird', 'Person', 'BirdPerson',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba', 'BirdPerson',
+        'I committed many war crimes in the gears war', now());
 
--- insert into users(email, enabled, first_name, last_name, nickname, password, username, bio)
--- values ('jerry@gmail.com', true, 'Jerry', 'Smith', 'jerry',
---         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
---         'jerrysmith', 'I am Jerry'),
---        ('birdperson@gmail.com', true, 'Bird', 'Person', 'birdperson',
---         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
---         'birdperson', 'Peace among worlds'),
---        ('squanchy@gmail.com', true, 'Squanchy', 'Cat', 'squanchy',
---         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
---         'squanchy', 'Time to squanch!'),
---        ('mrmeeseeks@gmail.com', true, 'Mr', 'Meeseeks', 'meeseeks',
---         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
---         'mrmeeseeks', 'Im Mr. Meeseeks! Look at me!'),
---        ('noobnoob@gmail.com', true, 'Noob', 'Noob', 'noobnoob',
---         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
---         'noobnoob', 'Oh my god!'),
---        ('tammy@gmail.com', true, 'Tammy', 'Gueterman', 'tammy',
---         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
---         'tammygueterman', 'For the Federation!'),
---        ('evilmorty@gmail.com', true, 'Evil', 'Morty', 'evilmorty',
---         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
---         'evilmorty', 'Youll never know'),
---        ('gearhead@gmail.com', true, 'Gear', 'Head', 'gearhead',
---         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
---         'gearhead', 'I love gears'),
---        ('scaryterry@gmail.com', true, 'Scary', 'Terry', 'scaryterry',
---         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
---         'scaryterry', 'You can run, but you cant hide!'),
---        ('abradolf@gmail.com', true, 'Abradolf', 'Lincler', 'abradolf',
---         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba',
---         'abradolflincler', 'I am a hybrid of good and evil');
+insert into users(first_name, last_name, email, username, password, bio, nickname, verified_account, private_account,
+                  create_ts)
+values ('Nguyen Van', 'Dinh', 'iamdinhhtvq@email.com', 'iamdinhhtvq',
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba', 'Software Engineer', 'Leo', true,
+        false, now());
 
+insert into users(first_name, last_name, email, username, password, bio, nickname, verified_account, private_account,
+                  create_ts)
+values ('Jerry', 'Smith', 'jerry@mail.com', 'JerrySmith',
+        '$2a$10$D/2JcFzpnoy.XlFPP3eyQu/9wm749pPIyPl.Os9RKI9s7lDY.MbIK', 'Im Jerry Smith', 'Jerry', false, false, now());
+insert into users(first_name, last_name, email, username, password, bio, nickname, verified_account, private_account,
+                  create_ts)
+values ('Beth', 'Smith', 'beth@mail.com', 'TheBethSmith',
+        '$2a$10$D/2JcFzpnoy.XlFPP3eyQu/9wm749pPIyPl.Os9RKI9s7lDY.MbIK', 'Mom of two, married to Jerry', 'Beth Smith',
+        false, false, now());
 
--- insert into users(email, enabled, first_name, last_name, nickname, password, username, bio, verified_account,
---                   private_account)
--- values ('iamdinhhtvq@gmail.com', true, 'Định', 'Nguyễn Văn', 'Leon',
---         '$2a$10$RgKj7kNuA6TNvGdrF0.Kt.h0BQF7IR66naQw6YBU3h/2YSzt2OG6C',
---         'dinhhtvq123', 'Software Engineer', true, true);
-
-insert into user_roles_junction(role_id, user_id)
-values (1, 4),
-       (1, 3),
-       (1, 2),
-       (1, 1);
--- (1, 5),
+insert into user_roles_junction(user_id, role_id)
+values (1, 1),
+       (2, 1),
+       (3, 1),
+       (4, 1),
+       (5, 1),
+       (6, 1),
+       (7, 1);
 
 -- insert into posts (audience, content, posted_date, reply_restriction, scheduled, author_id)
 -- values (0,

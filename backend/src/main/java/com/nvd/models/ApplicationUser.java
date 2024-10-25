@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -39,6 +40,9 @@ public class ApplicationUser {
 
     private String bio;
     private String nickname;
+
+    @Column(name = "create_ts")
+    private LocalDateTime createTimestamp;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_picture", referencedColumnName = "image_id")
@@ -87,6 +91,7 @@ public class ApplicationUser {
     private Set<Role> authorities;  // set để không trùng role
 
     public ApplicationUser() {
+        this.createTimestamp = LocalDateTime.now();
         this.authorities = new HashSet<>();
         this.following = new HashSet<>();
         this.followers = new HashSet<>();
