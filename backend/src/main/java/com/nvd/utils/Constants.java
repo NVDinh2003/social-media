@@ -15,4 +15,7 @@ public class Constants {
 
     public static final String TOO_MANY_REQUESTS_EXC = "You have exceeded the number of allowed requests.";
 
+    // Notification
+    public static final String NOTI_DESTINATION = "/notifications";
+
 }

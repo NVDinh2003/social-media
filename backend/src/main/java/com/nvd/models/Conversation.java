@@ -27,11 +27,12 @@ public class Conversation {
     List<ApplicationUser> conversationUsers;
 
     @OneToMany(mappedBy = "conversation")
-    private List<Message> conversationMessages;
+    private List<Message> conversationMessage;
+
 
     @Column(name = "converstion_name")
-
     private String conversationName;
+
     @Column(name = "conversation_picture")
     private String conversationPicture;
 
@@ -40,11 +41,11 @@ public class Conversation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Conversation that = (Conversation) o;
-        return Objects.equals(conversationId, that.conversationId) && Objects.equals(conversationUsers, that.conversationUsers) && Objects.equals(conversationMessages, that.conversationMessages) && Objects.equals(conversationName, that.conversationName) && Objects.equals(conversationPicture, that.conversationPicture);
+        return Objects.equals(conversationId, that.conversationId) && Objects.equals(conversationUsers, that.conversationUsers) && Objects.equals(conversationMessage, that.conversationMessage) && Objects.equals(conversationName, that.conversationName) && Objects.equals(conversationPicture, that.conversationPicture);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(conversationId, conversationUsers, conversationMessages, conversationName, conversationPicture);
+        return Objects.hash(conversationId, conversationUsers, conversationMessage, conversationName, conversationPicture);
     }
 }

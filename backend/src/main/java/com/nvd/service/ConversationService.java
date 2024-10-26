@@ -2,10 +2,15 @@ package com.nvd.service;
 
 import com.nvd.models.ApplicationUser;
 import com.nvd.models.Conversation;
+import com.nvd.models.Message;
 import com.nvd.repositories.ConversationRepository;
+import com.nvd.utils.ConversationComparator;
+import com.nvd.utils.MessageComparator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -19,7 +24,19 @@ public class ConversationService {
         ApplicationUser user = userService.getUserById(userId);
         List<ApplicationUser> userList = List.of(user);
 
-        return conversationRepository.findAllByConversationUsersIn(userList);
+        List<Conversation> allConversations = conversationRepository.findAllByConversationUsersIn(userList);
+
+        ConversationComparator cc = new ConversationComparator();
+        allConversations.stream().map(conver -> {
+                    List<Message> conversationMessages = conver.getConversationMessage();
+                    Collections.sort(conversationMessages, new MessageComparator());
+                    conver.setConversationMessage(conversationMessages);
+                    return conver;
+                })
+                .sorted(cc)
+                .toList();
+
+        return allConversations;
     }
 
     public Conversation readOrCreateConversation(List<Integer> conversationUserIds) {
@@ -28,16 +45,23 @@ public class ConversationService {
         List<Conversation> conversations = conversationRepository.findAllByConversationUsersIn(conversationUsers);
 
         Conversation conversation = null;
-        for (int i = 0; i < conversations.size(); i++) {
-            if (usersListsAreTheSame(conversations.get(i).getConversationUsers(), conversationUsers)) {
-                conversation = conversations.get(i);
+        for (Conversation value : conversations) {
+            if (usersListsAreTheSame(value.getConversationUsers(), conversationUsers)) {
+                conversation = value;
 //                break;
             }
+        }
+
+        if (conversation != null) {
+            List<Message> conversationMessages = conversation.getConversationMessage();
+            Collections.sort(conversationMessages, new MessageComparator());
+            conversation.setConversationMessage(conversationMessages);
         }
 
         if (conversation == null) {
             conversation = Conversation.builder()
                     .conversationUsers(conversationUsers)
+                    .conversationMessage(new ArrayList<>())
                     .build();
             conversation = conversationRepository.save(conversation);
         }

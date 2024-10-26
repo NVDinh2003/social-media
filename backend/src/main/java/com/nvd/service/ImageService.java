@@ -6,7 +6,6 @@ import com.nvd.exceptions.UnableToSavePhotoException;
 import com.nvd.models.Image;
 import com.nvd.repositories.ImageRepository;
 import com.nvd.service.cloud.CloudinaryService;
-import com.nvd.utils.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -33,27 +33,55 @@ public class ImageService {
         return imageRepository.save(image);
     }
 
+    // save image tại local
+    private static final File DIRECTORY = new File("D:\\WorkSpace\\Spring_Project\\social-media\\backend\\img");
+    private static final String URL = "http://localhost:8000/images/";
 
     public Image uploadImage(MultipartFile file, String prefix) throws UnableToSavePhotoException {
         try {
-            FileUploadUtil.assertAllowed(file, FileUploadUtil.IMAGE_PATTERN);
-            String tempFileName = file.getOriginalFilename();
-            if (tempFileName == null || tempFileName.isEmpty())
-                throw new UnableToSavePhotoException();
+            // the content type form the request looks something like this img/jpeg
+            String extention = "." + file.getContentType().split("/")[1];
 
-            int index = tempFileName.lastIndexOf(".");
-            if (index > 0)
-                tempFileName = tempFileName.substring(0, index);
-            final String fileName = prefix + FileUploadUtil.getFileName(tempFileName);
+            if (!DIRECTORY.exists()) {
+                DIRECTORY.mkdirs(); // tạo thư mục nếu chưa tồn tại
+            }
 
-            // Upload ảnh lên Cloudinary
-            final CloudinaryResponse response = cloudinaryService.uploadImage(file, fileName);
-            Image image = new Image(fileName, file.getContentType(), null, response.getUrl());
-            return imageRepository.save(image);
-        } catch (Exception e) {
+            File img = File.createTempFile(prefix, extention, DIRECTORY);
+
+            file.transferTo(img);
+
+            String imageURL = URL + img.getName();
+
+            Image i = new Image(img.getName(), file.getContentType(), img.getPath(), imageURL);
+
+            return imageRepository.save(i);
+        } catch (IOException e) {
             throw new UnableToSavePhotoException();
+
         }
     }
+
+    // Upload ảnh lên Cloudinary
+//    public Image uploadImage(MultipartFile file, String prefix) throws UnableToSavePhotoException {
+//        try {
+//            FileUploadUtil.assertAllowed(file, FileUploadUtil.IMAGE_PATTERN);
+//            String tempFileName = file.getOriginalFilename();
+//            if (tempFileName == null || tempFileName.isEmpty())
+//                throw new UnableToSavePhotoException();
+//
+//            int index = tempFileName.lastIndexOf(".");
+//            if (index > 0)
+//                tempFileName = tempFileName.substring(0, index);
+//            final String fileName = prefix + FileUploadUtil.getFileName(tempFileName);
+//
+//            // Upload ảnh lên Cloudinary
+//            final CloudinaryResponse response = cloudinaryService.uploadImage(file, fileName);
+//            Image image = new Image(fileName, file.getContentType(), null, response.getUrl());
+//            return imageRepository.save(image);
+//        } catch (Exception e) {
+//            throw new UnableToSavePhotoException();
+//        }
+//    }
 
 
     public Image createOrganization(MultipartFile file, String organizationName) throws UnableToSavePhotoException {
@@ -89,6 +117,15 @@ public class ImageService {
         Image image = imageRepository.findByImageName(filename).get();
 
         return image.getImageType();
+    }
+
+    // Message
+    public String saveGifFromMessage(String url) {
+        UUID uuid = UUID.randomUUID();
+        String gifName = "msg-" + uuid;
+        Image image = new Image(gifName, "gif", url, url);
+        imageRepository.save(image);
+        return url;
     }
 
 }

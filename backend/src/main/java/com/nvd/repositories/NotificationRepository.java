@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface NofiticationRepository extends JpaRepository<Notification, Integer> {
+public interface NotificationRepository extends JpaRepository<Notification, Integer> {
     List<Notification> getByRecipientAndAcknowledgedFalse(ApplicationUser recipient);
 
     List<Notification> getByRecipientAndNotificationTypeInOrderByNotificationTimestampDesc(ApplicationUser user,

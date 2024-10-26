@@ -30,4 +30,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.TOO_MANY_REQUESTS);
     }
 
+    @ExceptionHandler({UnableToCreateMessageException.class})
+    public ResponseEntity<String> handleUnableToCreateMessage() {
+        return ResponseEntity.status(500).body("Unable to create a message at this time, please try again");
+    }
+
+    @ExceptionHandler({InvalidMessageException.class})
+    public ResponseEntity<String> handleInvalidMessage() {
+        return ResponseEntity.status(403).body("You attempted to create an invalid message in this conversation");
+    }
+
 }

@@ -48,6 +48,9 @@ public class Notification {
     private Post reply;
 
     //TODO: add messages when we get to that point
+    @ManyToOne
+    @JoinColumn(name = "message_id")
+    private Message message;
 
 
     @Override
@@ -55,11 +58,11 @@ public class Notification {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Notification that = (Notification) o;
-        return acknowledged == that.acknowledged && Objects.equals(notificationId, that.notificationId) && notificationType == that.notificationType && Objects.equals(notificationTimestamp, that.notificationTimestamp) && Objects.equals(recipient, that.recipient) && Objects.equals(actionUser, that.actionUser) && Objects.equals(post, that.post) && Objects.equals(reply, that.reply);
+        return acknowledged == that.acknowledged && Objects.equals(notificationId, that.notificationId) && notificationType == that.notificationType && Objects.equals(notificationTimestamp, that.notificationTimestamp) && Objects.equals(recipient, that.recipient) && Objects.equals(actionUser, that.actionUser) && Objects.equals(post, that.post) && Objects.equals(reply, that.reply) && Objects.equals(message, that.message);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(notificationId, notificationType, notificationTimestamp, acknowledged, recipient, actionUser, post, reply);
+        return Objects.hash(notificationId, notificationType, notificationTimestamp, acknowledged, recipient, actionUser, post, reply, message);
     }
 }
