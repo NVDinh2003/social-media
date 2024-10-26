@@ -89,6 +89,9 @@ export const MessagesBar: React.FC = () => {
                 </p>
               )}
           </div>
+          {messageState.unreadMessages.length > 0 && (
+            <Circle sx={{ color: "black", height: "10px", width: "10px" }} />
+          )}
         </div>
       ) : (
         <div className="messages-bar-header-group">

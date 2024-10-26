@@ -9,6 +9,7 @@ import { getFollowers } from "../../../../services/UserService";
 import ProfilePicture from "../../../../components/ProfilePicture/ProfilePicture";
 import Circle from "@mui/icons-material/Circle";
 import { PostProfilePopupIcons } from "../../../post/components/Post/PostProfilePopup/PostProfilePopupIcons/PostProfilePopupIcons";
+import { stringifyFullMonthAndYear } from "../../../../utils/DateUtils";
 
 export const ConversationUserInfo: React.FC<{ user: User }> = ({ user }) => {
   //
@@ -73,7 +74,7 @@ export const ConversationUserInfo: React.FC<{ user: User }> = ({ user }) => {
       </div>{" "}
       {/* Make sure to setup the bio for emojis and mentions */}
       <div className="conversation-user-info-stats">
-        Joined Placeholder {/* setup the create ts on the BE */}
+        Joined {stringifyFullMonthAndYear(new Date(user.createTimestamp))}
         <Circle
           sx={{
             height: "3px",

@@ -68,6 +68,7 @@ export interface User {
   verifiedAccount: boolean;
   privateAccount: boolean;
   organization: ImageInfo | null;
+  createTimestamp: Date;
 }
 
 interface RGBA {
@@ -182,7 +183,13 @@ export interface Notification {
 
 export interface Message {
   messageId: number;
+  messageType: "MESSAGE" | "ACTION";
   conversationId: number;
+  seenAt: Date;
+  sentBy: User;
+  seenBy: User[];
+  messageImage: string;
+  messageText: string;
 }
 
 export interface Conversation {
@@ -190,7 +197,8 @@ export interface Conversation {
   conversationUsers: User[];
   conversationPicture?: string;
   conversationName?: string;
-  messages: Message[];
+  // messages: Message[];
+  conversationMessage: Message[];
 }
 
 export interface ConversationUser {

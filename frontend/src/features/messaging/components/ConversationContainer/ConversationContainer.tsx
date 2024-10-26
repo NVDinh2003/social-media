@@ -23,6 +23,10 @@ export const ConversationContainer: React.FC<{
   return (
     <div className="conversation-container">
       <ConversationUserInfo user={filteredConversationUsers()[0]} />
+
+      {conversation.conversationMessage.map((message) => {
+        return <p>{message.messageText}</p>;
+      })}
     </div>
   );
 };

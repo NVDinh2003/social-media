@@ -88,11 +88,16 @@ public class UserController {
     }
 
     @PutMapping("test-follow")
-    public ApplicationUser testFollowUsers(
+    public Set<ApplicationUser> testFollowUsers(
             @RequestBody Map<String, String> body) {
-        String user1 = body.get("user1");
+        String user1 = body.get("user");
         String followToUser = body.get("followToUser");
-        return userService.testFollowUser(user1, followToUser);
+        ApplicationUser user = userService.testFollowUser(user1, followToUser);
+        ApplicationUser followed = user.getFollowing().stream()
+                .filter(u -> u.getUsername().equals(followToUser)).findFirst().orElse(null);
+
+        notificationService.createAndSendFollowNotifications(followed, user);
+        return user.getFollowing();
     }
 
 

@@ -190,6 +190,7 @@ export const UserSlice = createSlice({
           verifiedAccount: action.payload.loggedIn.user.verifiedAccount,
           privateAccount: action.payload.loggedIn.user.privateAccount,
           organization: action.payload.loggedIn.user.organization,
+          createTimestamp: action.payload.loggedIn.user.createTimestamp,
         },
         token: action.payload.loggedIn.token, // JWT token
         followers: action.payload.followers,

@@ -98,6 +98,10 @@ export const stringifyVNDate = (date: Dob): string => {
   return result;
 };
 
+export const stringifyFullMonthAndYear = (date: Date): string => {
+  return `${MONTHS[date.getMonth() + 1]} ${date.getFullYear()}`;
+};
+
 export const stringifyTime = (date: Date): string => {
   let hours = date.getHours();
   let minutes = date.getMinutes();

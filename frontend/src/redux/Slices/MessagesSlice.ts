@@ -3,6 +3,7 @@ import {
   Conversation,
   ConversationUser,
   Notification as INotification,
+  Message,
 } from "../../utils/GlobalInterface";
 import axios from "axios";
 
@@ -137,6 +138,40 @@ export const MessageSlice = createSlice({
       };
       return state;
     },
+    recievedMessage(state, action: PayloadAction<Message>) {
+      let conversations: Conversation[] = JSON.parse(
+        JSON.stringify(state.conversations)
+      );
+      let conversation = conversations.find(
+        (c) => c.conversationId === action.payload.conversationId
+      );
+
+      if (!conversation) return state;
+
+      let conversationIdx = conversations.indexOf(conversation);
+
+      let messages = [...conversation.conversationMessage, action.payload];
+
+      conversation = {
+        ...conversation,
+        conversationMessage: messages,
+      };
+
+      conversations.splice(conversationIdx, 1);
+      conversations = [conversation, ...conversations];
+
+      state = {
+        ...state,
+        conversations,
+        conversation:
+          conversation &&
+          conversation.conversationId === action.payload.conversationId
+            ? conversation
+            : state.conversation,
+      };
+
+      return state;
+    },
 
     updateUnreadMessages: (state, action: PayloadAction<INotification[]>) => {
       state = {
@@ -242,6 +277,7 @@ export const {
   updateConversationUsers,
   selectConversation,
   updateGifUrl,
+  recievedMessage,
 } = MessageSlice.actions;
 
 export default MessageSlice.reducer;

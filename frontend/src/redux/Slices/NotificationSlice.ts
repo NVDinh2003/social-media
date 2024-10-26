@@ -79,6 +79,16 @@ export const readNotifications = createAsyncThunk(
   }
 );
 
+export const dispatchUnreadMessage = createAsyncThunk(
+  "notification/unreadmessage",
+  async (payload: Notification, thunkAPI) => {
+    const state: any = thunkAPI.getState();
+    const existingUnread = state?.message?.unreadMessages;
+    const allMessages = [...existingUnread, payload];
+    thunkAPI.dispatch(updateUnreadMessages(allMessages));
+  }
+);
+
 export const NotificationSlice = createSlice({
   name: "notification",
   initialState,

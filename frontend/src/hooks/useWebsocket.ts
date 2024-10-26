@@ -4,9 +4,14 @@ import { AppDispatch, RootState } from "../redux/Store";
 import { useState } from "react";
 import SockJS from "sockjs-client";
 import {
+  dispatchUnreadMessage,
   loadNotifications,
   recievedNotification,
 } from "../redux/Slices/NotificationSlice";
+import {
+  loadConversations,
+  recievedMessage,
+} from "../redux/Slices/MessagesSlice";
 
 export function useWebSocket() {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -44,7 +49,12 @@ export function useWebSocket() {
     if (stompClient) {
       stompClient.subscribe(
         `/user/${user?.username}/notifications`,
-        onMessageReceived
+        onNotificationRecieved
+      );
+
+      stompClient.subscribe(
+        `/user/${user?.username}/messages`,
+        onMessageRecieved
       );
       console.log("Subscribed to notifications");
     }
@@ -55,10 +65,31 @@ export function useWebSocket() {
     setConnected(false);
   }
 
-  function onMessageReceived(payload: any) {
+  function onNotificationRecieved(payload: any) {
     const notification = JSON.parse(payload.body);
     dispatch(recievedNotification(notification));
+    if (notification.notificationType === "MESSAGE") {
+      dispatch(dispatchUnreadMessage(notification));
+    }
     // console.log(payload);
+  }
+
+  function onMessageRecieved(payload: any) {
+    const message = JSON.parse(payload.body);
+    const conversationExists = conversations.some(
+      (conversation) => conversation.conversationId === message.conversationId
+    );
+
+    if (!conversationExists && user && token) {
+      dispatch(
+        loadConversations({
+          userId: user.userId,
+          token,
+        })
+      );
+    } else {
+      dispatch(recievedMessage(message));
+    }
   }
 
   return { connected, connect };

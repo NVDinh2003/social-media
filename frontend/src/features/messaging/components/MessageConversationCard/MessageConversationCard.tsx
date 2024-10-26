@@ -97,7 +97,12 @@ export const MessageConversationCard: React.FC<{
           </div>
 
           <div className="message-conversation-card-text message-conversation-card-content">
-            Todo: after complete message
+            {/* Todo: after complete message */}
+            {conversation.conversationMessage.length > 0
+              ? conversation.conversationMessage[
+                  conversation.conversationMessage.length - 1
+                ].messageText
+              : "Conversation created"}
           </div>
         </div>
       </div>
