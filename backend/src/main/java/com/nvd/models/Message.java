@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -32,6 +33,10 @@ public class Message {
     @JoinColumn(name = "sent_by")
     private ApplicationUser sentBy;
 
+    @Column(name = "sent_at")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:sss")
+    private LocalDateTime sentAt;
+
     @ManyToOne
     @JoinColumn(name = "conversation_id", nullable = false)
     @JsonIgnore
@@ -39,8 +44,7 @@ public class Message {
 
     @Column(name = "message_text")
     private String messageText;
-    @Column(name = "sent_at")
-    private LocalDateTime sentAt;
+
 
     @ManyToMany
     @JoinTable(

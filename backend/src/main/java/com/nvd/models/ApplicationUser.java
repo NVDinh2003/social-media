@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -42,6 +43,7 @@ public class ApplicationUser {
     private String nickname;
 
     @Column(name = "create_ts")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTimestamp;
 
     @OneToOne(cascade = CascadeType.ALL)

@@ -17,10 +17,14 @@ import { updateGifUrl } from "../../../../redux/Slices/MessagesSlice";
 export const CreateMessageBar: React.FC = () => {
   //
   const [showActions, setShowActions] = useState<boolean>(true);
-  const [messageContent, setMessageContent] = useState<string>("");
 
+  const { loggedIn, token } = useSelector((state: RootState) => state.user);
+  const conversation = useSelector(
+    (state: RootState) => state.message.conversation
+  );
   const messageGif = useSelector((state: RootState) => state.message.gifUrl);
   const [messageImage, setMessageImage] = useState<File | null>(null);
+  const [messageContent, setMessageContent] = useState<string>("");
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -58,7 +62,7 @@ export const CreateMessageBar: React.FC = () => {
     }
   };
   const sendActive = () => {
-    return messageContent !== "" || messageImage || messageGif !== "";
+    return messageContent !== "" || messageImage || messageGif !== null;
   };
   const displayGif = () => {
     dispatch(updateDisplayMessageGif());

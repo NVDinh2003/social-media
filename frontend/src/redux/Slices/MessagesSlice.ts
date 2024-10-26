@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   Conversation,
   ConversationUser,
+  CreateMessageDTO,
   Notification as INotification,
   Message,
 } from "../../utils/GlobalInterface";
@@ -14,7 +15,7 @@ interface MessagesSliceState {
   popupOpen: boolean;
   conversationOpen: boolean;
   createGroup: boolean;
-  gifUrl: string;
+  gifUrl: string | null;
   conversationUsers: ConversationUser[];
   conversations: Conversation[];
   conversation: Conversation | undefined;
@@ -32,11 +33,16 @@ interface OpenConversationPayload {
   conversationUsers: ConversationUser[];
 }
 
+interface SendMessagePayload {
+  messagePayload: CreateMessageDTO;
+  image: File | null;
+  token: string;
+}
 const initialState: MessagesSliceState = {
   unreadMessages: [],
   popupOpen: false,
   createGroup: false,
-  gifUrl: "",
+  gifUrl: null,
   conversationOpen: false,
   conversationUsers: [],
   conversations: [],
@@ -113,6 +119,39 @@ export const openConversation = createAsyncThunk(
   }
 );
 
+export const sendMessage = createAsyncThunk(
+  "message/send",
+  async (payload: SendMessagePayload, thunkAPI) => {
+    let data = new FormData(); // FormData để gửi dữ liệu
+
+    data.append("messagePayload", JSON.stringify(payload.messagePayload));
+
+    if (payload.image !== null) {
+      data.append("image", payload.image);
+    } else {
+      // Nếu không có ảnh được cung cấp (payload.image là null), thì thêm một Blob rỗng giúp đảm bảo yêu cầu gửi đi vẫn có một trường "image"
+      data.append("image", new Blob([], { type: "file" })); // Nếu không có ảnh, thêm một Blob rỗng
+    }
+
+    let config = {
+      method: "post",
+      url: `${baseURL}/message`,
+      headers: {
+        Authorization: `Bearer ${payload.token}`,
+        "Content-Type": "multipart/form-data",
+      },
+      data,
+    };
+
+    let res = await axios(config);
+
+    thunkAPI.dispatch(recievedMessage(res.data));
+
+    return data;
+    //
+  }
+);
+
 export const MessageSlice = createSlice({
   name: "message",
   initialState,
@@ -131,7 +170,7 @@ export const MessageSlice = createSlice({
       };
       return state;
     },
-    updateGifUrl(state, action: PayloadAction<string>) {
+    updateGifUrl(state, action: PayloadAction<string | null>) {
       state = {
         ...state,
         gifUrl: action.payload,
@@ -164,7 +203,7 @@ export const MessageSlice = createSlice({
         ...state,
         conversations,
         conversation:
-          conversation &&
+          state.conversation &&
           conversation.conversationId === action.payload.conversationId
             ? conversation
             : state.conversation,

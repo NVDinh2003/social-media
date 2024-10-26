@@ -181,6 +181,8 @@ export interface Notification {
   reply: Post | null;
 }
 
+// Message and Conversation
+
 export interface Message {
   messageId: number;
   messageType: "MESSAGE" | "ACTION";
@@ -205,4 +207,34 @@ export interface ConversationUser {
   userId: number;
   pfp: string;
   nickname: string;
+}
+
+export interface CreateMessageUser {
+  userId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  username: string;
+  bio: string;
+  nickname: string;
+}
+
+export interface CreateMessageDTO {
+  messageType: string;
+  sentBy: CreateMessageUser;
+  conversation: {
+    conversationId: number;
+    conversationUsers: CreateMessageUser[];
+    conversationPicture?: string;
+    conversationName?: string;
+    conversationMessage: Array<{
+      messageType: string;
+      sentBy: CreateMessageUser;
+      conversation: { conversationId: number };
+      messageText: string;
+      messageImage: string | null;
+    }>;
+  };
+  text: string;
+  gifUrl: string | null;
 }
