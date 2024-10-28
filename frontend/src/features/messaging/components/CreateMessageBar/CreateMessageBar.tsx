@@ -12,7 +12,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { updateDisplayMessageGif } from "../../../../redux/Slices/ModalSlice";
 import { MessageImage } from "../MessageImage/MessageImage";
-import { updateGifUrl } from "../../../../redux/Slices/MessagesSlice";
+import {
+  sendMessage,
+  updateGifUrl,
+} from "../../../../redux/Slices/MessagesSlice";
+import {
+  CreateMessageDTO,
+  CreateMessageUser,
+} from "../../../../utils/GlobalInterface";
 
 export const CreateMessageBar: React.FC = () => {
   //
@@ -68,14 +75,92 @@ export const CreateMessageBar: React.FC = () => {
     dispatch(updateDisplayMessageGif());
   };
 
+  const handleSendMessage = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    const send = sendActive();
+
+    if (send && loggedIn && token && conversation) {
+      //
+
+      const sentBy: CreateMessageUser = {
+        userId: loggedIn.userId,
+        firstName: loggedIn.firstName,
+        lastName: loggedIn.lastName,
+        email: loggedIn.email,
+        username: loggedIn.username,
+        bio: loggedIn.bio,
+        nickname: loggedIn.nickname,
+      };
+
+      const createMessageConvo = {
+        conversationId: conversation.conversationId,
+        conversationUsers: conversation.conversationUsers.map((user) => {
+          return {
+            userId: user.userId,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            username: user.username,
+            bio: user.bio,
+            nickname: user.nickname,
+          };
+        }),
+        conversationPicture: conversation.conversationPicture,
+        conversationName: conversation.conversationName,
+        conversationMessage: conversation.conversationMessage.map((message) => {
+          return {
+            messageType: message.messageType,
+            sentBy: {
+              userId: message.sentBy.userId,
+              firstName: message.sentBy.firstName,
+              lastName: message.sentBy.lastName,
+              email: message.sentBy.email,
+              username: message.sentBy.username,
+              bio: message.sentBy.bio,
+              nickname: message.sentBy.nickname,
+            },
+            conversation: {
+              conversationId: message.conversationId,
+            },
+            messageText: message.messageText,
+            messageImage: message.messageImage,
+          };
+        }),
+      };
+
+      const messagePayload: CreateMessageDTO = {
+        messageType: "MESSAGE",
+        sentBy,
+        conversation: createMessageConvo,
+        text: messageContent,
+        gifUrl: messageGif,
+      };
+
+      dispatch(
+        sendMessage({
+          messagePayload,
+          image: messageImage,
+          token,
+        })
+      );
+
+      if (textAreaRef && textAreaRef.current) {
+        textAreaRef.current.value = "";
+        setMessageContent("");
+        setMessageImage(null);
+        dispatch(updateGifUrl(null));
+      }
+    }
+  };
+
   useEffect(() => {
     calculateLineHeight();
-  }, [showActions]);
+  }, [showActions, messageContent, messageImage, messageGif]);
 
   return (
     <div className="create-message-bar">
       <div className="create-message-bar-bg">
-        {!messageImage && messageGif === "" && (
+        {!messageImage && messageGif === null && (
           <div>
             {showActions ? (
               <div className="create-message-bar-action-wrapper">
@@ -128,8 +213,8 @@ export const CreateMessageBar: React.FC = () => {
               removeImage={() => setMessageImage(null)}
             />
           )}
-          {messageGif !== "" && (
-            <MessageImage removeImage={() => dispatch(updateGifUrl(""))} />
+          {messageGif !== null && (
+            <MessageImage removeImage={() => dispatch(updateGifUrl(null))} />
           )}
           <div className="create-message-bar-text-area">
             {messageContent !== "" && (
@@ -159,6 +244,7 @@ export const CreateMessageBar: React.FC = () => {
           className={`create-message-bar-send-icon ${
             sendActive() ? "send-icon-active" : ""
           }`}
+          onClick={handleSendMessage}
         >
           <SendMessageSVG
             height={20}

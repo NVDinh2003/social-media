@@ -51,7 +51,7 @@ export const MessageImage: React.FC<MessageImageProps> = ({
     });
   };
   const backgroundImage = () => {
-    if (messageGif === "") {
+    if (messageGif === null) {
       return image ? window.URL.createObjectURL(image) : "";
     } else {
       return playGif ? messageGif : "";
@@ -86,7 +86,7 @@ export const MessageImage: React.FC<MessageImageProps> = ({
             <PlayGifSVG height={60} width={60} color={"#FFF"} />
           </div>
         )}
-        {!playGif && !image && (
+        {!playGif && !image && messageGif !== null && (
           <div onClick={handlePlayGif}>
             <img src={messageGif} ref={imageRef} hidden />
             <canvas ref={canvasRef} onClick={handlePlayGif}></canvas>
