@@ -41,25 +41,29 @@ export const MessagesPopup: React.FC = () => {
   }, [messageState.popupOpen]);
 
   return (
-    <div className="messages-popup-container" style={{ height }}>
-      <div className={`messages-popup`}>
+    <div className="messages-popup-container">
+      <div className={`messages-popup`} style={{ height }}>
         <MessagesBar />
 
-        {messageState.popupOpen && (
-          <div className="messages-popup-content">
-            {messageState.conversationOpen && messageState.conversation ? (
-              <ConversationContainer conversation={messageState.conversation} />
-            ) : (
-              <>
-                {messageState.conversations.map((conversation) => {
-                  return (
-                    <MessageConversationCard conversation={conversation} />
-                  );
-                })}
-              </>
-            )}
-          </div>
-        )}
+        <div className="messages-popup-content-container">
+          {messageState.popupOpen && (
+            <div className="messages-popup-content">
+              {messageState.conversationOpen && messageState.conversation ? (
+                <ConversationContainer
+                  conversation={messageState.conversation}
+                />
+              ) : (
+                <>
+                  {messageState.conversations.map((conversation) => {
+                    return (
+                      <MessageConversationCard conversation={conversation} />
+                    );
+                  })}
+                </>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* input message area  */}
         {messageState.conversationOpen && messageState.popupOpen && (

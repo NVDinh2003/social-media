@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import "./CreateMessageBar.css";
 import MediaSVG from "../../../../components/SVGs/MediaSVG";
@@ -75,6 +75,21 @@ export const CreateMessageBar: React.FC = () => {
     dispatch(updateDisplayMessageGif());
   };
 
+  const messageImageContainer = useMemo(() => {
+    if (messageImage)
+      return (
+        <MessageImage
+          image={messageImage}
+          removeImage={() => setMessageImage(null)}
+        />
+      );
+  }, [messageImage]);
+
+  const messageGifContainer = useMemo(() => {
+    if (messageGif)
+      return <MessageImage removeImage={() => dispatch(updateGifUrl(null))} />;
+  }, [messageGif]);
+
   const handleSendMessage = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     const send = sendActive();
@@ -90,6 +105,7 @@ export const CreateMessageBar: React.FC = () => {
         username: loggedIn.username,
         bio: loggedIn.bio,
         nickname: loggedIn.nickname,
+        profilePicture: loggedIn.profilePicture,
       };
 
       const createMessageConvo = {
@@ -103,6 +119,7 @@ export const CreateMessageBar: React.FC = () => {
             username: user.username,
             bio: user.bio,
             nickname: user.nickname,
+            profilePicture: user.profilePicture,
           };
         }),
         conversationPicture: conversation.conversationPicture,
@@ -118,6 +135,7 @@ export const CreateMessageBar: React.FC = () => {
               username: message.sentBy.username,
               bio: message.sentBy.bio,
               nickname: message.sentBy.nickname,
+              profilePicture: message.sentBy.profilePicture,
             },
             conversation: {
               conversationId: message.conversationId,
@@ -207,15 +225,10 @@ export const CreateMessageBar: React.FC = () => {
           </div>
         )}
         <div style={{ marginLeft: `${messageImage ? "12px" : "0px"}` }}>
-          {messageImage && (
-            <MessageImage
-              image={messageImage}
-              removeImage={() => setMessageImage(null)}
-            />
-          )}
-          {messageGif !== null && (
-            <MessageImage removeImage={() => dispatch(updateGifUrl(null))} />
-          )}
+          {/* Message images  */}
+          {messageImage && messageImageContainer}
+          {messageGif !== null && messageGifContainer}
+
           <div className="create-message-bar-text-area">
             {messageContent !== "" && (
               <div

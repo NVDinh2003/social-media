@@ -32,6 +32,20 @@ export const VI_MONTHS: string[] = [
   "Tháng 12",
 ];
 
+export const WEEKDAY = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
+export const getDayOfWeek = (date: Date) => {
+  return WEEKDAY[date.getDay()];
+};
+
 export const getMonths = (): JSX.Element[] => {
   return MONTHS.map((month, index) => {
     if (index === 0) {
@@ -138,6 +152,17 @@ export const cleanDateForRequest = (date: Dob): string => {
 
   return `${date.year}-${month}-${day}`;
 };
+
+export function lessThanDay(d1: Date, d2: Date): boolean {
+  let timeDifference = d1.getTime() - d2.getTime();
+  let dayDifference = timeDifference / (1000 * 3600 * 24);
+  return dayDifference < 1;
+}
+export function lessThanWeek(d1: Date, d2: Date): boolean {
+  let timeDifference = d1.getTime() - d2.getTime();
+  let dayDifference = Math.round(timeDifference / (1000 * 3600 * 24));
+  return dayDifference < 7;
+}
 
 export function lessThanMonth(d1: Date, d2: Date): boolean {
   let timeDifference = d1.getTime() - d2.getTime();

@@ -24,7 +24,8 @@ public class FeedService {
         ApplicationUser currentUser = userService.getUserById(userId);
 
         Set<ApplicationUser> following = currentUser.getFollowing();
-        following.add(currentUser); // include the current user in the feed as well as their followings
+        if (!following.contains(currentUser))
+            following.add(currentUser); // include the current user in the feed as well as their followings
 
 //        Set<Post> currentUserPosts = postService.getAllPostsByAuthor(currentUser);
 

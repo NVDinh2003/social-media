@@ -17,11 +17,17 @@
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   background-color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages-popup-content-container {
+  max-height: 373px;
+  height: fit-content;
+  overflow: hidden;
 }
 
 .messages-popup-content {
   width: 100%;
-  height: fit-content;
-  min-height: 375px;
-  overflow-y: scroll;
+  height: 100%;
 }

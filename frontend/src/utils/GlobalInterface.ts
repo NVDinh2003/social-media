@@ -187,7 +187,7 @@ export interface Message {
   messageId: number;
   messageType: "MESSAGE" | "ACTION";
   conversationId: number;
-  seenAt: Date;
+  sentAt: Date;
   sentBy: User;
   seenBy: User[];
   messageImage: string;
@@ -217,6 +217,7 @@ export interface CreateMessageUser {
   username: string;
   bio: string;
   nickname: string;
+  profilePicture: ImageInfo | null;
 }
 
 export interface CreateMessageDTO {

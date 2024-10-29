@@ -3,8 +3,6 @@
   height: fit-content;
   border-top: 1px solid #aab8c2;
   padding: 4px 12px;
-  position: sticky;
-  bottom: 0;
 }
 .create-message-bar-bg {
   padding: 8px;
