@@ -39,8 +39,8 @@ export const CreateMessageBar: React.FC = () => {
 
   const textContent = (): JSX.Element[] => {
     let postContent = convertPostContentToElements(messageContent, "post");
-    let messageElement = convertElementsToMessageText(postContent);
-    return messageElement;
+    let messageElements = convertElementsToMessageText(postContent, "create");
+    return messageElements;
   };
 
   const focusOnText = () => {

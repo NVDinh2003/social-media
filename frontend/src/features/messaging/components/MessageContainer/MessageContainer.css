@@ -27,6 +27,10 @@
   font-size: 15px;
   font-weight: 500;
   color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
 }
 .message-gray {
   background-color: #657786;

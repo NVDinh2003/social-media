@@ -16,7 +16,7 @@ values ('rick@mail.com', true, 'Rick', 'Sanchez', 'Rick',
 
 insert into users(first_name, last_name, email, username, password, bio, nickname, verified_account, private_account,
                   create_ts)
-values ('Nguyen Van', 'Dinh', 'iamdinhhtvq@email.com', 'iamdinhhtvq',
+values ('Nguyen Van', 'Dinh', 'iamdinhhtvq@gmail.com', 'iamdinhhtvq',
         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba', 'Software Engineer', 'Leo', true,
         false, now());
 

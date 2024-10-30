@@ -33,10 +33,6 @@ public class Message {
     @JoinColumn(name = "sent_by")
     private ApplicationUser sentBy;
 
-    @Column(name = "sent_at")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:sss")
-    private LocalDateTime sentAt;
-
     @ManyToOne
     @JoinColumn(name = "conversation_id", nullable = false)
     @JsonIgnore
@@ -45,6 +41,9 @@ public class Message {
     @Column(name = "message_text")
     private String messageText;
 
+    @Column(name = "sent_at")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:sss")
+    private LocalDateTime sentAt;
 
     @ManyToMany
     @JoinTable(
@@ -59,7 +58,12 @@ public class Message {
 
     public Message() {
         this.seenBy = new HashSet<>();
-        this.sentAt = LocalDateTime.now();
+//        this.sentAt = LocalDateTime.now();
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        sentAt = LocalDateTime.now();
     }
 
     @Override

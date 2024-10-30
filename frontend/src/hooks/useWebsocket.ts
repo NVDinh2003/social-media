@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Client, over } from "stompjs";
 import { AppDispatch, RootState } from "../redux/Store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
 import {
   dispatchUnreadMessage,
@@ -60,9 +60,34 @@ export function useWebSocket() {
     }
   }
 
+  useEffect(() => {
+    // Kết nối WebSocket khi component mount
+    connect();
+
+    // Cleanup: Đóng kết nối khi component unmount
+    return () => {
+      if (connected) {
+        disconnect(); // Đảm bảo rằng bạn có hàm disconnect để đóng kết nối
+      }
+    };
+  }, []);
+
+  function disconnect() {
+    if (stompClient) {
+      stompClient.disconnect(() => {
+        console.log("Disconnected from websocket server");
+        setConnected(false);
+      });
+    }
+  }
+
   function onError(error: any) {
     console.error("WebSocket error:", error);
     setConnected(false);
+    // Tự động kết nối lại
+    setTimeout(() => {
+      connect();
+    }, 3000); // Thử kết nối lại sau 3 giây
   }
 
   function onNotificationRecieved(payload: any) {

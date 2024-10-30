@@ -246,7 +246,10 @@ export const convertPostContentToElementForNotifications = (
   });
 };
 
-export const convertElementsToMessageText = (elements: JSX.Element[]) => {
+export const convertElementsToMessageText = (
+  elements: JSX.Element[],
+  location: string
+) => {
   return elements.map((element) => {
     if (element.type === "img") {
       element = {
@@ -261,7 +264,8 @@ export const convertElementsToMessageText = (elements: JSX.Element[]) => {
         ...element,
         props: {
           ...element.props,
-          className: "message-text",
+          className:
+            location === "create" ? "message-text" : "message-container-text",
         },
       };
     }

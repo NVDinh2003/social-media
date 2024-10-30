@@ -66,6 +66,11 @@
   white-space: nowrap;
   display: inline;
   overflow: hidden;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
 }
 
 .message-conversation-card-options-wrapper {

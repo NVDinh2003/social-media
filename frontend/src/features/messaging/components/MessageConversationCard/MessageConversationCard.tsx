@@ -9,6 +9,8 @@ import Circle from "@mui/icons-material/Circle";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import { MessageConversationPicture } from "../MessageConversationPicture/MessageConversationPicture";
 import { selectConversation } from "../../../../redux/Slices/MessagesSlice";
+import { convertPostContentToElements } from "../../../post/utils/PostUtils";
+import { convertElementsToMessageText } from "../../../../utils/EmojiUtils";
 
 export const MessageConversationCard: React.FC<{
   conversation: Conversation;
@@ -25,6 +27,22 @@ export const MessageConversationCard: React.FC<{
 
   const handleConversationClicked = () => {
     dispatch(selectConversation(conversation));
+  };
+
+  const textContent = (): JSX.Element[] => {
+    const message =
+      conversation.conversationMessage.length > 0
+        ? conversation.conversationMessage[
+            conversation.conversationMessage.length - 1
+          ].messageText
+        : "Conversation created";
+
+    let postContent = convertPostContentToElements(message, "post");
+    let messageElements = convertElementsToMessageText(
+      postContent,
+      "conversation"
+    );
+    return messageElements;
   };
 
   useEffect(() => {

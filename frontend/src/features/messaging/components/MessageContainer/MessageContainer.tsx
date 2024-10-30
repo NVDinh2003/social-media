@@ -13,6 +13,8 @@ import {
   stringifyTime,
 } from "../../../../utils/DateUtils";
 import { Message } from "../../../../utils/GlobalInterface";
+import { convertPostContentToElements } from "../../../post/utils/PostUtils";
+import { convertElementsToMessageText } from "../../../../utils/EmojiUtils";
 export const MessageContainer: React.FC<{
   message: Message;
   showSent: boolean;
@@ -45,6 +47,15 @@ export const MessageContainer: React.FC<{
     }
   };
 
+  const textContent = (): JSX.Element[] => {
+    let postContent = convertPostContentToElements(message.messageText, "post");
+    let messageElements = convertElementsToMessageText(
+      postContent,
+      "container"
+    );
+    return messageElements;
+  };
+
   return (
     <div className="message-container">
       <div
@@ -54,7 +65,7 @@ export const MessageContainer: React.FC<{
       >
         {usersMessage() ? (
           <div className="message-subtitle-right">
-            <div className="message message-blue">{message.messageText}</div>
+            <div className="message message-blue">{textContent()}</div>
             <div className="message-subtitle">
               {sentAt()}
               {(showSent || message.seenBy.length !== 0) && (
@@ -73,9 +84,7 @@ export const MessageContainer: React.FC<{
             <div className="gray-message-group">
               <ProfilePicture user={message.sentBy} size={"40px"} />
               <div>
-                <div className="message message-gray">
-                  {message.messageText}
-                </div>
+                <div className="message message-gray">{textContent()}</div>
               </div>
             </div>
             <div className="message-subtitle message-subtitle-left">

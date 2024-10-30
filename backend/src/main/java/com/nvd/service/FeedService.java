@@ -24,10 +24,9 @@ public class FeedService {
         ApplicationUser currentUser = userService.getUserById(userId);
 
         Set<ApplicationUser> following = currentUser.getFollowing();
-        if (!following.contains(currentUser))
+        if (!following.contains(currentUser)) {
             following.add(currentUser); // include the current user in the feed as well as their followings
-
-//        Set<Post> currentUserPosts = postService.getAllPostsByAuthor(currentUser);
+        }
 
         Page<Post> followingPosts = postService.getFeedPage(userId, sessionStart, page);
         List<FeedPostDTO> listPosts = followingPosts.map(post -> {
@@ -45,12 +44,6 @@ public class FeedService {
                             : null);
             return feedPostDTO;
         }).toList();
-
-        // map these to new DTO for the feed itself
-
-//        List<Post> allPosts = new ArrayList<>();
-//        allPosts.addAll(currentUserPosts);
-//        allPosts.addAll(followingPosts);
 
         return new FetchFeedResponseDTO(page, sessionStart, listPosts);
     }

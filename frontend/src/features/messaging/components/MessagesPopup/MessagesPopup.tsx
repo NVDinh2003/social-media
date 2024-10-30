@@ -56,7 +56,10 @@ export const MessagesPopup: React.FC = () => {
                 <>
                   {messageState.conversations.map((conversation) => {
                     return (
-                      <MessageConversationCard conversation={conversation} />
+                      <MessageConversationCard
+                        key={conversation.conversationId}
+                        conversation={conversation}
+                      />
                     );
                   })}
                 </>

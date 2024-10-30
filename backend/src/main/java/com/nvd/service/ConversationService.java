@@ -23,15 +23,14 @@ public class ConversationService {
     public List<Conversation> readAllConversationsWithUser(Integer userId) {
         ApplicationUser user = userService.getUserById(userId);
         List<ApplicationUser> userList = List.of(user);
-
         List<Conversation> allConversations = conversationRepository.findAllByConversationUsersIn(userList);
 
         ConversationComparator cc = new ConversationComparator();
-        allConversations.stream().map(conver -> {
-                    List<Message> conversationMessages = conver.getConversationMessage();
+        allConversations.stream().map(conversation -> {
+                    List<Message> conversationMessages = conversation.getConversationMessage();
                     Collections.sort(conversationMessages, new MessageComparator());
-                    conver.setConversationMessage(conversationMessages);
-                    return conver;
+                    conversation.setConversationMessage(conversationMessages);
+                    return conversation;
                 })
                 .sorted(cc)
                 .toList();

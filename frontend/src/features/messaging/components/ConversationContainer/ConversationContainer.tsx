@@ -36,15 +36,16 @@ export const ConversationContainer: React.FC<{
   return (
     <div className="conversation-container" ref={scrollRef}>
       <ConversationUserInfo user={filteredConversationUsers()[0]} />
-
-      {conversation.conversationMessage.map((message) => {
-        return <p>{message.messageText}</p>;
-      })}
-
       <div className="conversation-messages">
         {conversation.conversationMessage.map((message, idx) => {
           const showSent = idx === conversation.conversationMessage.length - 1;
-          return <MessageContainer message={message} showSent={showSent} />;
+          return (
+            <MessageContainer
+              key={message.messageId}
+              message={message}
+              showSent={showSent}
+            />
+          );
         })}
       </div>
       <div ref={scrollRef} className="conversation-container-bottom"></div>
