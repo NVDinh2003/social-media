@@ -6,6 +6,7 @@ import com.nvd.models.Message;
 import com.nvd.repositories.ConversationRepository;
 import com.nvd.utils.ConversationComparator;
 import com.nvd.utils.MessageComparator;
+import com.nvd.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +28,25 @@ public class ConversationService {
 
         ConversationComparator cc = new ConversationComparator();
         allConversations.stream().map(conversation -> {
+//                    List<Message> conversationMessages = conversation.getConversationMessage();
+//                    Collections.sort(conversationMessages, new MessageComparator());
+//                    conversation.setConversationMessage(conversationMessages);
+//                    return conversation;
                     List<Message> conversationMessages = conversation.getConversationMessage();
                     Collections.sort(conversationMessages, new MessageComparator());
+
+                    // Decrypt each message in the conversation
+                    for (Message message : conversationMessages) {
+                        boolean isGroupMessage = conversation.getConversationUsers().size() > 2;
+                        String decryptedText = MessageUtils.decryptMessage(
+                                message.getMessageText(),
+                                userId,
+                                message.getSentBy().getUserId(),
+                                isGroupMessage
+                        );
+                        message.setMessageText(decryptedText);
+                    }
+
                     conversation.setConversationMessage(conversationMessages);
                     return conversation;
                 })
@@ -71,4 +89,6 @@ public class ConversationService {
     private boolean usersListsAreTheSame(List<ApplicationUser> list1, List<ApplicationUser> list2) {
         return new HashSet<>(list1).equals(new HashSet<>(list2));
     }
+
+
 }

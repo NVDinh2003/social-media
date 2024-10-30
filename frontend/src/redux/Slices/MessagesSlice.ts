@@ -145,9 +145,11 @@ export const sendMessage = createAsyncThunk(
 
     let res = await axios(config);
 
-    thunkAPI.dispatch(recievedMessage(res.data));
+    // thunkAPI.dispatch(recievedMessage(res.data));
+    // return data;
 
-    return data;
+    thunkAPI.dispatch(recievedMessage(res.data));
+    return res.data; // Trả về dữ liệu từ phản hồi thay vì FormData
     //
   }
 );
