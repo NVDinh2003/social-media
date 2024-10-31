@@ -7,22 +7,23 @@
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.15",
     "@react-oauth/google": "^0.12.1",
-    "@reduxjs/toolkit": "^2.2.3",
+    "@reduxjs/toolkit": "^2.3.0",
     "@types/node": "^18.0.4",
-    "@types/react": "^18.0.15",
-    "@types/react-dom": "^18.0.6",
     "@types/sockjs-client": "^1.5.4",
     "@types/stompjs": "^2.3.9",
     "@types/styled-components": "^5.1.34",
-    "axios": "^1.6.8",
+    "axios": "^1.7.7",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
+    "dotenv": "^16.4.5",
     "emoji-picker-element": "^1.22.8",
     "form-data": "^4.0.0",
+    "history": "^5.3.0",
     "net": "^1.0.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-redux": "^9.1.1",
-    "react-router-dom": "^6.23.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-redux": "^9.1.2",
+    "react-router-dom": "^6.27.0",
     "react-scripts": "^5.0.1",
     "react-toastify": "^10.0.6",
     "redux": "^5.0.1",
@@ -33,7 +34,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "dev": "react-scripts start"
   },
   "eslintConfig": {
     "extends": [
@@ -51,5 +53,15 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "react-error-overlay": "^6.0.11",
+    "tailwindcss": "^3.4.14",
+    "vite": "^5.4.10"
   }
 }

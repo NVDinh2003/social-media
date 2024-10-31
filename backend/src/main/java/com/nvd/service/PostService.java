@@ -1,6 +1,7 @@
 package com.nvd.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nvd.dto.request.CreatePostDTO;
 import com.nvd.dto.request.CreateReplyDTO;
 import com.nvd.dto.response.PostDTO;
@@ -138,6 +139,8 @@ public class PostService {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+
             dto = objectMapper.readValue(post, CreatePostDTO.class);
 
             Post p = new Post();

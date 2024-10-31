@@ -63,6 +63,11 @@ export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
     navigate(`/post/${post.postId}`);
   };
 
+  const navigateToUserProfile = (event: React.MouseEvent) => {
+    event.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
+    navigate(`/${post.author.username}`);
+  };
+
   useEffect(() => {
     if (postRef && postRef.current) {
       const observer = new IntersectionObserver(batchView, {
@@ -98,7 +103,10 @@ export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
           notification ? "post-body-wrapper-notification" : "post-body-wrapper"
         }
       >
-        <div className={notification ? "post-left-notification" : "post-left"}>
+        <div
+          className={notification ? "post-left-notification" : "post-left"}
+          onClick={navigateToUserProfile}
+        >
           <img
             className="post-pfp"
             src={

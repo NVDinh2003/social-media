@@ -17,6 +17,9 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { Authenticate } from "./features/auth/Authenticate";
 
+import "./assets/css/index.css";
+import "./assets/css/tailwind.css";
+
 const theme: Theme = {
   colors: {
     blue: "#1DA1F2",

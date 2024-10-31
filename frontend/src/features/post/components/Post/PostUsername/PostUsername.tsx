@@ -23,7 +23,8 @@ export const PostUsername: React.FC<PostUsernameProps> = ({
 
   const [displayModal, setDisplayModal] = useState<boolean>(false);
   const navigate = useNavigate();
-  const navigateToProfile = () => {
+  const navigateToProfile = (event: React.MouseEvent) => {
+    event.stopPropagation(); // Ngăn chặn sự kiện click lan truyền
     navigate(`/${author.username}`);
   };
 

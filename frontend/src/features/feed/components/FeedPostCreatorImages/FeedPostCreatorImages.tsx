@@ -1,20 +1,19 @@
-import React, { useMemo } from "react";
-
-import "./FeedPostCreatorImages.css";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
+import TagPeopleSVG from "../../../../components/SVGs/TagPeopleSVG";
 import ListsSVG from "../../../../components/SVGs/ListsSVG";
-import { FeedPostCreatorImage } from "./FeedPostCreatorImage/FeedPostCreatorImage";
+import "./FeedPostCreatorImages.css";
+
 import { createImageContainer, displayTagPeople } from "../../utils/FeedUtils";
 import {
   updateDisplayEditPostImage,
   updateDisplayTagPeople,
 } from "../../../../redux/Slices/ModalSlice";
+import { FeedPostCreatorImage } from "./FeedPostCreatorImage/FeedPostCreatorImage";
 
 export const FeedPostCreatorImages: React.FC = () => {
-  //
   const postState = useSelector((state: RootState) => state.post);
-  // console.log(postState.currentPostImages);
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -22,7 +21,6 @@ export const FeedPostCreatorImages: React.FC = () => {
     () => createImageContainer(postState.currentPostImages),
     [postState.currentPostImages]
   );
-
   const replyImageContainer = useMemo(
     () => createImageContainer(postState.currentReplyImages),
     [postState.currentReplyImages]
@@ -41,11 +39,9 @@ export const FeedPostCreatorImages: React.FC = () => {
       {postState.currentPost &&
         postState.currentPost.images.length === 0 &&
         postImageContainer}
-
       {postState.currentReply &&
         postState.currentReply.images.length === 0 &&
         replyImageContainer}
-
       {postState.currentPost?.images.length !== 0 &&
         postState.currentReply?.images.length !== 0 && (
           <div className="feed-post-creator-images-container container-odd">
@@ -69,15 +65,13 @@ export const FeedPostCreatorImages: React.FC = () => {
             />
           </div>
         )}
-
       <div className="feed-post-creator-images-options">
         {displayTagPeople(postState, toggleTagPeopleModal)}
-
         <p
           className="feed-post-creator-images-option"
           onClick={toggleDescriptionModal}
         >
-          <ListsSVG height={16} width={16} color={"#536471"} />
+          <ListsSVG width={16} height={16} color={"#536471"} />
           Add Description
         </p>
       </div>

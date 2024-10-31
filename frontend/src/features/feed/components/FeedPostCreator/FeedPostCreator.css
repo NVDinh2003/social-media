@@ -14,6 +14,7 @@
   object-fit: cover;
   margin-top: 11px;
   margin-left: 15px;
+  max-width: none !important;
 }
 
 .feed-post-creator-right {

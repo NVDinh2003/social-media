@@ -73,6 +73,8 @@
   border-radius: 100%;
   border: none;
   object-fit: cover;
+  cursor: pointer;
+  max-width: none !important;
 }
 
 .post-right {

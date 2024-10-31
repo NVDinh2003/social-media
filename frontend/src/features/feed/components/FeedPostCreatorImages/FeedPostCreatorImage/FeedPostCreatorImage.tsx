@@ -1,7 +1,7 @@
 import React from "react";
 
 import "./FeedPostCreatorImage.css";
-import { Close } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../redux/Store";
 import {
@@ -23,17 +23,15 @@ export const FeedPostCreatorImage: React.FC<FeedPostCreatorImageProps> = ({
   type,
   displayCloseIcon,
 }) => {
-  //
   const state = useSelector((state: RootState) => state.post);
+
   const dispatch: AppDispatch = useDispatch();
 
   const removeImage = (e: React.MouseEvent<HTMLDivElement>) => {
-    //
     e.stopPropagation();
-
     if (
       (state.currentPost && state.currentPost.images.length > 0) ||
-      (state.currentReply && state.currentReply.images.length > 0)
+      (state.currentReply && state.currentReply?.images.length > 0)
     ) {
       dispatch(
         updateCurrentPost({
@@ -45,6 +43,7 @@ export const FeedPostCreatorImage: React.FC<FeedPostCreatorImageProps> = ({
       let filteredImages: File[] = state.currentPostImages.filter(
         (img: any) => img.name !== name
       );
+
       dispatch(updateCurrentPostImages(filteredImages));
     }
   };
@@ -62,7 +61,7 @@ export const FeedPostCreatorImage: React.FC<FeedPostCreatorImageProps> = ({
     >
       {displayCloseIcon && (
         <div className="feed-post-creator-image-clear" onClick={removeImage}>
-          <Close
+          <CloseIcon
             sx={{
               fontSize: "18px",
               color: "white",
@@ -70,7 +69,6 @@ export const FeedPostCreatorImage: React.FC<FeedPostCreatorImageProps> = ({
           />
         </div>
       )}
-
       {type === "image/gif" || "gif" ? (
         <></>
       ) : (

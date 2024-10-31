@@ -6,6 +6,7 @@ import "./ProfileTopBar.css";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import { convertNumberOfPostsToString } from "../../utils/ProfileUitls";
 import { ImageInfo } from "../../../../utils/GlobalInterface";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileTopBarProps {
   nickname: string;
@@ -20,9 +21,16 @@ export const ProfileTopBar: React.FC<ProfileTopBarProps> = ({
   organization,
   numberOfPosts,
 }) => {
+  //
+  const navigate = useNavigate();
+
+  const navigateToHome = () => {
+    navigate("/home");
+  };
+
   return (
     <div className="profile-top-bar">
-      <div className="profile-top-bar-left">
+      <div className="profile-top-bar-left" onClick={navigateToHome}>
         <ArrowBackIcon
           sx={{
             height: "20px",

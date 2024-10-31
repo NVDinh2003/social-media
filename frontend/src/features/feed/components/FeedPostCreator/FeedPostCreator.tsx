@@ -106,7 +106,7 @@ export const FeedPostCreator: React.FC = () => {
 
   return (
     <div className="feed-post-creator" onClick={activate}>
-      <Link to="">
+      <Link to={`/${loggedInUser?.username}`}>
         <img
           src={
             loggedInUser && loggedInUser.profilePicture
