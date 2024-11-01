@@ -60,8 +60,13 @@ public class MessageUtils {
     //    private decryptMessageText
 //   giải mã tin nhắn
     public String decryptMessage(String encryptedText, int currentUserId, int senderId, boolean isGroupMessage) {
-        if (encryptedText.isEmpty()) {
+        if (encryptedText == null || encryptedText.isEmpty()) {
             return "";
+        }
+
+        // If the current user is the sender, return the encrypted text as is
+        if (currentUserId == senderId) {
+            return encryptedText;
         }
 
         // Nếu là chat 1-1

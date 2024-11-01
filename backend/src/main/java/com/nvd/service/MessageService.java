@@ -74,6 +74,15 @@ public class MessageService {
 
             message = messageRepository.save(message);
 
+            // Decrypt the message text for returning
+            String decryptedMessageText = MessageUtils.decryptMessage(
+                    encryptedMessageText,
+                    dto.getSentBy().getUserId(),
+                    dto.getSentBy().getUserId(),
+                    conversation.getConversationUsers().size() > 2
+            );
+            message.setMessageText(decryptedMessageText);
+
             // Send notifications
             List<ApplicationUser> notificationRecipients = message.getConversation().getConversationUsers()
                     .stream()

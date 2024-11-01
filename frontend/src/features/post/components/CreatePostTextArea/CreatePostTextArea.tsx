@@ -58,8 +58,11 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
       textAreaRef.current.style.height =
         textAreaRef.current.scrollHeight + "px";
     }
+
     const content = textContent();
+
     if (
+      content.elements.length > 0 &&
       content.elements[content.elements.length - 1].props.className.includes(
         "mention"
       )
@@ -74,16 +77,25 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
       dispatch(updateDisplayPostMention(false));
     }
 
-    const newContent = e.target.value;
-    setContent(newContent);
-
     if (location === "post") {
-      dispatch(updateCurrentPost({ name: "content", value: newContent }));
+      dispatch(
+        updateCurrentPost({
+          name: "content",
+          value: e.target.value,
+        })
+      );
     }
 
     if (location === "reply") {
-      dispatch(updateCurrentPost({ name: "replyContent", value: newContent }));
+      dispatch(
+        updateCurrentPost({
+          name: "replyContent",
+          value: e.target.value,
+        })
+      );
     }
+
+    setContent(e.target.value);
   };
 
   const activate = (e: React.MouseEvent<HTMLDivElement>) => {

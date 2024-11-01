@@ -46,9 +46,12 @@ export const convertPostContentToElements = (
     ></span>,
   ];
 
-  let characters: string[] = Array.from(content);
-  let currentWord: string = "";
+  if (!content) {
+    return []; // Trả về mảng rỗng nếu content là null hoặc undefined
+  }
 
+  let characters: string[] = Array.from(content);
+  let currentWord = "";
   for (let char of characters) {
     if (char === "\n" || char === "\r") {
       tags.push(<br />);
@@ -56,7 +59,7 @@ export const convertPostContentToElements = (
         <span
           className={
             location === "creator"
-              ? "feed-post-creator-content-paragraph"
+              ? "feed-post-creator-conent-paragraph"
               : "post-content-span"
           }
         ></span>
@@ -70,7 +73,7 @@ export const convertPostContentToElements = (
         <span
           className={
             location === "creator"
-              ? "feed-post-creator-content-paragraph"
+              ? "feed-post-creator-conent-paragraph"
               : "post-content-span"
           }
         >
@@ -82,7 +85,7 @@ export const convertPostContentToElements = (
         <span
           className={
             location === "creator"
-              ? "feed-post-creator-content-paragraph"
+              ? "feed-post-creator-conent-paragraph"
               : "post-content-span"
           }
         >
@@ -93,7 +96,7 @@ export const convertPostContentToElements = (
         <span
           className={
             location === "creator"
-              ? "feed-post-creator-content-paragraph"
+              ? "feed-post-creator-conent-paragraph"
               : "post-content-span"
           }
         ></span>
@@ -125,6 +128,22 @@ export const convertPostContentToElements = (
   });
 
   return tags;
+};
+
+export const convertPostContentToElementsForNotifications = (
+  elements: JSX.Element[]
+) => {
+  return elements.map((element) => {
+    element = {
+      ...element,
+      props: {
+        ...element.props,
+        className: "post-notification-content-text",
+      },
+    };
+
+    return element;
+  });
 };
 
 export const convertCount = (count: number) => {

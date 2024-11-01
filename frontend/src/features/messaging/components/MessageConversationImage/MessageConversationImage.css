@@ -1,0 +1,44 @@
+.message-conversation-image {
+  width: 275px;
+  height: 155px;
+  border-radius: 12px;
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
+  background-color: black;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  margin-bottom: 2px;
+  margin-top: 2px;
+  cursor: pointer;
+  position: relative;
+}
+.message-conversation-image-gif-controls {
+  height: 20px;
+  width: 60px;
+  position: absolute;
+  bottom: 8px;
+  left: 12px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.message-conversation-image-gif-control-wrapper {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.message-conversation-image-gif-control-wrapper:hover {
+  cursor: pointer;
+  background-color: rgba(256, 256, 256, 0.1);
+}
+.message-conversation-image-gif-text {
+  margin: 0;
+  padding: 0;
+  color: white;
+  font-size: 13px;
+}

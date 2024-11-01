@@ -1,4 +1,5 @@
 import React from "react";
+
 import "./MessageContainer.css";
 
 import { useSelector } from "react-redux";
@@ -12,14 +13,15 @@ import {
   stringifyDate,
   stringifyTime,
 } from "../../../../utils/DateUtils";
+import { convertElementsToMessageText } from "../../../../utils/EmojiUtils";
+import { MessageConversationImage } from "../MessageConversationImage/MessageConversationImage";
 import { Message } from "../../../../utils/GlobalInterface";
 import { convertPostContentToElements } from "../../../post/utils/PostUtils";
-import { convertElementsToMessageText } from "../../../../utils/EmojiUtils";
+
 export const MessageContainer: React.FC<{
   message: Message;
   showSent: boolean;
 }> = ({ message, showSent }) => {
-  //
   const loggedIn = useSelector((state: RootState) => state.user.loggedIn);
   const conversation = useSelector(
     (state: RootState) => state.message.conversation
@@ -32,6 +34,7 @@ export const MessageContainer: React.FC<{
   const sentAt = () => {
     const sentAtDate = new Date(message.sentAt);
     const time = stringifyTime(sentAtDate);
+
     if (lessThanDay(sentAtDate, new Date())) {
       return time;
     } else if (lessThanWeek(sentAtDate, new Date())) {
@@ -43,11 +46,13 @@ export const MessageContainer: React.FC<{
         day: sentAtDate.getDate(),
         year: sentAtDate.getFullYear(),
       });
+
       return `${fullDate}, ${time}`;
     }
   };
 
   const textContent = (): JSX.Element[] => {
+    // console.log(message.messageText);
     let postContent = convertPostContentToElements(message.messageText, "post");
     let messageElements = convertElementsToMessageText(
       postContent,
@@ -65,17 +70,25 @@ export const MessageContainer: React.FC<{
       >
         {usersMessage() ? (
           <div className="message-subtitle-right">
-            <div className="message message-blue">{textContent()}</div>
+            {message.messageImage && (
+              <MessageConversationImage message={message} />
+            )}
+            {message.messageText !== "" && (
+              <div className="message message-blue">{textContent()}</div>
+            )}
             <div className="message-subtitle">
               {sentAt()}
-              {(showSent || message.seenBy.length !== 0) && (
+              {(showSent ||
+                (message.seenBy && message.seenBy.length !== 0)) && (
                 <Circle sx={{ fontSize: "4px", color: "#657786" }} />
               )}
               {showSent && <>Sent</>}
               {conversation &&
+                conversation.conversationUsers &&
                 conversation.conversationUsers.length > 2 &&
+                message.seenBy &&
                 message.seenBy.length > 0 && (
-                  <>Seen by ${message.seenBy.length} person</>
+                  <>Seen by {message.seenBy.length} person</>
                 )}
             </div>
           </div>
@@ -84,7 +97,12 @@ export const MessageContainer: React.FC<{
             <div className="gray-message-group">
               <ProfilePicture user={message.sentBy} size={"40px"} />
               <div>
-                <div className="message message-gray">{textContent()}</div>
+                {message.messageImage && (
+                  <MessageConversationImage message={message} />
+                )}
+                {message.messageText !== "" && (
+                  <div className="message message-gray">{textContent()}</div>
+                )}
               </div>
             </div>
             <div className="message-subtitle message-subtitle-left">

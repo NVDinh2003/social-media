@@ -14,7 +14,6 @@
   object-fit: cover;
   margin-top: 11px;
   margin-left: 15px;
-  max-width: none !important;
 }
 
 .feed-post-creator-right {
@@ -32,7 +31,7 @@
   font-size: 14px;
   color: #1da1f2;
   padding: 2px;
-  border: 1px solid #aabbc2;
+  border: 1px solid #aab8c2;
   border-radius: 50px;
 }
 
@@ -41,21 +40,24 @@
   cursor: pointer;
 }
 
-.feed-post-creator-content-paragraph {
-  height: 20px;
-  width: 20px;
-  margin: 0;
-  padding: 0;
-  /* margin-left: 4px;
-  margin-right: 4px; */
-  font-weight: 400;
+.feed-post-creator-conent-paragraph {
   font-size: 20px;
+  font-weight: 400;
 }
 
 .feed-post-creator-content-paragraph-mention {
   font-size: 20px;
   font-weight: 400;
   color: #1da1f2;
+}
+
+.feed-post-creator-post-content-emoji {
+  height: 20px;
+  width: 20px;
+  margin: 0;
+  padding: 0;
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 .feed-post-creator-reply {
