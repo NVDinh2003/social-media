@@ -7,122 +7,115 @@ import com.nvd.encrypt.AES;
 import com.nvd.encrypt.DiffieHellman;
 import com.nvd.models.ApplicationUser;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 //1. Đánh dấu lớp là final để không thể kế thừa.
 //2. Tạo một constructor private để ngăn việc khởi tạo lớp.
 //3. Tự động biến tất cả các phương thức trong lớp thành static.
 @UtilityClass
+@Slf4j
 public class MessageUtils {
 
-    // ma hoa tin nhan
-    public String encryptMessage(String messageText, int fromUser, List<ApplicationUser> toUsers) {
-        if (messageText.isEmpty()) {
-            return "";
-        }
+    /**
+     * Encrypt message for all participants including sender
+     */
+    public static String encryptMessage(String messageText, Integer senderId, List<ApplicationUser> conversationUsers) {
+        boolean isGroupChat = conversationUsers.size() > 2;
 
-        // Nếu chỉ có 2 người (chat 1-1)
-        if (toUsers.size() == 1) {
-            int toUser = toUsers.get(0).getUserId();
-            int key = DiffieHellman.genSecretKey(fromUser, toUser);
-            return AES.encrypt(messageText, key);
-        }
+        if (isGroupChat) {
+            // For group chat: encrypt message for all users including sender
+            List<Integer> allUserIds = conversationUsers.stream()
+                    .map(ApplicationUser::getUserId)
+                    .collect(Collectors.toList());
 
-        // Nếu là group chat
-        // Tạo JSON object chứa các tin nhắn được mã hóa cho từng người
-        ObjectMapper mapper = new ObjectMapper();
-        Map<Integer, String> encryptedMessages = new HashMap<>();
+            DiffieHellman diffieHellman = new DiffieHellman();
+            Map<Integer, String> encryptedMessages = new HashMap<>();
 
-        // Tạo secret key và mã hóa tin nhắn cho từng người trong nhóm
-        for (ApplicationUser user : toUsers) {
-            // Bỏ qua người gửi
-            if (user.getUserId() == fromUser) {
-                continue;
+            // Encrypt for all users including sender
+            for (Integer userId : allUserIds) {
+                if (userId.equals(senderId)) {
+                    // For sender: use their own public and private keys
+                    int secretKey = DiffieHellman.genSecretKey(senderId, senderId);
+                    encryptedMessages.put(senderId, AES.encrypt(messageText, secretKey));
+                } else {
+                    // For other recipients: use Diffie-Hellman normally
+                    int secretKey = DiffieHellman.genSecretKey(senderId, userId);
+                    encryptedMessages.put(userId, AES.encrypt(messageText, secretKey));
+                }
             }
 
-            // Mã hóa tin nhắn với secret key của từng người
-            int secretKey = DiffieHellman.genSecretKey(fromUser, user.getUserId());
-            String encryptedMessage = AES.encrypt(messageText, secretKey);
-            encryptedMessages.put(user.getUserId(), encryptedMessage);
-        }
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                return mapper.writeValueAsString(encryptedMessages);
+            } catch (JsonProcessingException e) {
+                log.error("Error converting encrypted messages to JSON", e);
+                throw new RuntimeException("Error encrypting group message");
+            }
+        } else {
+            // For individual chat: encrypt message for both sender and receiver
+            Map<Integer, String> encryptedMessages = new HashMap<>();
 
-        try {
-            // Chuyển map thành JSON string để lưu vào database
-            return mapper.writeValueAsString(encryptedMessages);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error encrypting group message", e);
+            // Encrypt for sender
+            int senderSecretKey = DiffieHellman.genSecretKey(senderId, senderId);
+            encryptedMessages.put(senderId, AES.encrypt(messageText, senderSecretKey));
+
+            // Encrypt for receiver
+            ApplicationUser recipient = conversationUsers.stream()
+                    .filter(user -> !user.getUserId().equals(senderId))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Recipient not found"));
+
+            int recipientSecretKey = DiffieHellman.genSecretKey(senderId, recipient.getUserId());
+            encryptedMessages.put(recipient.getUserId(), AES.encrypt(messageText, recipientSecretKey));
+
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                return mapper.writeValueAsString(encryptedMessages);
+            } catch (JsonProcessingException e) {
+                log.error("Error converting encrypted messages to JSON", e);
+                throw new RuntimeException("Error encrypting message");
+            }
         }
     }
 
-    //    private decryptMessageText
-//   giải mã tin nhắn
-    public String decryptMessage(String encryptedText, int currentUserId, int senderId, boolean isGroupMessage) {
-        if (encryptedText == null || encryptedText.isEmpty()) {
-            return "";
-        }
-
-        // If the current user is the sender, return the encrypted text as is
-        if (currentUserId == senderId) {
-            return encryptedText;
-        }
-
-        // Nếu là chat 1-1
-        if (!isGroupMessage) {
-            return decryptOneToOneMessage(encryptedText, currentUserId, senderId);
-        }
-
-        // Nếu là group chat
-        return decryptGroupMessage(encryptedText, currentUserId, senderId);
-    }
-
-    private String decryptOneToOneMessage(String encryptedText, int currentUserId, int senderId) {
+    /**
+     * Decrypt message for any user (sender or recipient)
+     */
+    public static String decryptMessage(String encryptedText, Integer currentUserId, Integer senderId, boolean isGroupMessage) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            // Convert JSON string to Map
-            Map<Integer, String> encryptedMessages = mapper.readValue(
-                    encryptedText,
+            Map<Integer, String> encryptedMessages = mapper.readValue(encryptedText,
                     new TypeReference<Map<Integer, String>>() {
-                    }
-            );
+                    });
 
-            // Get the encrypted message for the current user
-            String userEncryptedMessage = encryptedMessages.get(currentUserId);
-            if (userEncryptedMessage == null) {
+            String userMessage = encryptedMessages.get(currentUserId);
+            if (userMessage == null) {
+                log.error("No message found for user: {}", currentUserId);
                 return null;
             }
 
-            // Decrypt the message with the user's secret key
-            int key = DiffieHellman.genSecretKey(currentUserId, senderId);
-            return AES.decrypt(userEncryptedMessage, key);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error decrypting one-to-one message", e);
-        }
-    }
-
-    private String decryptGroupMessage(String encryptedText, int currentUserId, int senderId) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            // Chuyển JSON string thành Map
-            Map<Integer, String> encryptedMessages = mapper.readValue(
-                    encryptedText,
-                    new TypeReference<Map<Integer, String>>() {
-                    }
-            );
-
-            // Lấy tin nhắn được mã hóa cho user hiện tại
-            String userEncryptedMessage = encryptedMessages.get(currentUserId);
-            if (userEncryptedMessage == null) {
-                return null;
+            // If current user is the sender
+            if (currentUserId.equals(senderId)) {
+                int secretKey = DiffieHellman.genSecretKey(senderId, senderId);
+                return AES.decrypt(userMessage, secretKey);
             }
 
-            // Giải mã tin nhắn với secret key của user
-            int key = DiffieHellman.genSecretKey(currentUserId, senderId);
-            return AES.decrypt(userEncryptedMessage, key);
+            // If current user is a recipient
+            if (isGroupMessage) {
+                return new DiffieHellman().decryptGroupMessage(userMessage, currentUserId, senderId);
+            } else {
+                int secretKey = DiffieHellman.genSecretKey(currentUserId, senderId);
+                return AES.decrypt(userMessage, secretKey);
+            }
+
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error decrypting group message", e);
+            log.error("Error decrypting message", e);
+            return null;
         }
     }
 }

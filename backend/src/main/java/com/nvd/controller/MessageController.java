@@ -3,6 +3,7 @@ package com.nvd.controller;
 import com.nvd.dto.response.MessageDTO;
 import com.nvd.models.Message;
 import com.nvd.service.MessageService;
+import com.nvd.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,7 @@ public class MessageController {
     public MessageDTO sendMessage(@RequestPart("messagePayload") String messagePayload,
                                   @RequestPart("image") List<MultipartFile> image) {
         Message message = messageService.createMessage(messagePayload, image);
-        return new MessageDTO(
+        MessageDTO dto = new MessageDTO(
                 message.getMessageId(),
                 message.getMessageType(),
                 message.getConversation().getConversationId(),
@@ -35,8 +36,18 @@ public class MessageController {
                 message.getSentBy(),
                 message.getSeenBy(),
                 message.getMessageImage(),
-                message.getMessageText()
+                ""
         );
+
+        String decryptedText = MessageUtils.decryptMessage(
+                message.getMessageText(),
+                message.getSentBy().getUserId(),
+                message.getSentBy().getUserId(),
+                message.getConversation().getConversationUsers().size() > 2
+        );
+        dto.setMessageText(decryptedText);
+
+        return dto;
     }
 
 //    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})

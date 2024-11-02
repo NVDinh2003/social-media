@@ -62,7 +62,6 @@ public class MessageService {
                     dto.getSentBy().getUserId(),
                     dto.getConversation().getConversationUsers()
             );
-
             // Build and save message
             message = Message.builder()
                     .messageType(dto.getMessageType())
@@ -73,15 +72,6 @@ public class MessageService {
                     .build();
 
             message = messageRepository.save(message);
-
-            // Decrypt the message text for returning
-            String decryptedMessageText = MessageUtils.decryptMessage(
-                    encryptedMessageText,
-                    dto.getSentBy().getUserId(),
-                    dto.getSentBy().getUserId(),
-                    conversation.getConversationUsers().size() > 2
-            );
-            message.setMessageText(decryptedMessageText);
 
             // Send notifications
             List<ApplicationUser> notificationRecipients = message.getConversation().getConversationUsers()
