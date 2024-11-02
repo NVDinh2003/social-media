@@ -52,7 +52,6 @@ export const MessageContainer: React.FC<{
   };
 
   const textContent = (): JSX.Element[] => {
-    // console.log(message.messageText);
     let postContent = convertPostContentToElements(message.messageText, "post");
     let messageElements = convertElementsToMessageText(
       postContent,
@@ -76,6 +75,7 @@ export const MessageContainer: React.FC<{
             {message.messageText !== "" && (
               <div className="message message-blue">{textContent()}</div>
             )}
+
             <div className="message-subtitle">
               {sentAt()}
               {(showSent ||

@@ -36,7 +36,6 @@ export const MessageConversationCard: React.FC<{
             conversation.conversationMessage.length - 1
           ].messageText
         : "Conversation created";
-
     let postContent = convertPostContentToElements(message, "post");
     let messageElements = convertElementsToMessageText(
       postContent,
@@ -116,11 +115,7 @@ export const MessageConversationCard: React.FC<{
 
           <div className="message-conversation-card-text message-conversation-card-content">
             {/* Todo: after complete message */}
-            {conversation.conversationMessage.length > 0
-              ? conversation.conversationMessage[
-                  conversation.conversationMessage.length - 1
-                ].messageText
-              : "Conversation created"}
+            {textContent()}
           </div>
         </div>
       </div>

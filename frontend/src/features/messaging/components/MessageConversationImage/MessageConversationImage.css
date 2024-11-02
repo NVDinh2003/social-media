@@ -14,7 +14,7 @@
   position: relative;
 }
 .message-conversation-image-gif-controls {
-  height: 20px;
+  width: 20px;
   width: 60px;
   position: absolute;
   bottom: 8px;

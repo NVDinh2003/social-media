@@ -1,5 +1,6 @@
 import { Pause, PlayArrow } from "@mui/icons-material";
 import React, { useEffect, useRef, useState } from "react";
+
 import "./MessageConversationImage.css";
 import { Message } from "../../../../utils/GlobalInterface";
 export const MessageConversationImage: React.FC<{ message: Message }> = ({
@@ -22,8 +23,8 @@ export const MessageConversationImage: React.FC<{ message: Message }> = ({
     if (canvasRef && canvasRef.current && imageRef && imageRef.current) {
       const height = 155;
       const width = 275;
-      canvasRef.current.width = width;
       canvasRef.current.height = height;
+      canvasRef.current.width = width;
       const context = canvasRef.current.getContext("2d");
       if (context !== null) {
         let scale = Math.min(
@@ -59,10 +60,7 @@ export const MessageConversationImage: React.FC<{ message: Message }> = ({
       )}
       {isGif && (
         <div className="message-conversation-image-gif-controls">
-          <div
-            className="message-conversation-image-gif-control-wrapper"
-            onClick={playPause}
-          >
+          <div className="message-conversation-image-gif-control-wrapper">
             {playGif ? (
               <Pause sx={{ color: "white", fontSize: "18px" }} />
             ) : (
