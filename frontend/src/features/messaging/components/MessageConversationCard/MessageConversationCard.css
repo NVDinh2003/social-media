@@ -62,7 +62,7 @@
 
 .message-conversation-card-content {
   width: fit-content;
-  min-width: 100%;
+  /* min-width: 100%; */
   white-space: nowrap;
   display: inline;
   overflow: hidden;
