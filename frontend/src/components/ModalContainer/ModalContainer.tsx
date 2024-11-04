@@ -10,6 +10,7 @@ import { CreateMessageModal } from "../../features/messaging/components/CreateMe
 import { FeedPostCreatorLocationModal } from "../../features/feed/components/FeedPostCreatorLocationModal/FeedPostCreatorLocationModal";
 import { updateGifUrl } from "../../redux/Slices/MessagesSlice";
 import { updateDisplayMessageGif } from "../../redux/Slices/ModalSlice";
+import { EditProfile } from "../../features/profile/components/EditProfile/EditProfile";
 
 export default function ModalContainer() {
   const displayEditImageModal = useSelector(
@@ -40,6 +41,11 @@ export default function ModalContainer() {
     (state: RootState) => state.modal.displayMessageGif
   );
 
+  // edit profile
+  const displayEditProfile = useSelector(
+    (state: RootState) => state.modal.displayEditProfile
+  );
+
   const dispatch: AppDispatch = useDispatch();
 
   const addGifToMessage = (url: string) => {
@@ -60,6 +66,8 @@ export default function ModalContainer() {
       {displayMessageGif && (
         <FeedPostCreatorGifModal handleClick={addGifToMessage} />
       )}
+
+      {displayEditProfile && <EditProfile />}
     </>
   );
 }

@@ -12,6 +12,7 @@ interface ModalSliceState {
   displayPostMention: boolean;
   displayCreateMessage: boolean;
   displayMessageGif: boolean;
+  displayEditProfile: boolean;
 }
 
 const initialState: ModalSliceState = {
@@ -26,6 +27,7 @@ const initialState: ModalSliceState = {
   displayPostMention: false,
   displayCreateMessage: false,
   displayMessageGif: false,
+  displayEditProfile: false,
 };
 
 export const ModalSlice = createSlice({
@@ -90,7 +92,7 @@ export const ModalSlice = createSlice({
       return state;
     },
 
-    updateDisplatMentionLearnMore(state) {
+    updateDisplayMentionLearnMore(state) {
       state = {
         ...state,
         displayMentionLearnMore: !state.displayMentionLearnMore,
@@ -122,6 +124,13 @@ export const ModalSlice = createSlice({
       };
       return state;
     },
+    updateDisplayEditProfile(state) {
+      state = {
+        ...state,
+        displayEditProfile: !state.displayEditProfile,
+      };
+      return state;
+    },
 
     //
   },
@@ -135,10 +144,11 @@ export const {
   updateDisplayLocation,
   updateDisplayCreateReply,
   updateDisplayPostMore,
-  updateDisplatMentionLearnMore,
+  updateDisplayMentionLearnMore,
   updateDisplayPostMention,
   updateDisplayCreateMessage,
   updateDisplayMessageGif,
+  updateDisplayEditProfile,
 } = ModalSlice.actions;
 
 export default ModalSlice.reducer;

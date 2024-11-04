@@ -11,7 +11,7 @@ import { AppDispatch, RootState } from "../../../../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import { readNotifications } from "../../../../redux/Slices/NotificationSlice";
 import { Post } from "../../../post/components/Post/Post";
-import { updateDisplatMentionLearnMore } from "../../../../redux/Slices/ModalSlice";
+import { updateDisplayMentionLearnMore } from "../../../../redux/Slices/ModalSlice";
 import { Notification } from "../Notification/Notification";
 
 export const MentionNotification: React.FC<{
@@ -21,7 +21,7 @@ export const MentionNotification: React.FC<{
   const dispatch: AppDispatch = useDispatch();
 
   const openLearnMore = () => {
-    dispatch(updateDisplatMentionLearnMore());
+    dispatch(updateDisplayMentionLearnMore());
   };
 
   useEffect(() => {

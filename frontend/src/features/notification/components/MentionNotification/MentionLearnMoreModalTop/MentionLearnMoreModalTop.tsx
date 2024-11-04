@@ -3,13 +3,13 @@ import React from "react";
 import "./MentionLearnMoreModalTop.css";
 import { AppDispatch } from "../../../../../redux/Store";
 import { useDispatch } from "react-redux";
-import { updateDisplatMentionLearnMore } from "../../../../../redux/Slices/ModalSlice";
+import { updateDisplayMentionLearnMore } from "../../../../../redux/Slices/ModalSlice";
 import Close from "@mui/icons-material/Close";
 
 export const MentionLearnMoreModalTop: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const close = () => {
-    dispatch(updateDisplatMentionLearnMore());
+    dispatch(updateDisplayMentionLearnMore());
   };
 
   return (

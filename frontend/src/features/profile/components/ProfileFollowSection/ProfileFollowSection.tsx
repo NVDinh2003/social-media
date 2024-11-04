@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { followUser } from "../../../../redux/Slices/UserSlice";
 import { ImageInfo, User } from "../../../../utils/GlobalInterface";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { updateDisplayEditProfile } from "../../../../redux/Slices/ModalSlice";
 
 interface ProfileFollowSectionProps {
   profilePicture: ImageInfo | null;
@@ -22,6 +24,7 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
   selfMode,
 }) => {
   //
+  const default_pfp = process.env.REACT_APP_PFP;
   const dispatch: AppDispatch = useDispatch();
   const token = useSelector((state: RootState) => state.user.token);
   const followingList = useSelector((state: RootState) => state.user.following);
@@ -30,11 +33,36 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
   const [hoveringOverUnfollow, setHoveringOverUnfollow] =
     useState<boolean>(false);
 
-  const handleFollowUser = () => {
-    if (token) dispatch(followUser({ token, followee: profileUser.username }));
-  };
+  // const handleFollowUser = () => {
+  //   console.log("handle follow");
+  //   if (token) dispatch(followUser({ token, followee: profileUser.username }));
+  // };
 
-  const default_pfp = process.env.REACT_APP_PFP;
+  const handleFollowUser = () => {
+    console.log("handle follow");
+    if (token) {
+      const isFollowing = followingList.find(
+        (person) => person.username === profileUser.username
+      );
+
+      if (isFollowing) {
+        const confirmUnfollow = window.confirm(
+          "Bạn có chắc chắn muốn hủy theo dõi " + profileUser.username + "?"
+        );
+        if (confirmUnfollow) {
+          dispatch(followUser({ token, followee: profileUser.username }));
+          toast.success("Đã hủy theo dõi " + profileUser.username, {
+            autoClose: 1500,
+          });
+        }
+      } else {
+        dispatch(followUser({ token, followee: profileUser.username }));
+        toast.success("Đã theo dõi " + profileUser.username, {
+          autoClose: 1500,
+        });
+      }
+    }
+  };
 
   // github
   const navigate = useNavigate();
@@ -46,63 +74,67 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
   function EditButton() {
     return (
       <button
-        onClick={() => setEditMode(true)}
-        className="w-[134px] rounded-3xl h-8 flex items-center justify-center border-2 border-[#323C44] transition-all hover:bg-[#181919] self-start "
+        onClick={openEditProfile}
+        className="w-[134px] rounded-3xl h-8 flex items-center justify-center border-2 border-[#323C44] transition-all hover:bg-[#0f14191a] self-start "
       >
         <span>Edit profile</span>
       </button>
     );
   }
+  const openEditProfile = () => {
+    console.log(`Open Edit Profile`);
+    dispatch(updateDisplayEditProfile());
+  };
+
+  function FollowSection() {
+    return (
+      <div className="profile-follow-section-left">
+        <div className="profile-follow-section-more">
+          <MoreHorizIcon
+            sx={{
+              width: "20px",
+              height: "20px",
+            }}
+          />
+        </div>
+
+        {followingList.find(
+          (person) => person.username === profileUser.username
+        ) && (
+          <div className="profile-follow-section-more">
+            <NotificationAddIcon
+              sx={{
+                width: "20px",
+                height: "20px",
+              }}
+            />
+          </div>
+        )}
+
+        {followingList.find(
+          (person) => person.username === profileUser.username
+        ) ? (
+          <button
+            className="profile-follow-section-unfollow-button"
+            onMouseEnter={() => setHoveringOverUnfollow(true)}
+            onMouseLeave={() => setHoveringOverUnfollow(false)}
+            onClick={handleFollowUser}
+          >
+            {hoveringOverUnfollow ? "Unfollow" : "Following"}
+          </button>
+        ) : (
+          <button
+            className="profile-follow-section-follow-button"
+            onClick={handleFollowUser}
+          >
+            Follow
+          </button>
+        )}
+      </div>
+    );
+  }
 
   return (
-    // <div className="profile-follow-section">
-    //   <img
-    //     src={profilePicture ? profilePicture.imageURL : default_pfp}
-    //     alt={`${username}'s pfp`}
-    //     className="profile-follow-section-pfp"
-    //   />
-
-    //   <div className="profile-follow-section-left">
-    //     <div className="profile-follow-section-more">
-    //       <MoreHorizIcon
-    //         sx={{
-    //           width: "20px",
-    //           height: "20px",
-    //         }}
-    //       />
-    //     </div>
-
-    //     {followingList.find((person) => person.username === username) && (
-    //       <div className="profile-follow-section-more">
-    //         <NotificationAddIcon
-    //           sx={{
-    //             width: "20px",
-    //             height: "20px",
-    //           }}
-    //         />
-    //       </div>
-    //     )}
-
-    //     {followingList.find((person) => person.username === username) ? (
-    //       <button
-    //         className="profile-follow-section-unfollow-button"
-    //         onMouseEnter={() => setHoveringOverUnfollow(true)}
-    //         onMouseLeave={() => setHoveringOverUnfollow(false)}
-    //       >
-    //         {hoveringOverUnfollow ? "Unfollow" : "Following"}
-    //       </button>
-    //     ) : (
-    //       <button
-    //         className="profile-follow-section-follow-button"
-    //         onClick={handleFollowUser}
-    //       >
-    //         Follow
-    //       </button>
-    //     )}
-    //   </div>
-
-    // </div>
-
     <div
       id="user-information"
       className="w-full flex flex-col justify-between relative pb-2"
@@ -113,7 +145,7 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
           style={
             profileUser.bannerPicture
               ? {
-                  backgroundImage: `url("${profileUser.bannerPicture}")`,
+                  backgroundImage: `url("${profileUser.bannerPicture.imageURL}")`,
                 }
               : { backgroundColor: "#aab8c2" }
           }
@@ -130,52 +162,7 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
             />
           </div>
           <div></div>
-          {/* {selfMode ? <EditButton /> 
-        :   
-        } */}
-
-          <div className="profile-follow-section-left">
-            <div className="profile-follow-section-more">
-              <MoreHorizIcon
-                sx={{
-                  width: "20px",
-                  height: "20px",
-                }}
-              />
-            </div>
-
-            {followingList.find(
-              (person) => person.username === profileUser.username
-            ) && (
-              <div className="profile-follow-section-more">
-                <NotificationAddIcon
-                  sx={{
-                    width: "20px",
-                    height: "20px",
-                  }}
-                />
-              </div>
-            )}
-
-            {followingList.find(
-              (person) => person.username === profileUser.username
-            ) ? (
-              <button
-                className="profile-follow-section-unfollow-button"
-                onMouseEnter={() => setHoveringOverUnfollow(true)}
-                onMouseLeave={() => setHoveringOverUnfollow(false)}
-              >
-                {hoveringOverUnfollow ? "Unfollow" : "Following"}
-              </button>
-            ) : (
-              <button
-                className="profile-follow-section-follow-button"
-                onClick={handleFollowUser}
-              >
-                Follow
-              </button>
-            )}
-          </div>
+          {selfMode ? <EditButton /> : <FollowSection />}
         </div>
         <div className="h-10 w-full"></div>
       </div>

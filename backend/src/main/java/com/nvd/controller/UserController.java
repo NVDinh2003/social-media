@@ -83,7 +83,9 @@ public class UserController {
         ApplicationUser followed = user.getFollowing().stream()
                 .filter(u -> u.getUsername().equals(followedUser)).findFirst().orElse(null);
 
-        notificationService.createAndSendFollowNotifications(followed, user);
+        if (followed != null) {
+            notificationService.createAndSendFollowNotifications(followed, user);
+        }
         return user.getFollowing();
     }
 

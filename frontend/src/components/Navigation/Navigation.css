@@ -163,7 +163,7 @@
   align-items: center;
   border: none;
   border-radius: 100%;
-  z-index: 10;
+  z-index: 9;
 }
 
 .navigation-notification-count {

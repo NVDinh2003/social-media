@@ -4,15 +4,20 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import "./Profile.css";
 import { Post, User } from "../utils/GlobalInterface";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/Store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../redux/Store";
 import { ProfileTopBar } from "../features/profile";
 
 import { ProfileFollowSection } from "../features/profile/components/ProfileFollowSection/ProfileFollowSection";
+import { EditProfile } from "../features/profile/components/EditProfile/EditProfile";
+import { updateDisplayEditProfile } from "../redux/Slices/ModalSlice";
 
 export const Profile: React.FC = () => {
   //
   const token = useSelector((state: RootState) => state.user.token);
+  const currentUserLoggedIn = useSelector(
+    (state: RootState) => state.user.loggedIn
+  );
   const followings = useSelector((state: RootState) => state.user.following);
   const followers = useSelector((state: RootState) => state.user.followers);
   const { username } = useParams();
@@ -37,7 +42,7 @@ export const Profile: React.FC = () => {
       user = req.data;
       //   user.bannerPicture = `${process.env.REACT_APP_DEFAULT_BANNER}`;
 
-      console.log(user);
+      // console.log(user);
       setProfileUser(user);
       //
     } catch (e) {
@@ -58,7 +63,7 @@ export const Profile: React.FC = () => {
         }
       );
 
-      console.log(posts);
+      // console.log(posts);
 
       setPosts(req.data);
     } catch (e) {
@@ -75,8 +80,7 @@ export const Profile: React.FC = () => {
   const [editMode, setEditMode] = useState(false);
   const [selfMode, setSelfMode] = useState(false);
 
-  const navigate = useNavigate();
-  const params = useParams();
+  // const navigate = useNavigate();
 
   function EditComponent({
     active,
@@ -91,43 +95,24 @@ export const Profile: React.FC = () => {
   }
 
   useEffect(() => {
-    if (params.username == profileUser?.username) {
-      setSelfMode(true);
-      return;
+    if (profileUser) {
+      const isSelfMode = username === currentUserLoggedIn?.username;
+      if (isSelfMode !== selfMode) {
+        // console.log("before: ", selfMode);
+        setSelfMode(isSelfMode);
+        // console.log("after: ", isSelfMode);
+      }
     }
-  }, [params, profileUser]);
+  }, [username, profileUser, selfMode]);
+
+  // edit profile
+  const displayEditProfileModal = useSelector(
+    (state: RootState) => state.modal.displayEditProfile
+  );
 
   return (
     <div className="">
       {profileUser ? (
-        // <>
-        //   {/* Top Bar  */}
-        //   <ProfileTopBar
-        //     nickname={profileUser.nickname}
-        //     isVerified={profileUser.verifiedAccount}
-        //     organization={profileUser.organization}
-        //     numberOfPosts={posts.length}
-        //   />
-
-        //   {/* Profile Banner */}
-        //   <div
-        //     className="profile-banner-picture"
-        //     style={
-        //       profileUser.bannerPicture
-        //         ? {
-        //             backgroundImage: `url("${profileUser.bannerPicture}")`,
-        //           }
-        //         : { backgroundColor: "#aab8c2" }
-        //     }
-        //   />
-
-        //   {/* Profile picture, options, follow */}
-        //   <ProfileFollowSection
-        //     profilePicture={profileUser.profilePicture}
-        //     username={profileUser.username}
-        //   />
-        // </>
-
         <main className="w-full flex items-start">
           <div className="min-w-full md:w-[990px] md:min-w-max relative">
             <div className="w-full flex items-end justify-end gap-10 ">
@@ -164,17 +149,17 @@ export const Profile: React.FC = () => {
                   id="menu"
                   className="w-full h-12 relative flex items-center border-b border-b-gray-500 border-opacity-50 mt-3"
                 >
-                  <div className="w-full h-full px-2 md:px-4 flex items-center justify-center transition-all hover:bg-[#181818] cursor-pointer ">
+                  <div className="w-full h-full px-2 md:px-4 flex items-center justify-center transition-all hover:bg-[#0f14191a] cursor-pointer ">
                     <span className="font-bold h-full border-b-4 border-[#1d9bf0] flex items-center justify-center ">
                       Post
                     </span>
                   </div>
-                  <div className="w-full h-full px-2 md:px-4 flex items-center justify-center transition-all hover:bg-[#181818] cursor-pointer">
+                  <div className="w-full h-full px-2 md:px-4 flex items-center justify-center transition-all hover:bg-[#0f14191a] cursor-pointer">
                     <span className="text-[#71767B] whitespace-nowrap ">
                       Reply
                     </span>
                   </div>
-                  <div className="w-full h-full px-2 md:px-4 flex items-center justify-center transition-all hover:bg-[#181818] cursor-pointer">
+                  <div className="w-full h-full px-2 md:px-4 flex items-center justify-center transition-all hover:bg-[#0f14191a] cursor-pointer">
                     <span className="text-[#71767B] whitespace-nowrap ">
                       Media
                     </span>
