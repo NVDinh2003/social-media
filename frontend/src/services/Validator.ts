@@ -7,6 +7,9 @@ export const validateName = (value: string): boolean => {
 export const validateDob = (dob: Dob): boolean => {
   let { month, day, year } = dob;
 
+  if (day === undefined || month === undefined || year === undefined)
+    return false;
+
   let leapYears: number[] = [];
 
   for (let i = 2022; i > 1902; i -= 4) {

@@ -2,33 +2,36 @@ insert into roles
 values (1, 'USER'),
        (2, 'ADMIN');
 
-insert into users(email, enabled, first_name, last_name, nickname, password, username, bio, create_ts)
+insert into users(email, enabled, first_name, last_name, nickname, password, username, bio, create_ts, dob)
 values ('rick@mail.com', true, 'Rick', 'Sanchez', 'Rick',
-        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba', 'RickSanchez', 'Im pickle rick', now()),
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba', 'RickSanchez', 'Im pickle rick', now(),
+        '2000-01-01'),
        ('morty@mail.com', true, 'Morty', 'Smith', 'MortDawg',
-        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba', 'MortySmith', 'Rick is my grandpa', now()),
+        '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba', 'MortySmith', 'Rick is my grandpa', now(),
+        '2000-01-01'),
        ('summer@mail.com', true, 'Summer', 'Smith', 'Summer',
         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba', 'SSSummertime',
-        'My brother Morty is so annoying, he never lets me join adventures with my Grandpa Rick', now()),
+        'My brother Morty is so annoying, he never lets me join adventures with my Grandpa Rick', now(), '2000-01-01'),
        ('birdperson@mail.com', true, 'Bird', 'Person', 'BirdPerson',
         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba', 'BirdPerson',
-        'I committed many war crimes in the gears war', now());
+        'I committed many war crimes in the gears war', now(), '2000-01-01');
 
 insert into users(first_name, last_name, email, username, password, bio, nickname, verified_account, private_account,
-                  create_ts)
+                  create_ts, dob)
 values ('Nguyen Van', 'Dinh', 'iamdinhhtvq@gmail.com', 'iamdinhhtvq',
         '$2a$10$mf1nYe0RREDy6dlCEpEL1.LTPCCzjETa40dx1/UNlcLv9ZB6uSiba', 'Software Engineer', 'Leo', true,
-        false, now());
+        false, now(), '2000-01-01');
 
 insert into users(first_name, last_name, email, username, password, bio, nickname, verified_account, private_account,
-                  create_ts)
+                  create_ts, dob)
 values ('Jerry', 'Smith', 'jerry@mail.com', 'JerrySmith',
-        '$2a$10$D/2JcFzpnoy.XlFPP3eyQu/9wm749pPIyPl.Os9RKI9s7lDY.MbIK', 'Im Jerry Smith', 'Jerry', false, false, now());
+        '$2a$10$D/2JcFzpnoy.XlFPP3eyQu/9wm749pPIyPl.Os9RKI9s7lDY.MbIK', 'Im Jerry Smith', 'Jerry', false, false, now(),
+        '2000-01-01');
 insert into users(first_name, last_name, email, username, password, bio, nickname, verified_account, private_account,
-                  create_ts)
+                  create_ts, dob)
 values ('Beth', 'Smith', 'beth@mail.com', 'TheBethSmith',
         '$2a$10$D/2JcFzpnoy.XlFPP3eyQu/9wm749pPIyPl.Os9RKI9s7lDY.MbIK', 'Mom of two, married to Jerry', 'Beth Smith',
-        false, false, now());
+        false, false, now(), '2000-01-01');
 
 insert into user_roles_junction(user_id, role_id)
 values (1, 1),

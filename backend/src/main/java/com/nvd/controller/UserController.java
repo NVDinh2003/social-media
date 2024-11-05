@@ -1,6 +1,7 @@
 package com.nvd.controller;
 
 import com.google.common.net.HttpHeaders;
+import com.nvd.dto.request.UserUpdateDTO;
 import com.nvd.exceptions.UnableToResolvePhotoException;
 import com.nvd.exceptions.UnableToSavePhotoException;
 import com.nvd.models.ApplicationUser;
@@ -66,10 +67,11 @@ public class UserController {
         return ResponseEntity.ok(org);
     }
 
-    @PutMapping("/")
-    public ApplicationUser updateUser(
-            @RequestBody ApplicationUser user) {
-        return userService.update(user);
+    @PutMapping("/update")
+    public ResponseEntity<ApplicationUser> updateUser(@RequestBody UserUpdateDTO userUpdateDTO, @RequestHeader("Authorization") String token) {
+        String loggedInUsername = tokenService.getUsernameFromToken(token);
+        ApplicationUser updatedUser = userService.updateUser(userUpdateDTO, loggedInUsername);
+        return ResponseEntity.ok(updatedUser);
     }
 
     @PutMapping("follow")

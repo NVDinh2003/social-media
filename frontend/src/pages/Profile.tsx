@@ -82,33 +82,17 @@ export const Profile: React.FC = () => {
 
   // const navigate = useNavigate();
 
-  function EditComponent({
-    active,
-    setEditMode,
-  }: {
-    active: boolean;
-    setEditMode: boolean;
-  }) {
-    if (active) return;
-    //  <EditProfile setEditMode={setEditMode} />
-    <>Edit profile</>;
-  }
+  useEffect(() => {
+    console.log("Profile");
+    if (profileUser && currentUserLoggedIn) {
+      const isSelfMode = username === currentUserLoggedIn.username;
+      setSelfMode(isSelfMode);
+    }
+  }, [username, profileUser, currentUserLoggedIn]);
 
   useEffect(() => {
-    if (profileUser) {
-      const isSelfMode = username === currentUserLoggedIn?.username;
-      if (isSelfMode !== selfMode) {
-        // console.log("before: ", selfMode);
-        setSelfMode(isSelfMode);
-        // console.log("after: ", isSelfMode);
-      }
-    }
-  }, [username, profileUser, selfMode]);
-
-  // edit profile
-  const displayEditProfileModal = useSelector(
-    (state: RootState) => state.modal.displayEditProfile
-  );
+    if (selfMode && token) fetchProfileUser();
+  }, [selfMode, currentUserLoggedIn]);
 
   return (
     <div className="">

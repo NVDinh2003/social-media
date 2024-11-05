@@ -35,7 +35,7 @@ export const ValidatedTextInput: React.FC<ValidatedTextInputProps> = ({
 
   const update = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setValue(e.target.value);
-    console.log("send the info back to the dispathcher");
+    // console.log("send the info back to the dispathcher");
     changeValue(e);
   };
 

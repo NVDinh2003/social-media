@@ -24,6 +24,7 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
   selfMode,
 }) => {
   //
+  // console.log(selfMode);
   const default_pfp = process.env.REACT_APP_PFP;
   const dispatch: AppDispatch = useDispatch();
   const token = useSelector((state: RootState) => state.user.token);
@@ -63,6 +64,10 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
       }
     }
   };
+
+  useEffect(() => {
+    // console.log("selfMode in ProfileFollowSection:", selfMode);
+  }, [selfMode]);
 
   // github
   const navigate = useNavigate();
@@ -157,7 +162,7 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
           <div className="bg-black w-[141px] h-[141px] rounded-full absolute -bottom-[90%] ">
             <img
               src={profileUser?.profilePicture?.imageURL ?? default_pfp}
-              className="rounded-full  object-cover border-[4px] border-black "
+              className="rounded-full  object-cover border-[2px] border-black "
               alt=""
             />
           </div>

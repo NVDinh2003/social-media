@@ -37,7 +37,7 @@ export const ValidatedDateSelector: React.FC<ValidatedDateSelectorProps> = ({
     else {
       eName = name.toLowerCase();
     }
-    // console.log("eName: ", eName.toLowerCase());
+    console.log("eName: ", eName.toLowerCase(), +e.target.value);
     dispatcher(eName, +e.target.value);
   };
 

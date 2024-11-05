@@ -153,6 +153,11 @@ export const cleanDateForRequest = (date: Dob): string => {
   return `${date.year}-${month}-${day}`;
 };
 
+export const convertDateStringToDob = (dateString: string): Dob => {
+  const [year, month, day] = dateString.split("-").map(Number);
+  return { year, month, day };
+};
+
 export function lessThanDay(d1: Date, d2: Date): boolean {
   let timeDifference = d1.getTime() - d2.getTime();
   let dayDifference = timeDifference / (1000 * 3600 * 24);

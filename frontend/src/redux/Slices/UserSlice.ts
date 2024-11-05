@@ -3,6 +3,10 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../utils/GlobalInterface";
 import axios from "axios";
 import { getFollowers, getFollowing } from "../../services/UserService";
+import {
+  cleanDateForRequest,
+  convertDateStringToDob,
+} from "../../utils/DateUtils";
 
 const baseURL = process.env.REACT_APP_API_URL;
 
@@ -29,6 +33,14 @@ interface VerifyUserBody {
 interface followUserBody {
   token: string;
   followee: string;
+}
+
+interface UpdateUserInfoPayload {
+  firstName: string;
+  lastName: string;
+  nickname: string;
+  bio: string;
+  dateOfBirth: string;
 }
 
 const initialState: UserSliceState = {
@@ -64,6 +76,7 @@ export const getUserByToken = createAsyncThunk(
       });
 
       const user = req.data;
+      user.dateOfBirth = convertDateStringToDob(user.dateOfBirth);
 
       // console.log(user.user);
 
@@ -72,6 +85,7 @@ export const getUserByToken = createAsyncThunk(
 
       let followingAndFollowers = await Promise.all([followers, following]);
 
+      // console.log(user);
       return {
         loggedIn: user,
         followers: followingAndFollowers[0],
@@ -127,6 +141,77 @@ export const loginUser = createAsyncThunk(
       };
     } catch (e) {
       console.log("login failed");
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+export const updateProfilePicture = createAsyncThunk(
+  "user/updateProfilePicture",
+  async (body: { token: string; file: File }, thunkAPI) => {
+    try {
+      const formData = new FormData();
+      formData.append("image", body.file);
+
+      const req = await axios.post(`${baseURL}/users/pfp`, formData, {
+        headers: {
+          Authorization: `Bearer ${body.token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return req.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+export const updateBannerPicture = createAsyncThunk(
+  "user/updateBannerPicture",
+  async (body: { token: string; file: File }, thunkAPI) => {
+    try {
+      const formData = new FormData();
+      formData.append("image", body.file);
+
+      const req = await axios.post(`${baseURL}/users/banner`, formData, {
+        headers: {
+          Authorization: `Bearer ${body.token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return req.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+// Modify the updateUserInfo thunk
+export const updateUserInfo = createAsyncThunk(
+  "user/updateUserInfo",
+  async (body: { token: string; userInfo: Partial<User> }, thunkAPI) => {
+    try {
+      const userInfoPayload: UpdateUserInfoPayload = {
+        firstName: body.userInfo.firstName!,
+        lastName: body.userInfo.lastName!,
+        nickname: body.userInfo.nickname!,
+        bio: body.userInfo.bio!,
+        dateOfBirth: cleanDateForRequest(body.userInfo.dateOfBirth!),
+      };
+
+      const req = await axios.put(`${baseURL}/users/update`, userInfoPayload, {
+        headers: {
+          Authorization: `Bearer ${body.token}`,
+        },
+      });
+
+      const updatedUser = req.data;
+      updatedUser.dateOfBirth = convertDateStringToDob(updatedUser.dateOfBirth);
+
+      return updatedUser;
+    } catch (e) {
       return thunkAPI.rejectWithValue(e);
     }
   }
@@ -287,6 +372,27 @@ export const UserSlice = createSlice({
           error: true,
         };
         return state;
+      });
+
+    // upload profile and banner picture
+    builder
+      .addCase(updateProfilePicture.fulfilled, (state, action) => {
+        if (state.loggedIn) {
+          state.loggedIn.profilePicture = action.payload.profilePicture;
+        }
+      })
+      .addCase(updateBannerPicture.fulfilled, (state, action) => {
+        if (state.loggedIn) {
+          state.loggedIn.bannerPicture = action.payload.bannerPicture;
+        }
+      })
+      .addCase(updateUserInfo.fulfilled, (state, action) => {
+        if (state.loggedIn) {
+          state.loggedIn = {
+            ...state.loggedIn,
+            ...action.payload,
+          };
+        }
       });
 
     //

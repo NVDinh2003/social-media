@@ -2,7 +2,9 @@ package com.nvd.service;
 
 import com.nvd.dto.oauth.UserInfoResponse;
 import com.nvd.dto.request.FindUsernameDTO;
+import com.nvd.dto.request.UserUpdateDTO;
 import com.nvd.exceptions.*;
+import com.nvd.mappers.UserMapper;
 import com.nvd.models.ApplicationUser;
 import com.nvd.models.Image;
 import com.nvd.models.RegistrationObject;
@@ -10,6 +12,7 @@ import com.nvd.models.Role;
 import com.nvd.repositories.RoleRepository;
 import com.nvd.repositories.UserRepository;
 import com.nvd.utils.FileUploadUtil;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,11 +23,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.Date;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Set;
@@ -40,6 +45,7 @@ public class UserService implements UserDetailsService {
     private final MailService mailService;
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
+    private final UserMapper userMapper;
 
 
     public ApplicationUser registerUser(RegistrationObject ro) {
@@ -302,6 +308,7 @@ public class UserService implements UserDetailsService {
             String username = email.substring(0, email.indexOf('@'));
             newUser.setUsername(username);
             newUser.setNickname(username);
+            newUser.setDateOfBirth(Date.valueOf("2000-01-01"));  // default dob
             String imageName = FileUploadUtil.getFileName(username + "-google-profile-picture");
             newUser.setProfilePicture(Image.builder().imageURL(userInfo.getPicture()).imageName(imageName).build());
 
@@ -323,4 +330,17 @@ public class UserService implements UserDetailsService {
         });
     }
 
+    @Transactional
+    public ApplicationUser updateUser(UserUpdateDTO userUpdateDTO, String loggedInUsername) {
+        ApplicationUser user = userRepository.findByUsername(loggedInUsername)
+                .orElseThrow(() -> new EntityNotFoundException("Not found user with username: " + loggedInUsername));
+
+        ApplicationUser updated = userMapper.updateEntity(userUpdateDTO, user);
+
+//        updated.setId(teamId);
+
+        userRepository.save(updated);
+
+        return updated;
+    }
 }
