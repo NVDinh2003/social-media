@@ -11,7 +11,7 @@ export const FollowNotification: React.FC<{
 }> = ({ notifications }) => {
   return (
     <Notification
-      icon={<FollowNotificationSVG height={30} width={30} color="#1da1f2" />}
+      icon={<FollowNotificationSVG width={30} height={30} color="#1DA1F2" />}
       notifications={notifications}
     >
       <NotificationUsersText

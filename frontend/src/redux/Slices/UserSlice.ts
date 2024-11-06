@@ -76,7 +76,6 @@ export const getUserByToken = createAsyncThunk(
       });
 
       const user = req.data;
-      user.dateOfBirth = convertDateStringToDob(user.dateOfBirth);
 
       // console.log(user.user);
 
@@ -208,7 +207,7 @@ export const updateUserInfo = createAsyncThunk(
       });
 
       const updatedUser = req.data;
-      updatedUser.dateOfBirth = convertDateStringToDob(updatedUser.dateOfBirth);
+      // updatedUser.dateOfBirth = convertDateStringToDob(updatedUser.dateOfBirth);
 
       return updatedUser;
     } catch (e) {

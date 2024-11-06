@@ -186,7 +186,6 @@ export const FeedSlice = createSlice({
         return state;
       })
       .addCase(loadFeedPage.fulfilled, (state, action) => {
-        // console.log("ss: ", action.payload.sessionStart);
         state = {
           ...state,
           posts: action.payload.posts,

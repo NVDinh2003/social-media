@@ -26,10 +26,9 @@ export const Notification: React.FC<NotificationProps> = ({
   const handleNotificationClicked = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     if (notifications[0].acknowledged) {
-      // Do more work , this is just for this episode
       switch (notifications[0].notificationType) {
         case "FOLLOW":
-          if (notifications.length > 1) {
+          if (notifications.length === 1) {
             navigate(`/${notifications[0].actionUser.username}`);
           } else {
             navigate(`/${notifications[0].recipient.username}/followers`);
@@ -70,21 +69,14 @@ export const Notification: React.FC<NotificationProps> = ({
       {notifications[0].notificationType !== "REPLY" &&
         notifications[0].notificationType !== "MENTION" && (
           <div className="notification-top">
-            <div className="notification-top-icon-container">{icon}</div>
+            <div className="notification-icon-container">{icon}</div>
             <div className="notification-pfps">
               {notifications.slice(0, 10).map((noti) => {
-                return (
-                  <ProfilePicture
-                    user={noti.actionUser}
-                    size={"32"}
-                    key={noti.notificationId}
-                  />
-                );
+                return <ProfilePicture user={noti.actionUser} size={"32"} />;
               })}
             </div>
           </div>
         )}
-
       {children}
     </div>
   );

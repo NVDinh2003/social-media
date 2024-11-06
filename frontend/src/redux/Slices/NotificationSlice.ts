@@ -94,51 +94,61 @@ export const NotificationSlice = createSlice({
   initialState,
   reducers: {
     recievedNotification(state, action: PayloadAction<Notification>) {
+      const notificationExists = (
+        notificationList: Notification[],
+        newNotification: Notification
+      ) => {
+        return notificationList.some(
+          (notification) =>
+            notification.notificationId === newNotification.notificationId
+        );
+      };
+
       switch (action.payload.notificationType) {
         case "NEW_POST":
-          state = {
-            ...state,
-            newPostNotifications: [
+          if (!notificationExists(state.newPostNotifications, action.payload)) {
+            state.newPostNotifications = [
               action.payload,
               ...state.newPostNotifications,
-            ],
-          };
+            ];
+          }
           return state;
         case "LIKE":
         case "REPOST":
         case "BOOKMARK":
-          state = {
-            ...state,
-            postActionNotifications: [
+          if (
+            !notificationExists(state.postActionNotifications, action.payload)
+          ) {
+            state.postActionNotifications = [
               action.payload,
               ...state.postActionNotifications,
-            ],
-          };
+            ];
+          }
           return state;
         case "REPLY":
         case "MENTION":
-          state = {
-            ...state,
-            mentionNotifications: [
+          if (!notificationExists(state.mentionNotifications, action.payload)) {
+            state.mentionNotifications = [
               action.payload,
               ...state.mentionNotifications,
-            ],
-          };
+            ];
+          }
           return state;
         case "MESSAGE":
-          state = {
-            ...state,
-            messageNotifications: [
+          if (!notificationExists(state.messageNotifications, action.payload)) {
+            state.messageNotifications = [
               action.payload,
               ...state.messageNotifications,
-            ],
-          };
+            ];
+          }
           return state;
         case "FOLLOW":
-          state = {
-            ...state,
-            followNotifications: [action.payload, ...state.followNotifications],
-          };
+          if (!notificationExists(state.followNotifications, action.payload)) {
+            state.followNotifications = [
+              action.payload,
+              ...state.followNotifications,
+            ];
+          }
           return state;
         default:
           return state;

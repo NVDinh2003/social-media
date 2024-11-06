@@ -21,6 +21,7 @@ import {
   updateBannerPicture,
   updateUserInfo,
 } from "../../../../redux/Slices/UserSlice";
+import { convertDateStringToDob } from "../../../../utils/DateUtils";
 
 export const EditProfile: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -31,19 +32,39 @@ export const EditProfile: React.FC = () => {
   const [banner, setBanner] = useState<File | null>(null);
   const [photo, setPhoto] = useState<File | null>(null);
 
+  const [dob, setDob] = useState<Dob>({
+    day: 1,
+    month: 1,
+    year: 2000,
+  });
+
+  // console.log("dob", currentUser?.dateOfBirth);
+  useEffect(() => {
+    if (typeof currentUser?.dateOfBirth === "string") {
+      setDob(convertDateStringToDob(currentUser.dateOfBirth));
+    }
+  }, [currentUser?.dateOfBirth]);
+
+  useEffect(() => {
+    // console.log("dob changed", dob);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      dateOfBirth: dob,
+    }));
+  }, [dob]);
   const [formData, setFormData] = useState({
     firstName: currentUser?.firstName || "",
     lastName: currentUser?.lastName || "",
     nickname: currentUser?.nickname || "",
     bio: currentUser?.bio || "",
-    dateOfBirth: currentUser?.dateOfBirth || { day: 1, month: 1, year: 2000 },
+    dateOfBirth: dob,
   });
   const [valid, setValid] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
+  // useEffect(() => {
+  //   console.log(formData);
+  // }, [formData]);
 
   const handleImageChange = (type: "banner" | "photo", file: File) => {
     if (type === "banner") {

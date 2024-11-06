@@ -50,29 +50,86 @@ export const FeedPostCreator: React.FC = () => {
     }
   };
 
+  // const submitPost = () => {
+  //   if (currentPost && loggedInUser) {
+  //     let body = {
+  //       content: currentPost.content,
+  //       author: currentPost.author,
+  //       replies: [],
+  //       audience: currentPost.audience,
+  //       replyRestriction: currentPost.replyRestriction,
+  //       scheduled: currentPost.scheduled,
+  //       scheduledDate: currentPost.scheduledDate,
+  //       provinceCode: currentPost.provinceCode,
+  //       districtCode: currentPost.districtCode,
+  //       wardCode: currentPost.wardCode,
+  //       address: currentPost.address,
+  //       token: token,
+  //       images: currentPostImages.length > 0 ? [] : currentPost.images,
+  //       poll: currentPost.poll,
+  //       imageFiles: currentPostImages,
+  //     };
+
+  //     if (currentPostImages.length === 0) {
+  //       dispatch(createPost(body));
+  //     } else {
+  //       dispatch(createPostWithMedia(body));
+  //     }
+  //   }
+  // };
+
   const submitPost = () => {
     if (currentPost && loggedInUser) {
-      let body = {
-        content: currentPost.content,
-        author: currentPost.author,
-        replies: [],
-        audience: currentPost.audience,
-        replyRestriction: currentPost.replyRestriction,
-        scheduled: currentPost.scheduled,
-        scheduledDate: currentPost.scheduledDate,
-        provinceCode: currentPost.provinceCode,
-        districtCode: currentPost.districtCode,
-        wardCode: currentPost.wardCode,
-        address: currentPost.address,
-        token: token,
-        images: currentPostImages.length > 0 ? [] : currentPost.images,
-        poll: currentPost.poll,
-        imageFiles: currentPostImages,
-      };
-
       if (currentPostImages.length === 0) {
+        let poll = undefined;
+        if (currentPost.poll !== undefined && currentPost.images.length < 1) {
+          poll = JSON.parse(JSON.stringify(currentPost.poll));
+          console.log("there is a poll");
+          let timeString = currentPost.poll.endTime;
+          console.log(timeString);
+          let days = timeString.split(":")[0];
+          let hours = timeString.split(":")[1];
+          let minutes = timeString.split(":")[2];
+          let endTime = new Date();
+          endTime.setDate(endTime.getDate() + +days);
+          endTime.setHours(endTime.getHours() + +hours);
+          endTime.setMinutes(endTime.getMinutes() + +minutes);
+          poll = {
+            ...poll,
+            endTime: `${endTime.getFullYear()}-${endTime.getMonth()}-${endTime.getDate()} ${endTime.getHours()}:${endTime.getMinutes()}`,
+          };
+        }
+
+        let body = {
+          content: currentPost.content,
+          author: currentPost.author,
+          images: currentPost.images,
+          poll,
+          replies: [],
+          scheduled: currentPost.scheduled,
+          scheduledDate: currentPost.scheduledDate,
+          audience: currentPost.audience,
+          replyRestriction: currentPost.replyRestriction,
+          token: token,
+        };
+
+        console.log(body);
+
         dispatch(createPost(body));
       } else {
+        let body = {
+          content: currentPost.content,
+          author: currentPost.author,
+          replies: [],
+          scheduled: currentPost.scheduled,
+          scheduledDate: currentPost.scheduledDate,
+          audience: currentPost.audience,
+          replyRestriction: currentPost.replyRestriction,
+          token: token,
+          images: [],
+          poll: undefined,
+          imageFiles: currentPostImages,
+        };
         dispatch(createPostWithMedia(body));
       }
     }

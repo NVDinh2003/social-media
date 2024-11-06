@@ -17,25 +17,20 @@ import RepostNotificationSVG from "../../../../components/SVGs/NotificationActio
 export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
   notifications,
 }) => {
+  console.log(notifications.length);
   const groupedNotifications = (): JSX.Element[] => {
     const sorted: INotification[] = sortNotificationsByTimestamp(notifications);
     let notificationMap = new Map<string, INotification[]>();
     let notificationComponents: JSX.Element[] = [];
     let key = "";
-    let listKeys: string[] = [];
-
-    // console.log(sorted[0].notificationTimestamp);
 
     sorted.forEach((notification) => {
       const todaysDate = new Date();
-      // console.log(notification.notificationTimestamp);
       const notificationDate = new Date(notification.notificationTimestamp);
       const dateString = `${
         notificationDate.getMonth() + 1
       }-${notificationDate.getDate()}-${notificationDate.getFullYear()}`;
       key = "";
-
-      // console.log(dateString);
 
       if (notification.acknowledged) {
         if (
@@ -49,14 +44,10 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
             notification.reply.postId
           }`;
         } else if (lessThanMonth(todaysDate, notificationDate)) {
-          // less than month
-          // console.log("less than month");
           key = `read${notification.notificationType.toLowerCase()}NotificationsFor${dateString}${
-            notification.post && `AndPost${notification.post.postId}`
-          }: ''`;
+            notification.post ? `AndPost${notification.post.postId}` : ""
+          }`;
         } else if (lessThanYear(todaysDate, notificationDate)) {
-          // less than year
-          // console.log("less than year");
           key = `read${notification.notificationType.toLowerCase()}Notifications${
             notification.post ? `ForPost${notification.post.postId}` : ""
           }`;
@@ -69,8 +60,6 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
           readNotifications!.push(notification);
           notificationMap.set(key, readNotifications!);
         }
-        listKeys.push(key);
-        //
       } else {
         if (
           notification.notificationType === "REPLY" &&
@@ -93,11 +82,8 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
         const unreadNotifications = notificationMap.get(key);
         unreadNotifications!.push(notification);
         notificationMap.set(key, unreadNotifications!);
-        listKeys.push(key);
       }
     });
-
-    // console.log(listKeys);
 
     let unreadNotificationLists: Array<INotification[]> = [];
     let readNotificationLists: Array<INotification[]> = [];
@@ -124,9 +110,7 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
   const notificationListToElement = (
     notificationList: INotification[]
   ): JSX.Element => {
-    //
     let feedPost;
-
     switch (notificationList[0].notificationType) {
       case "FOLLOW":
         return (
@@ -145,7 +129,7 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
               <LikeNotificationSVG
                 height={30}
                 width={30}
-                color={"rgb(249,24,128"}
+                color={"rgb(249, 24, 128)"}
               />
             }
           />
@@ -160,7 +144,7 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
               <RepostNotificationSVG
                 height={30}
                 width={30}
-                color={"rgb(0,186,124"}
+                color={"rgb(0, 186, 124)"}
               />
             }
           />
@@ -189,7 +173,6 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
           repost: false,
           repostUser: notificationList[0].actionUser,
         };
-
         return (
           <Notification icon={<></>} notifications={notificationList}>
             <Post
@@ -204,5 +187,5 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
     }
   };
 
-  return <div className="notification-all">{groupedNotifications()}</div>;
+  return <div className="notifications-all">{groupedNotifications()}</div>;
 };

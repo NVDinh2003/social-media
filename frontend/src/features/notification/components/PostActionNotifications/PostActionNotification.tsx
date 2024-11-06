@@ -6,13 +6,13 @@ import { Notification } from "../Notification/Notification";
 import { NotificationUsersText } from "../NotificationUsersText/NotificationUsersText";
 import { NotificationPostContent } from "../NotificationPostContent/NotificationPostContent";
 
-interface PostActionNotificationProps {
+interface PostActionNotificationsProps {
   icon: JSX.Element;
   text: string;
   notifications: INotification[];
 }
 
-export const PostActionNotification: React.FC<PostActionNotificationProps> = ({
+export const PostActionNotification: React.FC<PostActionNotificationsProps> = ({
   icon,
   text,
   notifications,

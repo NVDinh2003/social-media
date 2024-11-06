@@ -222,6 +222,8 @@ export const createPostWithMedia = createAsyncThunk(
 
       let res = await axios(config);
 
+      thunkAPI.dispatch(setSessionTime(new Date()));
+
       return res.data;
     } catch (e) {
       thunkAPI.rejectWithValue(e);
