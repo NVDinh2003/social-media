@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import moment from "moment";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 
@@ -11,6 +11,7 @@ import { ImageInfo, User } from "../../../../utils/GlobalInterface";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { updateDisplayEditProfile } from "../../../../redux/Slices/ModalSlice";
+import TimeJoinedSVG from "../../../../components/SVGs/EditProfile/TimeJoinedSVG";
 
 interface ProfileFollowSectionProps {
   profilePicture: ImageInfo | null;
@@ -175,6 +176,12 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
         <h1 className="text-lg font-bold">{profileUser?.lastName}</h1>
         <span className="text-[#71767B]">@{profileUser?.username}</span>
         <span className="mt-3"> {profileUser?.bio} </span>
+
+        <p className="text-[#575B5F] font-semibold mt-2 flex items-center">
+          <TimeJoinedSVG height={20} width={20} /> Tham gia vào{" "}
+          {moment(profileUser?.createTimestamp).format("MMMM YYYY")}
+        </p>
+
         <div className="flex items-center justify-center mt-3 gap-4">
           <Link
             to="following"
