@@ -211,8 +211,21 @@ public class PostService {
         return postMapper.convertToDTO(post);
     }
 
-    public Set<Post> getAllPostsByAuthor(ApplicationUser author) {
-        return postRepository.findByAuthor(author).orElse(new HashSet<>());
+    public Set<PostDTO> getAllPostsByAuthor(ApplicationUser author) {
+        return postRepository.findByAuthorOrderByPostedDateDesc(author).orElse(new HashSet<>())
+                .stream()
+                .sorted() // Sort using the compareTo method
+                .map(postMapper::convertToDTO)
+                .collect(Collectors.toCollection(LinkedHashSet::new)); // Maintain order
+    }
+
+    public Set<PostDTO> getAllRepostPostsByUser(Integer userId) {
+        ApplicationUser user = userService.getUserById(userId);
+        return postRepository.findByRepostsOrderByPostedDateDesc(user).orElse(new HashSet<>())
+                .stream()
+                .sorted() // Sort using the compareTo method
+                .map(postMapper::convertToDTO)
+                .collect(Collectors.toCollection(LinkedHashSet::new)); // Maintain order
     }
 
     public Page<Post> getFeedPage(Integer userId, LocalDateTime sessionStart, Integer page) {
@@ -398,4 +411,6 @@ public class PostService {
 
         return posts;
     }
+
+
 }

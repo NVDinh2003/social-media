@@ -15,6 +15,7 @@ import { EditProfile } from "../features/profile/components/EditProfile/EditProf
 import { updateDisplayEditProfile } from "../redux/Slices/ModalSlice";
 import { Post } from "../features/post/components/Post/Post";
 import { ProfileUserPost } from "../features/profile/components/ProfileUserPost/ProfileUserPost";
+import { ProfileUserRepost } from "../features/profile/components/ProfileUserPost/ProfileUserRepost";
 
 export const Profile: React.FC = () => {
   const token = useSelector((state: RootState) => state.user.token);
@@ -64,6 +65,8 @@ export const Profile: React.FC = () => {
         }
       );
 
+      console.log(req.data);
+
       setPosts(req.data);
     } catch (e) {
       console.log("Issue loading posts: ", e);
@@ -110,7 +113,7 @@ export const Profile: React.FC = () => {
             <div className="w-full flex items-end justify-end gap-10 ">
               <div
                 id="tweets"
-                className="border-l md:w-[592px] w-full border-l-gray-500 border-r border-r-gray-500 border-opacity-50 self-start flex flex-col items-center"
+                className="border-l md:w-[624px] w-full border-l-gray-500 border-r border-r-gray-500 border-opacity-50 self-start flex flex-col items-center"
               >
                 <ProfileTopBar
                   nickname={profileUser.nickname}
@@ -140,49 +143,72 @@ export const Profile: React.FC = () => {
                 >
                   <div
                     onClick={(e: any) => handleClick(0)}
-                    // className={current == 0 ? "border-bottom" : "no-border"}
                     style={{ cursor: "pointer" }}
                     className="w-full h-full px-2 md:px-4 flex items-center justify-center transition-all hover:bg-[#0f14191a] cursor-pointer "
                   >
-                    <span className="font-bold h-full border-b-4 border-[#1d9bf0] flex items-center justify-center ">
+                    <span
+                      className={
+                        current === 0
+                          ? "font-bold h-full border-b-4 border-[#1d9bf0] flex items-center justify-center "
+                          : "text-[#71767B] whitespace-nowrap "
+                      }
+                    >
                       Post
                     </span>
                   </div>
 
                   <div
                     onClick={(e: any) => handleClick(1)}
-                    // className={current == 1 ? "border-bottom" : ""}
                     style={{ cursor: "pointer" }}
                     className="w-full h-full px-2 md:px-4 flex items-center justify-center transition-all hover:bg-[#0f14191a] cursor-pointer"
                   >
-                    <span className="text-[#71767B] whitespace-nowrap ">
+                    <span
+                      className={
+                        current === 1
+                          ? "font-bold h-full border-b-4 border-[#1d9bf0] flex items-center justify-center "
+                          : "text-[#71767B] whitespace-nowrap "
+                      }
+                    >
                       Reply
                     </span>
                   </div>
 
                   <div
                     onClick={(e: any) => handleClick(2)}
-                    // className={current == 2 ? "border-bottom" : ""}
                     style={{ cursor: "pointer" }}
                     className="w-full h-full px-2 md:px-4 flex items-center justify-center transition-all hover:bg-[#0f14191a] cursor-pointer"
                   >
-                    <span className="text-[#71767B] whitespace-nowrap ">
-                      Media
+                    <span
+                      className={
+                        current === 2
+                          ? "font-bold h-full border-b-4 border-[#1d9bf0] flex items-center justify-center "
+                          : "text-[#71767B] whitespace-nowrap "
+                      }
+                    >
+                      Repost
                     </span>
                   </div>
 
                   <div
                     onClick={(e: any) => handleClick(3)}
-                    // className={current == 3 ? "border-bottom" : ""}
                     style={{ cursor: "pointer" }}
                     className="w-full h-full px-2 md:px-4 flex items-center justify-center transition-all hover:bg-[#0f14191a] cursor-pointer"
                   >
-                    <span className="text-[#71767B] whitespace-nowrap ">
-                      Likes
+                    <span
+                      className={
+                        current === 3
+                          ? "font-bold h-full border-b-4 border-[#1d9bf0] flex items-center justify-center "
+                          : "text-[#71767B] whitespace-nowrap "
+                      }
+                    >
+                      Media
                     </span>
                   </div>
                 </div>
                 {current == 0 && <ProfileUserPost posts={posts} />}
+                {current == 2 && (
+                  <ProfileUserRepost userId={profileUser.userId} />
+                )}
               </div>
 
               <div

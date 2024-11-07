@@ -1,6 +1,5 @@
 import data from "../assets/list.with.modifiers.json";
 import dataWithImg from "../assets/list.with.images.coppy.json";
-import { ClassNames } from "@emotion/react";
 
 const EMOJIS = data.emojis;
 const EMOJIS_IMG = dataWithImg.emojis;

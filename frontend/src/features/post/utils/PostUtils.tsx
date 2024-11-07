@@ -180,6 +180,8 @@ export const renderLocationInfo = (post: Post) => {
 
   if (!isLocationValid) return null;
 
+  // console.log(districtCode, provinceCode, wardCode);
+
   const locationInfo = getDisplayLocationInfo({
     address,
     provinceCode,

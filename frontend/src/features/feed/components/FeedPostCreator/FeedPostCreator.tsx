@@ -80,10 +80,27 @@ export const FeedPostCreator: React.FC = () => {
 
   const submitPost = () => {
     if (currentPost && loggedInUser) {
+      let body = {
+        content: currentPost.content,
+        author: currentPost.author,
+        replies: [],
+        audience: currentPost.audience,
+        replyRestriction: currentPost.replyRestriction,
+        scheduled: currentPost.scheduled,
+        scheduledDate: currentPost.scheduledDate,
+        provinceCode: currentPost.provinceCode,
+        districtCode: currentPost.districtCode,
+        wardCode: currentPost.wardCode,
+        address: currentPost.address,
+        token: token,
+        images: currentPostImages.length > 0 ? [] : currentPost.images,
+        poll: currentPost.poll,
+        imageFiles: currentPostImages,
+      };
+
       if (currentPostImages.length === 0) {
-        let poll = undefined;
         if (currentPost.poll !== undefined && currentPost.images.length < 1) {
-          poll = JSON.parse(JSON.stringify(currentPost.poll));
+          let poll = JSON.parse(JSON.stringify(currentPost.poll));
           console.log("there is a poll");
           let timeString = currentPost.poll.endTime;
           console.log(timeString);
@@ -98,43 +115,14 @@ export const FeedPostCreator: React.FC = () => {
             ...poll,
             endTime: `${endTime.getFullYear()}-${endTime.getMonth()}-${endTime.getDate()} ${endTime.getHours()}:${endTime.getMinutes()}`,
           };
+          body.poll = poll;
         }
-
-        let body = {
-          content: currentPost.content,
-          author: currentPost.author,
-          images: currentPost.images,
-          poll,
-          replies: [],
-          scheduled: currentPost.scheduled,
-          scheduledDate: currentPost.scheduledDate,
-          audience: currentPost.audience,
-          replyRestriction: currentPost.replyRestriction,
-          token: token,
-        };
-
-        console.log(body);
-
         dispatch(createPost(body));
       } else {
-        let body = {
-          content: currentPost.content,
-          author: currentPost.author,
-          replies: [],
-          scheduled: currentPost.scheduled,
-          scheduledDate: currentPost.scheduledDate,
-          audience: currentPost.audience,
-          replyRestriction: currentPost.replyRestriction,
-          token: token,
-          images: [],
-          poll: undefined,
-          imageFiles: currentPostImages,
-        };
         dispatch(createPostWithMedia(body));
       }
     }
   };
-
   const generateButtonClass = (): string => {
     if (currentPost) {
       let content: string = currentPost.content;

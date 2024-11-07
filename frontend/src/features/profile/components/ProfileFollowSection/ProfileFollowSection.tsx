@@ -145,7 +145,7 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
       id="user-information"
       className="w-full flex flex-col justify-between relative pb-2"
     >
-      <div className="w-full h-[200px] relative bg-[#333639] ">
+      <div className="w-full h-[200px] relative bg-[#aab8c2] ">
         <div
           className="profile-banner-picture"
           style={

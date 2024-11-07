@@ -36,7 +36,7 @@ export const ForgotFormTwo: React.FC<ForgotFormTwoProps> = ({
         transformed += email.charAt(i++);
         transformed += email.charAt(i);
         domain = true;
-      } else if (domain == true && email.charAt(i) === ".")
+      } else if (domain === true && email.charAt(i) === ".")
         transformed += email.charAt(i);
       else transformed += "*";
     }

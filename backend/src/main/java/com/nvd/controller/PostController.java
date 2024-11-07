@@ -70,10 +70,15 @@ public class PostController {
     }
 
     @GetMapping("/author/{userId}")
-    public Set<Post> getAllPostsByAuthor(@PathVariable("userId") Integer userId) {
+    public Set<PostDTO> getAllPostsByAuthor(@PathVariable("userId") Integer userId) {
         ApplicationUser author = userService.getUserById(userId);
 
         return postService.getAllPostsByAuthor(author);
+    }
+
+    @GetMapping("/repost/user/{userId}")
+    public Set<PostDTO> getAllRepostPostsByUser(@PathVariable("userId") Integer userId) {
+        return postService.getAllRepostPostsByUser(userId);
     }
 
     @DeleteMapping("/{id}")

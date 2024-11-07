@@ -18,8 +18,6 @@ import { PostMore } from "../PostMore/PostMore";
 import { PostUsername } from "./PostUsername/PostUsername";
 import { PostContent } from "./PostContent/PostContent";
 import { PostActionBar } from "./PostActionBar/PostActionBar";
-import { getDisplayLocationInfo } from "../../../feed/utils/LocationUtils";
-import LocationSVG from "../../../../components/SVGs/LocationSVG";
 
 interface PostProps {
   feedPost: FeedPost;
@@ -35,6 +33,8 @@ export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
   const loggedIn = useSelector((state: RootState) => state.user.loggedIn);
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
+
+  console.log(feedPost.repost);
 
   const batchView = (entries: any) => {
     entries.forEach((entry: any) => {
