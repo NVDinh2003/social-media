@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  FeedPost,
-  Notification as INotification,
-} from "../../../../utils/GlobalInterface";
+import { Notification as INotification } from "../../../../utils/GlobalInterface";
 
 import "./NotificationsAll.css";
 import { FollowNotification } from "../FollowNotification/FollowNotification";

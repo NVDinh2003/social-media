@@ -3,7 +3,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./Reply.css";
 import { Post } from "../../../../utils/GlobalInterface";
 import CircleIcon from "@mui/icons-material/Circle";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import VerifiedIcon from "@mui/icons-material/Verified";
 
 import {
@@ -18,11 +17,11 @@ interface ReplyProps {
 
 export const Reply: React.FC<ReplyProps> = ({ reply }) => {
   //
+  // console.log(reply);
   const defaultPfp = process.env.REACT_APP_PFP;
   const overflowRef = useRef<HTMLDivElement>(null);
   const [overflowing, setOverflowing] = useState<boolean>(false);
-
-  const postImageContainer = useMemo(
+  const replyImageContainer = useMemo(
     () => createImagePostContainer(reply.images),
     [reply.postId]
   );
@@ -40,30 +39,26 @@ export const Reply: React.FC<ReplyProps> = ({ reply }) => {
         <img
           className="reply-pfp"
           src={
-            reply.author.profilePicture
+            reply.author && reply.author.profilePicture
               ? reply.author.profilePicture.imageURL
               : defaultPfp
           }
           alt={`${reply.author.nickname}'s pfp`}
         />
       </div>
-
       <div className="reply-right">
         <div className="post-right-top">
           <div className="post-user-info">
             <p className="post-nickname">{reply.author.nickname}</p>
-            {/* Add in verified once i add verified to the user on the backend */}
             {reply.author.verifiedAccount && (
               <VerifiedIcon
                 sx={{
-                  color: "#1da1f2",
+                  color: "#1DA1F2",
                   width: "20px",
                   height: "20px",
                 }}
               />
             )}
-
-            {/* Add in ord image once i add orgs to the user on the backend */}
             {reply.author.organization && (
               <img
                 className="post-organization"
@@ -71,19 +66,10 @@ export const Reply: React.FC<ReplyProps> = ({ reply }) => {
                 alt={`${reply.author.username}'s organization`}
               />
             )}
-
             <p className="post-username">@{reply.author.username}</p>
-            {/* <div className="post-dot-section">
-              <p className="post-dot">.</p>
-            </div> */}
             <CircleIcon
-              sx={{
-                height: "4px",
-                width: "4px",
-                color: "#657786",
-              }}
+              sx={{ height: "4px", width: "4px", color: "#657786" }}
             />
-            {/* Update convert posted date to string to say hours up to 24, days up to 7, then mon day if this year, mon day, year after */}
             {reply.postedDate && (
               <p className="post-posted-at">
                 {convertPostedDateToString(reply.postedDate)}
@@ -91,19 +77,11 @@ export const Reply: React.FC<ReplyProps> = ({ reply }) => {
             )}
           </div>
         </div>
-
-        {/* <div className="reply-content">{reply.content}</div> */}
-        <div
-          className="reply-content"
-          ref={overflowRef}
-          // dangerouslySetInnerHTML={formatTextContent(reply.content)}
-        >
-          {convertPostContentToElements(reply.content, "creator")}
+        <div className="reply-content" ref={overflowRef}>
+          {convertPostContentToElements(reply.content, "post")}
         </div>
-
-        {reply.images.length > 0 && postImageContainer}
-
         {overflowing && <p className="reply-show-more">Show more</p>}
+        {reply.images.length > 0 && replyImageContainer}
       </div>
     </div>
   );

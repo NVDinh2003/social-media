@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../../redux/Store";
 
-import { FeedPost, Post as IPost } from "../../../../utils/GlobalInterface";
+import { Post as IPost } from "../../../../utils/GlobalInterface";
 import { Post } from "../../../post/components/Post/Post";
 import { convertPostToFeedPost } from "../../utils/ProfileUitls";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/Store";
 
 interface ProfileUserPostProps {
   posts: IPost[];
@@ -13,10 +13,9 @@ interface ProfileUserPostProps {
 
 export const ProfileUserPost: React.FC<ProfileUserPostProps> = ({ posts }) => {
   const hiddenDiv = useRef<HTMLDivElement>(null);
-  const dispatch: AppDispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.user);
 
-  console.log("Profile post", posts);
+  // console.log("Profile post", posts);
 
   const fetchNextPosts = (entries: any) => {
     entries.forEach((entry: any) => {
@@ -40,13 +39,15 @@ export const ProfileUserPost: React.FC<ProfileUserPostProps> = ({ posts }) => {
 
   return (
     <div className="w-full flex flex-col min-h-screen ">
-      {posts.map((post) => (
-        <Post
-          feedPost={convertPostToFeedPost(post)}
-          key={post.postId}
-          notification={false}
-        />
-      ))}
+      {posts
+        .filter((post) => !post.replyTo)
+        .map((post) => (
+          <Post
+            feedPost={convertPostToFeedPost(post)}
+            key={post.postId}
+            notification={false}
+          />
+        ))}
       <div id="autoload" ref={hiddenDiv} hidden={posts.length === 0}>
         <CircularProgress
           size={30}

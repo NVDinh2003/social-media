@@ -28,15 +28,22 @@ public class FeedService {
             following.add(currentUser); // include the current user in the feed as well as their followings
         }
 
+        // lấy các posts của user hiện tại và các posts của các user mà họ đang theo dõi
         Page<Post> followingPosts = postService.getFeedPage(userId, sessionStart, page);
         List<FeedPostDTO> listPosts = followingPosts.map(post -> {
             FeedPostDTO feedPostDTO = new FeedPostDTO();
             feedPostDTO.setPost(postMapper.convertToDTO(post));
-            feedPostDTO.setReplyTo(post.getReply() ? postMapper.convertToEntity(postService.getPostById(post.getReplyTo())) : null);
 
+            // nếu post này là reply thì sẽ lấy bài post gốc mà nó reply
+            feedPostDTO.setReplyTo(post.isReply() ? postService.getPostDTOById(post.getReplyTo()) : null);
+
+            // check user hiện tại có follow author không và check author có là user hiện tại hay không
+            // -> true nếu current user không follow author không và author không phải là current user
             feedPostDTO.setRepost(!post.getAuthor().getFollowers().contains(userService.getUserById(userId))
                     && !post.getAuthor().equals(userService.getUserById(userId)));
+
             feedPostDTO.setRepostUser(
+                    // nếu là repost, duyệt qua list user đã repost bài post này, lọc và tìm user đầu tiên mà current user đang theo dõi
                     feedPostDTO.isRepost() ?
                             post.getReposts().stream().filter(user ->
                                     userService.getUserById(userId).getFollowing().contains(user)
@@ -47,4 +54,5 @@ public class FeedService {
 
         return new FetchFeedResponseDTO(page, sessionStart, listPosts);
     }
+
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nvd.dto.request.CreatePostDTO;
 import com.nvd.dto.request.CreateReplyDTO;
 import com.nvd.dto.response.PostDTO;
+import com.nvd.dto.response.UserReplyPostDTO;
 import com.nvd.exceptions.PostDoesNotExistException;
 import com.nvd.exceptions.UnableToCreatePostException;
 import com.nvd.mappers.PostMapper;
@@ -205,14 +206,18 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public PostDTO getPostById(Integer id) {
+    public PostDTO getPostDTOById(Integer id) {
         //TODO: setup custom exception for post that does not exist
         Post post = postRepository.findById(id).orElseThrow(PostDoesNotExistException::new);
         return postMapper.convertToDTO(post);
     }
 
+    public Post getPostEntityById(Integer id) {
+        return postRepository.findById(id).orElseThrow(PostDoesNotExistException::new);
+    }
+
     public Set<PostDTO> getAllPostsByAuthor(ApplicationUser author) {
-        return postRepository.findByAuthorOrderByPostedDateDesc(author).orElse(new HashSet<>())
+        return postRepository.findByAuthorOrderByPostedDateDesc(author)
                 .stream()
                 .sorted() // Sort using the compareTo method
                 .map(postMapper::convertToDTO)
@@ -226,6 +231,24 @@ public class PostService {
                 .sorted() // Sort using the compareTo method
                 .map(postMapper::convertToDTO)
                 .collect(Collectors.toCollection(LinkedHashSet::new)); // Maintain order
+    }
+
+    public List<UserReplyPostDTO> getAllReplyPostsByUser(Integer userId) {
+        ApplicationUser user = userService.getUserById(userId);
+        List<Post> listPosts = postRepository.findByAuthorOrderByPostedDateDesc(user)
+                .stream()
+                .sorted() // Sort using the compareTo method
+                .toList();
+
+        return listPosts.stream()
+                // loc post là reply va lấy bài post gốc mà nó reply
+                .filter(Post::isReply)
+                .map(post -> {
+                    UserReplyPostDTO userReplyPostDTO = new UserReplyPostDTO();
+                    userReplyPostDTO.setPost(postMapper.convertToDTO(post));
+                    userReplyPostDTO.setReplyTo(getPostDTOById(post.getReplyTo()));
+                    return userReplyPostDTO;
+                }).toList();
     }
 
     public Page<Post> getFeedPage(Integer userId, LocalDateTime sessionStart, Integer page) {
@@ -253,7 +276,7 @@ public class PostService {
 
 //        Post reply = createPost(postDTO);
         Post reply = postMapper.convertToEntity(createPost(postDTO));
-        reply.setReply(true);
+        reply.setIsReply(true);
         reply.setReplyTo(replyDTO.getOriginalPost());
 
         Post original = postRepository.findById(replyDTO.getOriginalPost()).orElseThrow(UnableToCreatePostException::new);
@@ -290,7 +313,7 @@ public class PostService {
 
 //            Post replyPost = createPost(postDTO);
             Post replyPost = postMapper.convertToEntity(createPost(postDTO));
-            replyPost.setReply(true);
+            replyPost.setIsReply(true);
             replyPost.setReplyTo(dto.getOriginalPost());
 
             Post original = postRepository.findById(dto.getOriginalPost()).orElseThrow(UnableToCreatePostException::new);

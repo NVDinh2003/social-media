@@ -115,6 +115,9 @@ export function createImageContainer(images: File[]): JSX.Element {
 }
 
 export function createImagePostContainer(images: PostImage[]): JSX.Element {
+  if (!images || images.length === 0) {
+    return <div className="feed-post-creator-images-container">No images</div>;
+  }
   if (images.length % 2 === 0) {
     // console.log(images.length);
     return (

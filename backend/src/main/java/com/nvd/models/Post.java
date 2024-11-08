@@ -52,7 +52,7 @@ public class Post implements Comparable<Post> {
     //TODO: Figure out video upload
 
     @Column(name = "is_reply")
-    private Boolean reply;
+    private Boolean isReply;
 
     @Column(name = "reply_to")
     private Integer replyTo;
@@ -135,11 +135,12 @@ public class Post implements Comparable<Post> {
         this.views = new HashSet<>();
     }
 
-    public Boolean getReply() {
-        if (reply == null)
+    public Boolean isReply() {
+        if (isReply == null)
             return false;
-        return reply;
+        return isReply;
     }
+
 
     @Override   // so sánh 2 obj Post dựa vào postedDate,
     //    sắp xếp theo thứ tự giảm dần của postedDate (mới nhất lên đầu).

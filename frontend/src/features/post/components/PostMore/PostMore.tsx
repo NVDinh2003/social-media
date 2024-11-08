@@ -24,6 +24,7 @@ export const PostMore: React.FC<PostMoreProps> = ({ postId, postAuthor }) => {
   const [active, setActive] = useState<boolean>(false);
 
   const openPostMoreOptions = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     const id: number = +e.currentTarget.id;
     dispatch(updateDisplayPostMore());
     if (id === postId) {

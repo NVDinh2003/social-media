@@ -16,6 +16,16 @@ public class FeedController {
 
     private final FeedService feedService;
 
+//    @PostMapping()
+//    public FetchFeedResponseDTO getPostsForFeed(@RequestBody FeedRequestDTO feedRequestDTO) {
+//
+//        return feedService.getFeedForUser
+//                (feedRequestDTO.getUserId(),
+//                        feedRequestDTO.getSessionStart(),
+//                        feedRequestDTO.getPage());
+//
+//    }
+
     @PostMapping()
     public FetchFeedResponseDTO getPostsForFeed(@RequestBody FeedRequestDTO feedRequestDTO) {
 

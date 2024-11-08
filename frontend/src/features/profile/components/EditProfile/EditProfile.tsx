@@ -1,19 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Modal } from "../../../../components/Modal/Modal";
-import { BottomlessModal } from "../../../../components/BottomlessModal/BottomlessModal";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { updateDisplayEditProfile } from "../../../../redux/Slices/ModalSlice";
 import Close from "@mui/icons-material/Close";
-
-import axios from "axios";
-import { ValidatedTextInput } from "../../../../components/ValidatedInput/ValidatedTextInput";
-import { RegisterNameInputs } from "../../../register/components/RegisterNameInput/RegisterNameInputs";
-import { RegisterEmailInput } from "../../../register/components/RegisterEmailInput/RegisterEmailInput";
-import { RegisterDateInput } from "../../../register/components/RegisterDateInput/RegisterDateInput";
 import { EditProfileAndBannerPicture } from "./EditProfileAndBannerPicture";
-
-import { current } from "@reduxjs/toolkit";
 import { EditUserInfoForm } from "./EditUserInfoForm";
 import { User, Dob } from "../../../../utils/GlobalInterface";
 import {

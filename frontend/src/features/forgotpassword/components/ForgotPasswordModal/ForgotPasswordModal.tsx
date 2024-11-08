@@ -36,9 +36,9 @@ export const ForgotPasswordModal: React.FC<{ toggleModal: () => void }> = ({
   });
   const [matching, setMatching] = useState<boolean>(true);
 
-  const changeCredential = (credential: string) => {
-    setCredential(credential);
-  };
+  // const changeCredential = (credential: string) => {
+  //   setCredential(credential);
+  // };
 
   const changeUserInputCode = (value: number) => {
     setUserInputCode(value);

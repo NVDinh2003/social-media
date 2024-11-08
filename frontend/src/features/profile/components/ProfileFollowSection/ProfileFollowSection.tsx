@@ -14,13 +14,11 @@ import { updateDisplayEditProfile } from "../../../../redux/Slices/ModalSlice";
 import TimeJoinedSVG from "../../../../components/SVGs/EditProfile/TimeJoinedSVG";
 
 interface ProfileFollowSectionProps {
-  profilePicture: ImageInfo | null;
   profileUser: User;
   selfMode: boolean;
 }
 
 export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
-  profilePicture,
   profileUser,
   selfMode,
 }) => {
@@ -69,13 +67,6 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
   useEffect(() => {
     // console.log("selfMode in ProfileFollowSection:", selfMode);
   }, [selfMode]);
-
-  // github
-  const navigate = useNavigate();
-  const params = useParams();
-
-  const [loading, setLoading] = useState(false);
-  const [editMode, setEditMode] = useState(false);
 
   function EditButton() {
     return (

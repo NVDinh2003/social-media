@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 
 import "./CreatePostButtonCluster.css";
 import MediaSVG from "../../../../components/SVGs/MediaSVG";

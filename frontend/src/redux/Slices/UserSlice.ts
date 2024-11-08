@@ -3,10 +3,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../utils/GlobalInterface";
 import axios from "axios";
 import { getFollowers, getFollowing } from "../../services/UserService";
-import {
-  cleanDateForRequest,
-  convertDateStringToDob,
-} from "../../utils/DateUtils";
+import { cleanDateForRequest } from "../../utils/DateUtils";
 
 const baseURL = process.env.REACT_APP_API_URL;
 

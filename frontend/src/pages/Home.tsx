@@ -9,7 +9,6 @@ import { FeedPostCreatorTagPeopleModal } from "../features/feed/components/FeedP
 import { FeedPostCreatorGifModal } from "../features/feed/components/FeedPostCreatorGifModal/FeedPostCreatorGifModal";
 import { SchedulePostModal } from "../features/schedule-post/SchedulePostModal/SchedulePostModal";
 import { FeedPostCreatorLocationModal } from "../features/feed/components/FeedPostCreatorLocationModal/FeedPostCreatorLocationModal";
-import { EditProfile } from "../features/profile/components/EditProfile/EditProfile";
 
 export const Home: React.FC = () => {
   //

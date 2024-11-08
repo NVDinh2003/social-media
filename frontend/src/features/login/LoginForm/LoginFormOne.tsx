@@ -8,7 +8,6 @@ import { validateEmail, validatePhone } from "../../../services/Validator";
 import { ValidatedTextInput } from "../../../components/ValidatedInput/ValidatedTextInput";
 import { ModalButton } from "../../../components/ModalButton/ModalButton";
 
-import google from "../../../assets/google.png";
 import apple from "../../../assets/apple.png";
 
 import "../../../assets/global.css";

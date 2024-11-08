@@ -52,7 +52,7 @@ export const PostMoreModal: React.FC<PostMoreModalProps> = ({
           <FollowSVG width={18} height={18} />
         )}
         <p className="post-more-modal-option-text">
-          {following ? "Unfollow" : "Follow"} @{author.username}0
+          {following ? "Unfollow" : "Follow"} @{author.username}
         </p>
       </div>
 

@@ -27,12 +27,12 @@ public class PostDTO implements Comparable<PostDTO> {
     private ApplicationUser author;
     private Set<ApplicationUser> likes;
     private List<Image> images;
-    private Boolean reply;
+    private Boolean isReply;
     private Integer replyTo;
     private Set<Post> replies;
     private Set<ApplicationUser> reposts;
     private Set<ApplicationUser> bookmarks;
-    private Set<ApplicationUser> views;
+    private Set<Integer> views;
     private boolean scheduled;
     private LocalDateTime scheduledDate;
     private Audience audience;
@@ -43,10 +43,10 @@ public class PostDTO implements Comparable<PostDTO> {
     private String districtCode;
     private String wardCode;
 
-    public Boolean getReply() {
-        if (reply == null)
+    public Boolean isReply() {
+        if (isReply == null)
             return false;
-        return reply;
+        return isReply;
     }
 
     @Override       // so sánh 2 obj Post dựa vào postedDate,

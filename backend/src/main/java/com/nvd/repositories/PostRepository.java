@@ -16,9 +16,11 @@ import java.util.Set;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
-    Optional<Set<Post>> findByAuthorOrderByPostedDateDesc(ApplicationUser author);
+    Set<Post> findByAuthorOrderByPostedDateDesc(ApplicationUser author);
 
     Optional<Set<Post>> findByRepostsOrderByPostedDateDesc(ApplicationUser author);
+
+    //    Optional<Set<Post>> findByRepliesOrderByPostedDateDesc(ApplicationUser author);
 
     // lấy tất cả các bài đăng có liên quan đến user,
     // union

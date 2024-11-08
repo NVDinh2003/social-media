@@ -4,6 +4,7 @@ import com.nvd.dto.request.CreatePostDTO;
 import com.nvd.dto.request.CreateReplyDTO;
 import com.nvd.dto.request.CreateViewsDTO;
 import com.nvd.dto.response.PostDTO;
+import com.nvd.dto.response.UserReplyPostDTO;
 import com.nvd.exceptions.PostDoesNotExistException;
 import com.nvd.exceptions.UnableToCreatePostException;
 import com.nvd.models.ApplicationUser;
@@ -66,7 +67,7 @@ public class PostController {
 
     @GetMapping("/{id}")
     public PostDTO getPostById(@PathVariable int id) {
-        return postService.getPostById(id);
+        return postService.getPostDTOById(id);
     }
 
     @GetMapping("/author/{userId}")
@@ -79,6 +80,11 @@ public class PostController {
     @GetMapping("/repost/user/{userId}")
     public Set<PostDTO> getAllRepostPostsByUser(@PathVariable("userId") Integer userId) {
         return postService.getAllRepostPostsByUser(userId);
+    }
+
+    @GetMapping("/reply/user/{userId}")
+    public List<UserReplyPostDTO> getAllReplyPostsByUser(@PathVariable("userId") Integer userId) {
+        return postService.getAllReplyPostsByUser(userId);
     }
 
     @DeleteMapping("/{id}")

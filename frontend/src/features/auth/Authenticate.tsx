@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setToken, getUserByToken } from "../../redux/Slices/UserSlice";
-import axios from "axios";
-import { AppDispatch } from "../../redux/Store";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 export const Authenticate: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch: AppDispatch = useDispatch();
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [jwt, setJwt, removeJwt] = useLocalStorage("token", "");
 

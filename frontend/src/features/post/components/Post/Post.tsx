@@ -29,12 +29,12 @@ export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
   const postRef = useRef<HTMLDivElement>(null);
   //
   const defaultPfp = process.env.REACT_APP_PFP;
-  const { post } = feedPost;
+  const { post, replyTo, repost, repostUser } = feedPost;
   const loggedIn = useSelector((state: RootState) => state.user.loggedIn);
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log(feedPost.repost);
+  // console.log(repost);
 
   const batchView = (entries: any) => {
     entries.forEach((entry: any) => {
@@ -86,7 +86,7 @@ export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
       ref={postRef}
       onClick={openPost}
     >
-      {feedPost.repost && (
+      {repost && (
         <p
           className="post-repost-info"
           onMouseOver={() => {
@@ -94,7 +94,7 @@ export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
           }}
         >
           <RepostOutlineSVG height={18} width={18} color={"#657786"} />
-          <PostUsername author={feedPost.repostUser} repost={true} />
+          <PostUsername author={repostUser} repost={true} />
         </p>
       )}
 
@@ -165,12 +165,12 @@ export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
             <PostMore postId={post.postId} postAuthor={post.author} />
           </div>
 
-          {notification && feedPost.replyTo && (
+          {notification && replyTo && (
             <div className="post-replying-to-container">
               <div className="post-replying-to">
                 Replying to{" "}
                 <div className="post-replying-to-user">
-                  @{feedPost.replyTo?.author.username}
+                  @{replyTo?.author.username}
                 </div>
               </div>
             </div>
@@ -178,17 +178,15 @@ export const Post: React.FC<PostProps> = ({ feedPost, notification }) => {
 
           <div
             className={
-              notification && feedPost.replyTo
-                ? "post-content-negative-wrapper"
-                : ""
+              notification && replyTo ? "post-content-negative-wrapper" : ""
             }
           >
-            <PostContent post={feedPost.post} location={"post"} />
+            <PostContent post={post} replyTo={replyTo} location={"post"} />
           </div>
 
-          {renderLocationInfo(feedPost.post)}
+          {renderLocationInfo(post)}
 
-          <PostActionBar post={feedPost.post} isIndividual={false} />
+          <PostActionBar post={post} isIndividual={false} />
         </div>
       </div>
     </div>

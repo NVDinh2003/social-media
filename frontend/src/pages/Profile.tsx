@@ -1,41 +1,31 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import CircularProgress from "@mui/material/CircularProgress";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/Store";
-import {
-  Post as PostInterface,
-  User,
-  FeedPost,
-} from "../utils/GlobalInterface";
+import { Post as PostInterface, User } from "../utils/GlobalInterface";
 import axios from "axios";
 import { ProfileTopBar } from "../features/profile";
 import { ProfileFollowSection } from "../features/profile/components/ProfileFollowSection/ProfileFollowSection";
-import { EditProfile } from "../features/profile/components/EditProfile/EditProfile";
-import { updateDisplayEditProfile } from "../redux/Slices/ModalSlice";
-import { Post } from "../features/post/components/Post/Post";
 import { ProfileUserPost } from "../features/profile/components/ProfileUserPost/ProfileUserPost";
 import { ProfileUserRepost } from "../features/profile/components/ProfileUserPost/ProfileUserRepost";
+import { ProfileUserReplyPost } from "../features/profile/components/ProfileUserPost/ProfileUserReplyPost";
 
 export const Profile: React.FC = () => {
   const token = useSelector((state: RootState) => state.user.token);
   const currentUserLoggedIn = useSelector(
     (state: RootState) => state.user.loggedIn
   );
-  const followings = useSelector((state: RootState) => state.user.following);
-  const followers = useSelector((state: RootState) => state.user.followers);
   const { username } = useParams();
   const [profileUser, setProfileUser] = useState<User | undefined>();
   const [posts, setPosts] = useState<PostInterface[]>([]);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [selfMode, setSelfMode] = useState(false);
-  const hiddenDiv = useRef<HTMLDivElement>(null);
-  const dispatch: AppDispatch = useDispatch();
+  // const hiddenDiv = useRef<HTMLDivElement>(null);
 
   const fetchProfileUser = async () => {
     let user;
     try {
-      console.log(username);
+      // console.log(username);
       let req = await axios.get(
         `${process.env.REACT_APP_API_URL}/users/${username}`,
         {
@@ -65,7 +55,7 @@ export const Profile: React.FC = () => {
         }
       );
 
-      console.log(req.data);
+      // console.log(req.data);
 
       setPosts(req.data);
     } catch (e) {
@@ -73,16 +63,16 @@ export const Profile: React.FC = () => {
     }
   };
 
-  const fetchNextPosts = (entries: any) => {
-    entries.forEach((entry: any) => {
-      if (entry.isIntersecting && currentUserLoggedIn && token) {
-        // Dispatch action to fetch next posts if needed
-      }
-    });
-  };
+  // const fetchNextPosts = (entries: any) => {
+  //   entries.forEach((entry: any) => {
+  //     if (entry.isIntersecting && currentUserLoggedIn && token) {
+  //       // Dispatch action to fetch next posts if needed
+  //     }
+  //   });
+  // };
 
   useEffect(() => {
-    console.log("posts: ", posts);
+    // console.log("posts: ", posts);
     if (token) fetchProfileUser();
   }, [username, token]);
 
@@ -95,7 +85,7 @@ export const Profile: React.FC = () => {
   }, [username, profileUser, currentUserLoggedIn]);
 
   useEffect(() => {
-    console.log("fetching profile");
+    // console.log("fetching profile");
     if (selfMode && token) fetchProfileUser();
   }, [selfMode, currentUserLoggedIn]);
 
@@ -128,7 +118,6 @@ export const Profile: React.FC = () => {
                     className="w-full flex flex-col justify-between relative pb-2"
                   >
                     <ProfileFollowSection
-                      profilePicture={profileUser.profilePicture}
                       profileUser={profileUser}
                       selfMode={selfMode}
                     />
@@ -205,9 +194,12 @@ export const Profile: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                {current == 0 && <ProfileUserPost posts={posts} />}
-                {current == 2 && (
-                  <ProfileUserRepost userId={profileUser.userId} />
+                {current === 0 && <ProfileUserPost posts={posts} />}
+                {current === 1 && (
+                  <ProfileUserReplyPost profileUser={profileUser} />
+                )}
+                {current === 2 && (
+                  <ProfileUserRepost profileUser={profileUser} />
                 )}
               </div>
 
