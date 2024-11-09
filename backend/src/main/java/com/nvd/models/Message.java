@@ -56,9 +56,26 @@ public class Message {
     @Column(name = "message_image", nullable = true)
     private String messageImage;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "message_reply_to", referencedColumnName = "message_id")
+    private Message replyTo;
+
+    @OneToMany(mappedBy = "messageReactionId")
+    private Set<MessageReaction> reactions;
+
+    @ManyToMany
+    @JoinTable(
+            name = "message_hidden_by",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "message_id")
+    )
+    private Set<ApplicationUser> hiddenBy;
+
     public Message() {
         this.seenBy = new HashSet<>();
 //        this.sentAt = LocalDateTime.now();
+        this.hiddenBy = new HashSet<>();
+        this.reactions = new HashSet<>();
     }
 
     @PrePersist

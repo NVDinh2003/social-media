@@ -17,7 +17,7 @@ public class ConversationComparator implements Comparator<Conversation> {
             return -1;
 
         Integer lastMessageIn0 = arg0.getConversationMessage().size() - 1;
-        Integer lastMessageIn1 = arg0.getConversationMessage().size() - 1;
+        Integer lastMessageIn1 = arg1.getConversationMessage().size() - 1;
 
         return arg0.getConversationMessage().get(lastMessageIn0).getSentAt()
                 .compareTo(arg1.getConversationMessage().get(lastMessageIn1).getSentAt());

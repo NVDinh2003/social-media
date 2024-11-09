@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class NotificationService {
     private final UserService userService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    private String notiDestination = Constants.NOTI_DESTINATION;
+    private final String notiDestination = Constants.NOTI_DESTINATION;
 
     private final static List<NotificationType> NON_NEW_NOTIFICATION_TYPES = List.of(
             NotificationType.FOLLOW,
@@ -144,5 +145,17 @@ public class NotificationService {
 
         recipients.forEach(user -> simpMessagingTemplate
                 .convertAndSendToUser(user.getUsername(), "/messages", messageDTO));
+    }
+
+    public void readMessageNotifications(List<Message> messages, ApplicationUser recipient) {
+        // lấy tất cả noti liên quan đến list mess
+        List<Notification> notifications = notificationRepository.findByMessageIn(messages);
+
+        //  lọc các noti khớp với recipient
+        List<Notification> filteredNotifications = notifications.stream()
+                .filter(noti -> Objects.equals(noti.getRecipient().getUserId(), recipient.getUserId()))
+                .toList();
+
+        this.acknowledgeNotification(filteredNotifications);
     }
 }

@@ -1,5 +1,6 @@
 package com.nvd.service;
 
+import com.nvd.exceptions.ConversationDoesNotExistException;
 import com.nvd.models.ApplicationUser;
 import com.nvd.models.Conversation;
 import com.nvd.models.Message;
@@ -20,6 +21,10 @@ import java.util.List;
 public class ConversationService {
     private final ConversationRepository conversationRepository;
     private final UserService userService;
+
+    public Conversation findById(Integer id) {
+        return conversationRepository.findById(id).orElseThrow(ConversationDoesNotExistException::new);
+    }
 
     public List<Conversation> readAllConversationsWithUser(Integer userId) {
         ApplicationUser user = userService.getUserById(userId);

@@ -1,28 +1,26 @@
 package com.nvd.controller;
 
+import com.nvd.dto.request.message.HideMessageRequestDTO;
+import com.nvd.dto.request.message.MessageReactDTO;
 import com.nvd.dto.response.MessageDTO;
+import com.nvd.mappers.MessageMapper;
 import com.nvd.models.Message;
 import com.nvd.service.MessageService;
 import com.nvd.utils.MessageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/message")
+@RequiredArgsConstructor
 public class MessageController {
     private final MessageService messageService;
+    private final MessageMapper messageMapper;
 
-    @Autowired
-    public MessageController(MessageService messageService) {
-        this.messageService = messageService;
-    }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public MessageDTO sendMessage(@RequestPart("messagePayload") String messagePayload,
@@ -50,9 +48,24 @@ public class MessageController {
         return dto;
     }
 
-//    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-//    public Message sendMessage(@RequestPart("messagePayload") String messagePayload,
-//                               @RequestPart(value = "image", required = false) List<MultipartFile> image) {
-//        return messageService.createMessage(messagePayload, image);
-//    }
+    @PostMapping(value = "/reply", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public MessageDTO sendReply(@RequestPart("messagePayload") String messagePayload, @RequestPart("image") List<MultipartFile> image, @RequestPart("replyTo") String replyTo) {
+        Message message = messageService.createReply(messagePayload, image, replyTo);
+        return messageMapper.convertToDTO(message);
+    }
+
+    @GetMapping(value = "/read")
+    public List<Message> readMessages(@RequestParam("userId") Integer userId, @RequestParam("conversationId") Integer conversationId) {
+        return messageService.readMessages(userId, conversationId);
+    }
+
+    @PostMapping(value = "/react")
+    public Message reactToMessage(@RequestBody MessageReactDTO body) {
+        return messageService.reactToMessage(body.getUser(), body.getMessage(), body.getReaction());
+    }
+
+    @PostMapping(value = "/hide")
+    public Message hideMessageForUser(@RequestBody HideMessageRequestDTO body) {
+        return messageService.hideMessageForUser(body.getUser(), body.getMessageId());
+    }
 }

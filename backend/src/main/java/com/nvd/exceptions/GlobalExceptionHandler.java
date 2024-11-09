@@ -40,4 +40,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(403).body("You attempted to create an invalid message in this conversation");
     }
 
+    @ExceptionHandler({MessageDoesNotExistException.class})
+    public ResponseEntity<String> handleMessageDoesNotExistException() {
+        return ResponseEntity.status(404).body("Message does not exist");
+    }
+
+    @ExceptionHandler({ConversationDoesNotExistException.class})
+    public ResponseEntity<String> handleConversationDoesNotExistException() {
+        return new ResponseEntity<String>("Conversation not found", HttpStatus.NOT_FOUND);
+    }
+
 }

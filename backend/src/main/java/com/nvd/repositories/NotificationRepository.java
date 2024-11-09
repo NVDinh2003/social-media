@@ -1,6 +1,7 @@
 package com.nvd.repositories;
 
 import com.nvd.models.ApplicationUser;
+import com.nvd.models.Message;
 import com.nvd.models.Notification;
 import com.nvd.models.enums.NotificationType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 
     List<Notification> getByRecipientAndNotificationTypeInOrderByNotificationTimestampDesc(ApplicationUser user,
                                                                                            List<NotificationType> types);
+
+    List<Notification> findByMessageIn(List<Message> messages);
 }
