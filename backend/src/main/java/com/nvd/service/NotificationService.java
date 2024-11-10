@@ -1,6 +1,7 @@
 package com.nvd.service;
 
 import com.nvd.dto.response.MessageDTO;
+import com.nvd.mappers.MessageMapper;
 import com.nvd.models.ApplicationUser;
 import com.nvd.models.Message;
 import com.nvd.models.Notification;
@@ -25,6 +26,7 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserService userService;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final MessageMapper messageMapper;
 
     private final String notiDestination = Constants.NOTI_DESTINATION;
 
@@ -132,16 +134,7 @@ public class NotificationService {
         notifications.forEach(noti -> simpMessagingTemplate
                 .convertAndSendToUser(noti.getRecipient().getUsername(), notiDestination, noti));
 
-        MessageDTO messageDTO = new MessageDTO(
-                message.getMessageId(),
-                message.getMessageType(),
-                message.getConversation().getConversationId(),
-                message.getSentAt(),
-                message.getSentBy(),
-                message.getSeenBy(),
-                message.getMessageImage(),
-                message.getMessageText()
-        );
+        MessageDTO messageDTO = messageMapper.convertToDTO(message);
 
         recipients.forEach(user -> simpMessagingTemplate
                 .convertAndSendToUser(user.getUsername(), "/messages", messageDTO));

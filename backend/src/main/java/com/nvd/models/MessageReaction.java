@@ -9,26 +9,22 @@ import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
-@Entity
-@Table(name = "message_reactions")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "message_reactions")
 public class MessageReaction {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "message_reaction_id")
     private Integer messageReactionId;
-
-    private String reaction;
-
-    // kiểm tra reactionUser neu có sự thay đổi và tự động cập nhật reactionUser trong CSDL
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "message_reaction_user", referencedColumnName = "user_id")
-    private ApplicationUser reactionUser;
-
+    ApplicationUser reactionUser;
+    @Column(name = "reaction")
+    private String reaction;
     @ManyToOne
     @JoinColumn(name = "message_id")
     @JsonIgnore

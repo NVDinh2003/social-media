@@ -23,6 +23,7 @@ import java.util.Set;
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "message_id")
     private Integer messageId;
 
     @Enumerated(EnumType.ORDINAL)
@@ -88,11 +89,11 @@ public class Message {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Message message = (Message) o;
-        return Objects.equals(messageId, message.messageId) && messageType == message.messageType && Objects.equals(sentBy, message.sentBy) && Objects.equals(conversation, message.conversation) && Objects.equals(messageText, message.messageText) && Objects.equals(sentAt, message.sentAt) && Objects.equals(seenBy, message.seenBy) && Objects.equals(messageImage, message.messageImage);
+        return Objects.equals(messageId, message.messageId) && messageType == message.messageType && Objects.equals(sentBy, message.sentBy) && Objects.equals(conversation, message.conversation) && Objects.equals(messageText, message.messageText) && Objects.equals(sentAt, message.sentAt) && Objects.equals(seenBy, message.seenBy) && Objects.equals(messageImage, message.messageImage) && Objects.equals(replyTo, message.replyTo) && Objects.equals(reactions, message.reactions) && Objects.equals(hiddenBy, message.hiddenBy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(messageId, messageType, sentBy, conversation, messageText, sentAt, seenBy, messageImage);
+        return Objects.hash(messageId, messageType, sentBy, conversation, messageText, sentAt, seenBy, messageImage, replyTo, reactions, hiddenBy);
     }
 }

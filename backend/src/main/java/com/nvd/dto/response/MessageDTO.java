@@ -1,6 +1,7 @@
 package com.nvd.dto.response;
 
 import com.nvd.models.ApplicationUser;
+import com.nvd.models.MessageReaction;
 import com.nvd.models.enums.MessageType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,4 +22,7 @@ public class MessageDTO {
     private Set<ApplicationUser> seenBy;
     private String messageImage;
     private String messageText;
+    private MessageDTO replyTo;
+    private Set<MessageReaction> messageReactions;
+    private Set<ApplicationUser> hiddenBy;
 }

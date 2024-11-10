@@ -15,8 +15,10 @@ import com.nvd.utils.FileUploadUtil;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -342,5 +344,19 @@ public class UserService implements UserDetailsService {
         userRepository.save(updated);
 
         return updated;
+    }
+
+    public ApplicationUser getCurrentUser() {
+        ApplicationUser user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        if (username != null) {
+            try {
+                user = userRepository.findByUsername(username).orElse(null);
+            } catch (Exception e) {
+                user = null;
+            }
+        }
+        return user;
     }
 }

@@ -2,9 +2,11 @@ package com.nvd.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nvd.dto.request.message.CreateMessageDTO;
+import com.nvd.dto.response.MessageDTO;
 import com.nvd.exceptions.InvalidMessageException;
 import com.nvd.exceptions.MessageDoesNotExistException;
 import com.nvd.exceptions.UnableToCreateMessageException;
+import com.nvd.mappers.MessageMapper;
 import com.nvd.models.*;
 import com.nvd.models.enums.MessageType;
 import com.nvd.repositories.ConversationRepository;
@@ -31,6 +33,7 @@ public class MessageService {
     private final UserService userService;
     private final ConversationService conversationService;
     private final MessageReactionService messageReactionService;
+    private final MessageMapper messageMapper;
 
     public Message createMessage(String messagePayload, List<MultipartFile> files) {
         Message message;
@@ -89,7 +92,6 @@ public class MessageService {
                     .filter(user -> !user.getUserId().equals(dto.getSentBy().getUserId()))
                     .toList();
             notificationService.createAndSendMessageNotifications(notificationRecipients, message.getSentBy(), message);
-
             return message;
         } catch (InvalidMessageException e) {
             throw e;
@@ -98,7 +100,7 @@ public class MessageService {
         }
     }
 
-    public Message createReply(String messagePayload, List<MultipartFile> files, String replyTo) {
+    public MessageDTO createReplyMessage(String messagePayload, List<MultipartFile> files, String replyTo) {
         Integer replyToId = Integer.parseInt(replyTo);
         Message replyToMessage = messageRepository.findById(replyToId)
                 .orElseThrow(MessageDoesNotExistException::new);
@@ -107,17 +109,17 @@ public class MessageService {
         message.setReplyTo(replyToMessage);
         message.setMessageType(MessageType.REPLY);
 
-        return message;
+        return decryptMessageAndConvertToMessageDTO(message.getSentBy(), message);
     }
 
-    public List<Message> readMessages(Integer userId, Integer conversationId) {
+    public List<MessageDTO> readMessages(Integer userId, Integer conversationId) {
         ApplicationUser user = userService.getUserById(userId);
         Conversation conversation = conversationService.findById(conversationId);
 
         // get list of messages from conversation
         List<Message> messagesToRead = conversation.getConversationMessage()
                 .stream()
-                // lọc các mess không phải của user hiện tại gửi
+                // lọc các mess không phải của user hiện tại gửi (loại trừ mess của current user)
                 .filter(mess -> !Objects.equals(mess.getSentBy().getUserId(), userId))
                 // set các mess khác được đọc bởi user hiện tại
                 .map(mess -> {
@@ -131,7 +133,9 @@ public class MessageService {
         // set lại noti (các mess đã được đọc, để không hiện . noti mess mới nữa)
         notificationService.readMessageNotifications(messagesToRead, user);
 
-        return messagesToRead;
+        return messagesToRead.stream()
+                .map(mess -> decryptMessageAndConvertToMessageDTO(user, mess))
+                .toList();
     }
 
     public Message reactToMessage(ApplicationUser user, Message message, String reaction) {
@@ -143,23 +147,44 @@ public class MessageService {
         // lấy reactions của mess hiện tại
         Set<MessageReaction> messageReactions = message.getReactions();
 
+
         if (deleted) { // nếu đã thả react thì hủy react đó ra khỏi list
-            messageReactions.stream()
-                    .filter(r -> r.getMessageReactionId() != messageReaction.getMessageReactionId())
+            messageReactions.stream().filter(r -> r.getMessageReactionId() != messageReaction.getMessageReactionId())
                     .toList();
         } else { // chưa thì thêm react
             messageReactions.add(messageReaction);
         }
-
         message.setReactions(messageReactions);
         return message;
     }
 
-    public Message hideMessageForUser(ApplicationUser user, Integer messageId) {
+    public MessageDTO hideMessageForUser(ApplicationUser user, Integer messageId) {
         Message message = messageRepository.findById(messageId).orElseThrow();
         Set<ApplicationUser> hiddenUsers = message.getHiddenBy();
         hiddenUsers.add(user);
         message.setHiddenBy(hiddenUsers);
-        return messageRepository.save(message);
+        return decryptMessageAndConvertToMessageDTO(user, messageRepository.save(message));
+    }
+
+    public MessageDTO decryptMessageAndConvertToMessageDTO(ApplicationUser currentUser, Message message) {
+        MessageDTO dto = messageMapper.convertToDTO(message);
+
+        String decryptedText = MessageUtils.decryptMessage(
+                message.getMessageText(),
+                currentUser.getUserId(),
+                message.getSentBy().getUserId(),
+                message.getConversation().getConversationUsers().size() > 2
+        );
+        dto.setMessageText(decryptedText);
+
+        return dto;
+    }
+
+    public Message getMessageById(Integer messageId) {
+        return messageRepository.findById(messageId).get();
+    }
+
+    public MessageDTO getMessageByIdD(Integer messageId) {
+        return messageMapper.convertToDTO(messageRepository.findById(messageId).get());
     }
 }
