@@ -6,6 +6,11 @@
   width: 100%;
   display: flex;
 }
+
+.message-content-react-options {
+  position: relative;
+}
+
 .left-messages {
   flex-direction: row;
 }

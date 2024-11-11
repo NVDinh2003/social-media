@@ -131,16 +131,11 @@ export const createPost = createAsyncThunk(
 
       const data = req.data;
 
-      // console.log("postedd: ", data.postedDate);
-
-      // thunkAPI.dispatch(
-      //   loadFeedPage({
-      //     token: body.token,
-      //     userId: body.author.userId,
-      //   })
-      // );
-
-      thunkAPI.dispatch(setSessionTime(new Date()));
+      thunkAPI.dispatch(
+        setSessionTime(
+          data.postedDate > new Date() ? data.postedDate : new Date()
+        )
+      );
 
       return data;
     } catch (e) {
@@ -222,7 +217,12 @@ export const createPostWithMedia = createAsyncThunk(
 
       let res = await axios(config);
 
-      thunkAPI.dispatch(setSessionTime(new Date()));
+      // thunkAPI.dispatch(setSessionTime(new Date()));
+      thunkAPI.dispatch(
+        setSessionTime(
+          res.data.postedDate > new Date() ? res.data.postedDate : new Date()
+        )
+      );
 
       return res.data;
     } catch (e) {
@@ -387,6 +387,30 @@ export const sendBatchedPostViews = createAsyncThunk(
       return req.data;
     } catch (e) {
       thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+export const deletePost = createAsyncThunk(
+  "post/delete",
+  async (body: PostActionBody, thunkAPI) => {
+    try {
+      let req = await axios.delete(`${baseUrl}/posts/${body.postId}`, {
+        headers: {
+          Authorization: `Bearer ${body.token}`,
+        },
+      });
+
+      const result = req.data;
+      thunkAPI.dispatch(
+        setSessionTime(
+          result.postedDate > new Date() ? result.postedDate : new Date()
+        )
+      );
+
+      return result;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
     }
   }
 );
@@ -827,6 +851,14 @@ export const PostSlice = createSlice({
       };
       return state;
     });
+
+    // delete post
+    // builder
+    //   .addCase(deletePost.fulfilled, (state, action) => {
+    //     state.posts = state.posts.filter(
+    //       (post) => post.postId !== action.payload
+    //     );
+    //   });
   },
 });
 

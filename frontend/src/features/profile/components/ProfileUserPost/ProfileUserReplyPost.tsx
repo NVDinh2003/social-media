@@ -6,6 +6,7 @@ import { Post as IPost, User } from "../../../../utils/GlobalInterface";
 import axios from "axios";
 import { Post } from "../../../post/components/Post/Post";
 import { convertPostToFeedPost } from "../../utils/ProfileUitls";
+import { Nothing } from "../../../../components/Nothing/Nothing";
 
 interface ProfileUserReplyPostProps {
   profileUser: User;
@@ -45,27 +46,33 @@ export const ProfileUserReplyPost: React.FC<ProfileUserReplyPostProps> = ({
   }, [profileUser, token]);
 
   return (
-    <div className="w-full flex flex-col min-h-screen ">
-      {replyPosts.map((post, index) => (
-        <Post
-          feedPost={convertPostToFeedPost(
-            post,
-            false,
-            post.author,
-            replyPostsTo[index]
-          )}
-          key={post.postId}
-          notification={false}
-        />
-      ))}
-      <div id="autoload" ref={hiddenDiv} hidden={replyPosts.length === 0}>
-        <CircularProgress
-          size={30}
-          sx={{
-            color: "#1da1f2",
-          }}
-        />
-      </div>
-    </div>
+    <>
+      {replyPosts.length === 0 ? (
+        <Nothing />
+      ) : (
+        <div className="w-full flex flex-col min-h-screen ">
+          {replyPosts.map((post, index) => (
+            <Post
+              feedPost={convertPostToFeedPost(
+                post,
+                false,
+                post.author,
+                replyPostsTo[index]
+              )}
+              key={post.postId}
+              notification={false}
+            />
+          ))}
+          <div id="autoload" ref={hiddenDiv} hidden={replyPosts.length === 0}>
+            <CircularProgress
+              size={30}
+              sx={{
+                color: "#1da1f2",
+              }}
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 };

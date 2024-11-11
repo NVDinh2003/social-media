@@ -60,7 +60,7 @@ public class Post implements Comparable<Post> {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "post_reply_juntion",
+            name = "post_reply_junction",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "reply_id")
     )
@@ -69,7 +69,7 @@ public class Post implements Comparable<Post> {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "post_repost_juntion",
+            name = "post_repost_junction",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
@@ -77,7 +77,7 @@ public class Post implements Comparable<Post> {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "post_bookmark_juntion",
+            name = "post_bookmark_junction",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
@@ -85,7 +85,7 @@ public class Post implements Comparable<Post> {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "post_view_juntion",
+            name = "post_view_junction",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )

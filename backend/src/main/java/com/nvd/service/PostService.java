@@ -13,6 +13,7 @@ import com.nvd.models.*;
 import com.nvd.models.enums.Audience;
 import com.nvd.models.enums.NotificationType;
 import com.nvd.models.enums.ReplyRestriction;
+import com.nvd.repositories.NotificationRepository;
 import com.nvd.repositories.PostRepository;
 import com.nvd.utils.Constants;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,7 @@ public class PostService {
     private final DistrictService districtService;
     private final WardService wardService;
     protected final NotificationService notificationService;
+    private final NotificationRepository notificationRepository;
     private final PostMapper postMapper;
 
     public PostDTO createPost(CreatePostDTO dto) {
@@ -257,8 +259,23 @@ public class PostService {
         return postRepository.findFeedPosts(userId, sessionStart, pageable);
     }
 
+    @Transactional
     public void deletePostById(int id) {
-        postRepository.deleteById(id);
+        Post post = postRepository.findById(id).orElseThrow(PostDoesNotExistException::new);
+
+        // Delete replies related to the post
+        Set<Post> replies = post.getReplies();
+        postRepository.deleteAll(replies);
+
+        // Clear all relationships
+        post.getLikes().clear();
+        post.getReplies().clear();
+        post.getViews().clear();
+        post.getReposts().clear();
+        post.getBookmarks().clear();
+        post.getImages().clear();
+
+        postRepository.delete(post);
     }
 
     public Post replyToPost(CreateReplyDTO replyDTO) {

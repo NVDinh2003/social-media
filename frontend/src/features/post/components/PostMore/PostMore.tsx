@@ -55,7 +55,11 @@ export const PostMore: React.FC<PostMoreProps> = ({ postId, postAuthor }) => {
         }}
       />
       {displayPostMore && active && (
-        <PostMoreModal author={postAuthor} followingList={following} />
+        <PostMoreModal
+          author={postAuthor}
+          followingList={following}
+          postId={postId}
+        />
       )}
     </div>
   );

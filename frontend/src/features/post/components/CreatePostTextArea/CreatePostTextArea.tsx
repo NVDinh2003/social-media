@@ -36,6 +36,12 @@ export const CreatePostTextArea: React.FC<CreatePostTextAreaProps> = ({
     }
   };
 
+  // useEffect(() => {
+  //   console.log("post content: ", currentPost?.content);
+  //   console.log("reply content: ", currentReply?.replyContent);
+  //   console.log("content: ", content);
+  // }, [currentPost?.content, currentReply?.replyContent, content]);
+
   useEffect(() => {
     // Đồng bộ hóa state local với state Redux
     let newContent = "";

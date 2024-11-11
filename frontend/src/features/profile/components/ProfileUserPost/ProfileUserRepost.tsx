@@ -6,6 +6,7 @@ import { Post as IPost, User } from "../../../../utils/GlobalInterface";
 import { Post } from "../../../post/components/Post/Post";
 import { convertPostToFeedPost } from "../../utils/ProfileUitls";
 import axios from "axios";
+import { Nothing } from "../../../../components/Nothing/Nothing";
 
 interface ProfileUserRepostProps {
   profileUser: User;
@@ -43,22 +44,28 @@ export const ProfileUserRepost: React.FC<ProfileUserRepostProps> = ({
   }, [profileUser, token]);
 
   return (
-    <div className="w-full flex flex-col min-h-screen ">
-      {repostPosts.map((post) => (
-        <Post
-          feedPost={convertPostToFeedPost(post, true, profileUser)}
-          key={post.postId}
-          notification={false}
-        />
-      ))}
-      <div id="autoload" ref={hiddenDiv} hidden={repostPosts.length === 0}>
-        <CircularProgress
-          size={30}
-          sx={{
-            color: "#1da1f2",
-          }}
-        />
-      </div>
-    </div>
+    <>
+      {repostPosts.length === 0 ? (
+        <Nothing />
+      ) : (
+        <div className="w-full flex flex-col min-h-screen ">
+          {repostPosts.map((post) => (
+            <Post
+              feedPost={convertPostToFeedPost(post, true, profileUser)}
+              key={post.postId}
+              notification={false}
+            />
+          ))}
+          <div id="autoload" ref={hiddenDiv} hidden={repostPosts.length === 0}>
+            <CircularProgress
+              size={30}
+              sx={{
+                color: "#1da1f2",
+              }}
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 };

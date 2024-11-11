@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Post } from "../../../../../utils/GlobalInterface";
 import ReplyOutlineSVG from "../../../../../components/SVGs/ReplyOutlineSVG";
 import RepostOutlineSVG from "../../../../../components/SVGs/RepostOutlineSVG";
@@ -29,8 +29,15 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
   post,
   isIndividual,
 }) => {
-  const { toggleReply, createRepost, createLike, createBookmark } =
-    usePostActions();
+  const {
+    toggleReply,
+    createRepost,
+    createLike,
+    createBookmark,
+    hasUserLiked,
+    hasUserReposted,
+    hasUserBookmarked,
+  } = usePostActions();
 
   const [colors, setColors] = useState<HoverColor>({
     reply: "#aab8c2",
@@ -41,27 +48,54 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
     share: "#aab8c2",
   });
 
+  useEffect(() => {
+    setColors((prevColors) => ({
+      ...prevColors,
+      repost: hasUserReposted(post) ? "rgb(0, 230, 64)" : "#aab8c2",
+      like: hasUserLiked(post) ? "rgb(242, 38, 19)" : "#aab8c2",
+      bookmark: hasUserBookmarked(post) ? "rgb(29, 155, 240)" : "#aab8c2",
+    }));
+  }, [post, hasUserLiked, hasUserReposted, hasUserBookmarked]);
+
   const updateHoverColor = (e: React.MouseEvent<HTMLDivElement>) => {
     const id = e.currentTarget.id;
 
     switch (id) {
       case "reply":
-        setColors({ ...colors, reply: "rgb(29, 155, 240)" });
+        setColors((prevColors) => ({
+          ...prevColors,
+          reply: "rgb(29, 155, 240)",
+        }));
         break;
       case "repost":
-        setColors({ ...colors, repost: "rgb(0, 230, 64)" });
+        setColors((prevColors) => ({
+          ...prevColors,
+          repost: "rgb(0, 230, 64)",
+        }));
         break;
       case "like":
-        setColors({ ...colors, like: "rgb(242, 38, 19)" });
+        setColors((prevColors) => ({
+          ...prevColors,
+          like: "rgb(242, 38, 19)",
+        }));
         break;
       case "views":
-        setColors({ ...colors, views: "rgb(29, 155, 240)" });
+        setColors((prevColors) => ({
+          ...prevColors,
+          views: "rgb(29, 155, 240)",
+        }));
         break;
       case "bookmark":
-        setColors({ ...colors, bookmark: "rgb(29, 155, 240)" });
+        setColors((prevColors) => ({
+          ...prevColors,
+          bookmark: "rgb(29, 155, 240)",
+        }));
         break;
       case "share":
-        setColors({ ...colors, share: "rgb(29, 155, 240)" });
+        setColors((prevColors) => ({
+          ...prevColors,
+          share: "rgb(29, 155, 240)",
+        }));
         break;
       default:
         break;
@@ -69,14 +103,12 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
   };
 
   const resetColors = () => {
-    setColors({
-      reply: "#aab8c2",
-      repost: "#aab8c2",
-      like: "#aab8c2",
-      views: "#aab8c2",
-      bookmark: "#aab8c2",
-      share: "#aab8c2",
-    });
+    setColors((prevColors) => ({
+      ...prevColors,
+      repost: hasUserReposted(post) ? "rgb(0, 230, 64)" : "#aab8c2",
+      like: hasUserLiked(post) ? "rgb(242, 38, 19)" : "#aab8c2",
+      bookmark: hasUserBookmarked(post) ? "rgb(29, 155, 240)" : "#aab8c2",
+    }));
   };
 
   return (
@@ -87,7 +119,10 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
           id="like"
           onMouseOver={updateHoverColor}
           onMouseLeave={resetColors}
-          onClick={() => createLike(post)}
+          onClick={(e) => {
+            e.stopPropagation();
+            createLike(post);
+          }}
         >
           <LikeOutlineSVG height={20} width={20} color={colors.like} />
         </div>
@@ -135,7 +170,10 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
           id="repost"
           onMouseOver={updateHoverColor}
           onMouseLeave={resetColors}
-          onClick={() => createRepost(post)}
+          onClick={(e) => {
+            e.stopPropagation();
+            createRepost(post);
+          }}
         >
           <RepostOutlineSVG height={20} width={20} color={colors.repost} />
         </div>
@@ -184,7 +222,10 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
             id="bookmark"
             onMouseOver={updateHoverColor}
             onMouseLeave={resetColors}
-            onClick={() => createBookmark(post)}
+            onClick={(e) => {
+              e.stopPropagation();
+              createBookmark(post);
+            }}
           >
             <BookmarksSVG height={20} width={20} color={colors.bookmark} />
           </div>

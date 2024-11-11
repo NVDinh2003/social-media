@@ -44,7 +44,8 @@ export const loadFeedPage = createAsyncThunk(
       const formattedSessionStart = dayjs(payload.sessionStart).format(
         "YYYY-MM-DDTHH:mm:ss.SSSSSS"
       );
-      // console.log("sessions start: " + formattedSessionStart);
+
+      console.log("sessions start: " + formattedSessionStart);
 
       let req = await axios.post(
         `${baseUrl}/feeds`,
@@ -210,13 +211,16 @@ export const FeedSlice = createSlice({
     builder.addCase(fetchNextFeedPage.fulfilled, (state, action) => {
       if (
         state.posts.length > 0 &&
+        action.payload.posts &&
         state.posts[0].post.postId === action.payload.posts[0].post.postId
       )
         return state;
 
       state = {
         ...state,
-        posts: [...state.posts, ...action.payload.posts],
+        posts: action.payload.posts
+          ? [...state.posts, ...action.payload.posts]
+          : state.posts,
         sessionStart: action.payload.sessionStart,
         loading: false,
         error: false,

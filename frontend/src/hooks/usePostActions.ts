@@ -9,11 +9,41 @@ import {
   repostPost,
   viewPost,
 } from "../redux/Slices/PostSlice";
+import { useCallback } from "react";
 
 export function usePostActions() {
   const token = useSelector((state: RootState) => state.user.token);
   const loggedIn = useSelector((state: RootState) => state.user.loggedIn);
   const dispatch: AppDispatch = useDispatch();
+
+  // Memoize the functions using useCallback
+  const hasUserLiked = useCallback(
+    (post: Post) => {
+      return (
+        loggedIn && post.likes.some((user) => user.userId === loggedIn.userId)
+      );
+    },
+    [loggedIn]
+  );
+
+  const hasUserReposted = useCallback(
+    (post: Post) => {
+      return (
+        loggedIn && post.reposts.some((user) => user.userId === loggedIn.userId)
+      );
+    },
+    [loggedIn]
+  );
+
+  const hasUserBookmarked = useCallback(
+    (post: Post) => {
+      return (
+        loggedIn &&
+        post.bookmarks.some((user) => user.userId === loggedIn.userId)
+      );
+    },
+    [loggedIn]
+  );
 
   const toggleReply = (post: Post) => {
     dispatch(setCurrentPost(post));
@@ -35,6 +65,7 @@ export function usePostActions() {
       };
       dispatch(updatePost(updatedPost));
     }
+
     if (
       loggedIn &&
       post.reposts.some((user) => user.userId === loggedIn.userId)
@@ -158,5 +189,8 @@ export function usePostActions() {
     createLike,
     createSingleView,
     createRepost,
+    hasUserLiked,
+    hasUserReposted,
+    hasUserBookmarked,
   };
 }

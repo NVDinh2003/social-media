@@ -66,12 +66,14 @@ export const Feed: React.FC = () => {
     if (sessionStart === undefined) {
       dispatch(setSessionTime(new Date()));
     }
+
     if (
       userState.loggedIn &&
       userState.token &&
       postState.loading === false &&
       sessionStart
     ) {
+      console.log("reloading feed page!");
       dispatch(
         loadFeedPage({
           token: userState.token,
@@ -80,7 +82,6 @@ export const Feed: React.FC = () => {
         })
       );
     }
-
     if (hiddenDiv && hiddenDiv.current) {
       const observer = new IntersectionObserver(fetchNextPosts, {
         root: null,
@@ -133,20 +134,6 @@ export const Feed: React.FC = () => {
       <FeedPostCreator />
 
       {notificationState.newPostNotifications.length > 0 && <FeedMorePosts />}
-
-      {/* {feedState.posts.length > 0 && (
-        <div className="feed-posts">
-          {feedState.posts
-            // .filter((post) => !post.replyTo)
-            .map((post) => (
-              <Post
-                feedPost={post}
-                key={post.post.postId}
-                notification={false}
-              />
-            ))}
-        </div>
-      )} */}
 
       {feedState.posts.length > 0 && (
         <div className="feed-posts">

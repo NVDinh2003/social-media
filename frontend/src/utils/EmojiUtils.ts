@@ -1,200 +1,197 @@
-import data from "../assets/list.with.modifiers.json";
-import dataWithImg from "../assets/list.with.images.coppy.json";
-
-const EMOJIS = data.emojis;
-const EMOJIS_IMG = dataWithImg.emojis;
-
-let supported =
-  window.navigator.platform.toUpperCase().indexOf("MAC") >= 0
-    ? "apple"
-    : "windows";
-
-interface EmojiData {
-  emoji: string;
+import { createElement } from "react";
+import emojis from "../assets/all-emojis.json";
+export const EMOJIS: Emoji[] = emojis.emojis;
+export const EMOJI_IMAGE_MAP: MappedEmoji[] = mapEmojisWithImages();
+export interface EmojiData {
   name: string;
+  category: string;
+  emoji: string;
+  image: string;
 }
-
-export const generateSmileysAndPeople = (): EmojiData[] => {
-  //
-
-  const smileyAndPeople = EMOJIS.filter((emoji) => {
-    let supportedPlatforms: any = emoji.support;
-
-    if (
-      emoji.category === "Smileys & Emotion" ||
-      (emoji.category === "People & Body" &&
-        supportedPlatforms[supported] === true)
-    )
-      return emoji;
-  }).map((emoji) => {
-    return { emoji: emoji.emoji, name: emoji.name };
+export interface Emoji {
+  name: string;
+  category: string;
+  emoji: string;
+  images: string[];
+  modifiers: string[];
+}
+interface MappedEmoji {
+  emoji: string;
+  image: string;
+}
+export function mapEmojisWithImages(): MappedEmoji[] {
+  let mappedEmojis: MappedEmoji[] = [];
+  EMOJIS.forEach((emoji) => {
+    if (emoji.images.length === 1) {
+      mappedEmojis.push({
+        emoji: emoji.emoji,
+        image: emoji.images[0],
+      });
+    } else {
+      for (let i = 0; i < emoji.modifiers.length; i++) {
+        mappedEmojis.push({
+          emoji: emoji.modifiers[0],
+          image: emoji.images[i + 1],
+        });
+      }
+    }
   });
+  return mappedEmojis;
+}
+export const generateEmojiCateogory = (
+  category: string,
+  modifier: string
+): EmojiData[] => {
+  const categoryEmojis: EmojiData[] = EMOJIS.filter(
+    (emoji: Emoji) => emoji.category === category
+  ).map((emoji: Emoji) => {
+    let indexOfModifier = convertModifierToIndex(modifier);
 
-  //   console.log(smileyAndPeople);
+    let emojiData: EmojiData = {
+      name: emoji.name,
+      category: emoji.category,
+      image: "",
+      emoji: "",
+    };
 
-  return smileyAndPeople;
-};
-
-export const generateAnimalsAndNature = (): EmojiData[] => {
-  const animalsAndNature = EMOJIS.filter((emoji) => {
-    let supportedPlatforms: any = emoji.support;
-    if (
-      emoji.category === "Animals & Nature" &&
-      supportedPlatforms[supported] === true
-    )
-      return emoji;
-  }).map((emoji) => {
-    return { emoji: emoji.emoji, name: emoji.name };
+    if (indexOfModifier > 0 && emoji.modifiers.length > 1) {
+      emojiData = {
+        ...emojiData,
+        image: emoji.images[indexOfModifier],
+        emoji: emoji.modifiers[indexOfModifier - 1],
+      };
+    } else {
+      emojiData = {
+        ...emojiData,
+        image: emoji.images[0],
+        emoji: emoji.emoji,
+      };
+    }
+    return emojiData;
   });
-
-  return animalsAndNature;
+  return categoryEmojis;
 };
-
-export const generateFoodAndDrink = (): EmojiData[] => {
-  const foodAndDrink = EMOJIS.filter((emoji) => {
-    let supportedPlatforms: any = emoji.support;
-    if (
-      emoji.category === "Food & Drink" &&
-      supportedPlatforms[supported] === true
-    )
-      return emoji;
-  }).map((emoji) => {
-    return { emoji: emoji.emoji, name: emoji.name };
-  });
-
-  return foodAndDrink;
-};
-
-export const generateActivities = (): EmojiData[] => {
-  const activities = EMOJIS.filter((emoji) => {
-    let supportedPlatforms: any = emoji.support;
-    if (
-      emoji.category === "Activities" &&
-      supportedPlatforms[supported] === true
-    )
-      return emoji;
-  }).map((emoji) => {
-    return { emoji: emoji.emoji, name: emoji.name };
-  });
-
-  return activities;
-};
-
-export const generateTravelAndPlaces = (): EmojiData[] => {
-  const travelAndPlaces = EMOJIS.filter((emoji) => {
-    let supportedPlatforms: any = emoji.support;
-    if (
-      emoji.category === "Travel & Places" &&
-      supportedPlatforms[supported] === true
-    )
-      return emoji;
-  }).map((emoji) => {
-    return { emoji: emoji.emoji, name: emoji.name };
-  });
-
-  return travelAndPlaces;
-};
-
-export const generateObjects = (): EmojiData[] => {
-  const objects = EMOJIS.filter((emoji) => {
-    let supportedPlatforms: any = emoji.support;
-    if (emoji.category === "Objects" && supportedPlatforms[supported] === true)
-      return emoji;
-  }).map((emoji) => {
-    return { emoji: emoji.emoji, name: emoji.name };
-  });
-
-  return objects;
-};
-
-export const generateSymbols = (): EmojiData[] => {
-  const symbols = EMOJIS.filter((emoji) => {
-    let supportedPlatforms: any = emoji.support;
-    if (emoji.category === "Symbols" && supportedPlatforms[supported] === true)
-      return emoji;
-  }).map((emoji) => {
-    return { emoji: emoji.emoji, name: emoji.name };
-  });
-
-  return symbols;
-};
-
-export const generateFlags = (): EmojiData[] => {
-  const flags = EMOJIS.filter((emoji) => {
-    let supportedPlatforms: any = emoji.support;
-    if (emoji.category === "Flags" && supportedPlatforms[supported] === true)
-      return emoji;
-  }).map((emoji) => {
-    return { emoji: emoji.emoji, name: emoji.name };
-  });
-
-  return flags;
-};
-
 export const generateTopRow = () => {
   interface TopRowData {
     img: string;
     id: string;
   }
-
   const data: TopRowData[] = [];
-
-  for (let emoji of EMOJIS_IMG) {
-    let value = emoji.name;
+  for (let emoji of EMOJIS) {
     let images: any = emoji.images;
-
-    if (value === "two o’clock") {
+    if (emoji.name === "Clock face two oclock") {
       data[0] = {
-        img: images[supported],
+        img: images[0],
         id: "Recent",
       };
     }
-    if (value === "grinning face") {
+    if (emoji.name === "Grinning face") {
       data[1] = {
-        img: images[supported],
-        id: "Smileys & People",
+        img: images[0],
+        id: "Smileys & people",
       };
     }
-    if (value === "bear") {
+    if (emoji.name === "Bear face") {
       data[2] = {
-        img: images[supported],
-        id: "Animals & Nature",
+        img: images[0],
+        id: "Animals & nature",
       };
     }
-    if (value === "hamburger") {
+    if (emoji.name === "Hamburger") {
       data[3] = {
-        img: images[supported],
-        id: "Food & Drink",
+        img: images[0],
+        id: "Food & drink",
       };
     }
-    if (value === "soccer ball") {
+    if (emoji.name === "Soccer ball") {
       data[4] = {
-        img: images[supported],
-        id: "Activities",
+        img: images[0],
+        id: "Activity",
       };
     }
-    if (value === "oncoming automobile") {
-      data[7] = {
-        img: images[supported],
-        id: "Travel & Places",
+    if (emoji.name === "Oncoming automobile") {
+      data[5] = {
+        img: images[0],
+        id: "Travel & places",
       };
     }
-    if (value === "light bulb") {
+    if (emoji.name === "Electric light bulb") {
       data[6] = {
-        img: images[supported],
+        img: images[0],
         id: "Objects",
       };
     }
-    if (value === "input symbols") {
+    if (emoji.name === "Input symbol for symbols") {
       data[7] = {
-        img: images[supported],
+        img: images[0],
         id: "Symbols",
       };
     }
-    if (value === "triangular flag") {
+    if (emoji.name === "Triangular flag on post") {
       data[8] = {
-        img: images[supported],
+        img: images[0],
         id: "Flags",
+      };
+    }
+  }
+  return data;
+};
+
+export const mapReactionBar = () => {
+  interface Reaction {
+    img: string;
+    emoji: string;
+  }
+
+  const data: Reaction[] = [];
+  for (let emoji of EMOJIS) {
+    let images: any = emoji.images;
+    if (emoji.name === "Thumbs up") {
+      data[0] = {
+        img: images[0],
+        emoji: emoji.emoji,
+      };
+    }
+
+    if (emoji.name === "Red heart") {
+      data[1] = {
+        img: images[0],
+        emoji: emoji.emoji,
+      };
+    }
+
+    if (emoji.name === "Smiling face with open mouth and tightly-closed eyes") {
+      data[2] = {
+        img: images[0],
+        emoji: emoji.emoji,
+      };
+    }
+
+    if (emoji.name === "Rolling on the floor laughing") {
+      data[3] = {
+        img: images[0],
+        emoji: emoji.emoji,
+      };
+    }
+
+    if (emoji.name === "Smiling face with heart-shaped eyes") {
+      data[4] = {
+        img: images[0],
+        emoji: emoji.emoji,
+      };
+    }
+
+    if (emoji.name === "Clown face") {
+      data[5] = {
+        img: images[0],
+        emoji: emoji.emoji,
+      };
+    }
+
+    if (emoji.name === "Loudly crying face") {
+      data[6] = {
+        img: images[0],
+        emoji: emoji.emoji,
       };
     }
   }
@@ -205,28 +202,53 @@ export const generateTopRow = () => {
 export const determineSkinToneColor = (currentSkinTone: string): string => {
   switch (currentSkinTone) {
     case "light":
-      return "rgb(247,222,206)";
+      return "rgb(247, 222, 206)";
     case "medium-light":
-      return "rbg(243,210,162)";
+      return "rgb(243, 210, 162)";
     case "medium":
-      return "rgb(213,171,136)";
+      return "rgb(213, 171, 136)";
     case "medium-dark":
-      return "rgb(175,126,87)";
+      return "rgb(175, 126, 87)";
     case "dark":
-      return "rgb(124,83,62)";
+      return "rgb(124, 83, 62)";
     default:
-      return "rgb(255,220,93)";
+      return "rgb(255, 220, 93)";
   }
 };
-
-export const getEmojiCharacterByName = (name: string) => {
-  let emoji: EmojiData | undefined;
-
+export const convertModifierToIndex = (modifier: string): number => {
+  switch (modifier) {
+    case "light":
+      return 1;
+    case "medium-light":
+      return 2;
+    case "medium":
+      return 3;
+    case "medium-dark":
+      return 4;
+    case "dark":
+      return 5;
+    default:
+      return 0;
+  }
+};
+export const getEmojiCharacterByNameAndModifier = (
+  name: string,
+  modifier: string
+): string => {
+  let emoji: Emoji | undefined;
   for (let e of EMOJIS) {
     if (e.name === name) emoji = e;
   }
 
-  return emoji;
+  if (emoji) {
+    if (emoji.modifiers.length === 0 || modifier === "none") {
+      return emoji.emoji;
+    } else {
+      let modifierNumber = convertModifierToIndex(modifier) - 1;
+      return emoji.modifiers[modifierNumber];
+    }
+  }
+  return "";
 };
 
 export const convertPostContentToElementForNotifications = (

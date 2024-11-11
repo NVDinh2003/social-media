@@ -5,17 +5,25 @@ import MessageReplySVG from "../../../../components/SVGs/Messages/MessageReplySV
 import CopyMessageSVG from "../../../../components/SVGs/Messages/CopyMessageSVG";
 import DeleteMessageSVG from "../../../../components/SVGs/Messages/DeleteMessageSVG";
 interface MessageMoreModalProps {
+  distance: { top: number; left: number };
   handleReplyClicked: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleCopyClicked: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleDeleteClicked: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 export const MessageMoreModal: React.FC<MessageMoreModalProps> = ({
+  distance,
   handleReplyClicked,
   handleCopyClicked,
   handleDeleteClicked,
 }) => {
   return (
-    <div className="message-more-modal">
+    <div
+      className="message-more-modal"
+      style={{
+        marginTop: `${distance.top}px`,
+        marginLeft: `${distance.left}px`,
+      }}
+    >
       <div
         className="message-more-modal-option-group"
         onClick={handleReplyClicked}

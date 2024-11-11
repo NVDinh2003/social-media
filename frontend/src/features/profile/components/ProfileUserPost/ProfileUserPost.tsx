@@ -6,6 +6,8 @@ import { Post } from "../../../post/components/Post/Post";
 import { convertPostToFeedPost } from "../../utils/ProfileUitls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/Store";
+import { VerifiedNotifications } from "../../../notification/components/VerifiedNotifications/VerifiedNotifications";
+import { Nothing } from "../../../../components/Nothing/Nothing";
 
 interface ProfileUserPostProps {
   posts: IPost[];
@@ -38,24 +40,30 @@ export const ProfileUserPost: React.FC<ProfileUserPostProps> = ({ posts }) => {
   }, [userState.token, userState.loggedIn]);
 
   return (
-    <div className="w-full flex flex-col min-h-screen ">
-      {posts
-        .filter((post) => !post.replyTo)
-        .map((post) => (
-          <Post
-            feedPost={convertPostToFeedPost(post)}
-            key={post.postId}
-            notification={false}
-          />
-        ))}
-      <div id="autoload" ref={hiddenDiv} hidden={posts.length === 0}>
-        <CircularProgress
-          size={30}
-          sx={{
-            color: "#1da1f2",
-          }}
-        />
-      </div>
-    </div>
+    <>
+      {posts.length === 0 ? (
+        <Nothing />
+      ) : (
+        <div className="w-full flex flex-col min-h-screen ">
+          {posts
+            .filter((post) => !post.replyTo)
+            .map((post) => (
+              <Post
+                feedPost={convertPostToFeedPost(post)}
+                key={post.postId}
+                notification={false}
+              />
+            ))}
+          <div id="autoload" ref={hiddenDiv} hidden={posts.length === 0}>
+            <CircularProgress
+              size={30}
+              sx={{
+                color: "#1da1f2",
+              }}
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 };

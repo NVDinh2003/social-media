@@ -2,7 +2,8 @@
   width: 168px;
   height: 132px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
-  position: absolute;
+  /* position: absolute; */
+  position: fixed;
   top: 0;
   left: 0;
   background-color: white;

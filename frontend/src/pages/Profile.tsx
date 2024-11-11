@@ -9,6 +9,8 @@ import { ProfileFollowSection } from "../features/profile/components/ProfileFoll
 import { ProfileUserPost } from "../features/profile/components/ProfileUserPost/ProfileUserPost";
 import { ProfileUserRepost } from "../features/profile/components/ProfileUserPost/ProfileUserRepost";
 import { ProfileUserReplyPost } from "../features/profile/components/ProfileUserPost/ProfileUserReplyPost";
+import { VerifiedNotifications } from "../features/notification/components/VerifiedNotifications/VerifiedNotifications";
+import { Nothing } from "../components/Nothing/Nothing";
 
 export const Profile: React.FC = () => {
   const token = useSelector((state: RootState) => state.user.token);
@@ -201,6 +203,7 @@ export const Profile: React.FC = () => {
                 {current === 2 && (
                   <ProfileUserRepost profileUser={profileUser} />
                 )}
+                {current === 3 && <Nothing />}
               </div>
 
               <div
