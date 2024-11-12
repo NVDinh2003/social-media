@@ -19,7 +19,7 @@
 }
 
 .profile-follow-section-left {
-  width: 50%;
+  /* width: 50%; */
   height: fit-content;
   display: flex;
   justify-content: flex-end;

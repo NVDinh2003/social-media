@@ -10,6 +10,7 @@ import { Notification } from "../Notification/Notification";
 import { Post } from "../../../post/components/Post/Post";
 import LikeNotificationSVG from "../../../../components/SVGs/NotificationAction/LikeNotificationSVG";
 import RepostNotificationSVG from "../../../../components/SVGs/NotificationAction/RepostNotificationSVG";
+import { Nothing } from "../../../../components/Nothing/Nothing";
 
 export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
   notifications,
@@ -184,5 +185,9 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
     }
   };
 
-  return <div className="notifications-all">{groupedNotifications()}</div>;
+  return (
+    <div className="notifications-all">
+      {notifications.length === 0 ? <Nothing /> : groupedNotifications()}
+    </div>
+  );
 };

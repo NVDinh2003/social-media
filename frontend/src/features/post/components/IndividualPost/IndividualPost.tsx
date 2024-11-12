@@ -28,7 +28,7 @@ export const IndividualPost: React.FC<IndividualPostProps> = ({ post }) => {
   const { createSingleView } = usePostActions();
 
   const navigateToProfile = () => {
-    navigate(`/profile/${post.author.username}`);
+    navigate(`/${post.author.username}`);
   };
 
   useEffect(() => {

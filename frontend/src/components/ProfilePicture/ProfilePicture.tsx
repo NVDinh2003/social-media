@@ -14,7 +14,7 @@ export default function ProfilePicture(props: ProfilePictureProps) {
   const default_pfp = process.env.REACT_APP_PFP;
   const navigate = useNavigate();
   const navigateToProfile = () => {
-    navigate(`/profile/${props.user.username}`);
+    navigate(`/${props.user.username}`);
   };
 
   return (

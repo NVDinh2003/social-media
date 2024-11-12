@@ -12,6 +12,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { updateDisplayEditProfile } from "../../../../redux/Slices/ModalSlice";
 import TimeJoinedSVG from "../../../../components/SVGs/EditProfile/TimeJoinedSVG";
+import { FollowSection } from "./FollowSection";
 
 interface ProfileFollowSectionProps {
   profileUser: User;
@@ -38,32 +39,6 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
   //   if (token) dispatch(followUser({ token, followee: profileUser.username }));
   // };
 
-  const handleFollowUser = () => {
-    console.log("handle follow");
-    if (token) {
-      const isFollowing = followingList.find(
-        (person) => person.username === profileUser.username
-      );
-
-      if (isFollowing) {
-        const confirmUnfollow = window.confirm(
-          "Bạn có chắc chắn muốn hủy theo dõi " + profileUser.username + "?"
-        );
-        if (confirmUnfollow) {
-          dispatch(followUser({ token, followee: profileUser.username }));
-          toast.success("Đã hủy theo dõi " + profileUser.username, {
-            autoClose: 1500,
-          });
-        }
-      } else {
-        dispatch(followUser({ token, followee: profileUser.username }));
-        toast.success("Đã theo dõi " + profileUser.username, {
-          autoClose: 1500,
-        });
-      }
-    }
-  };
-
   useEffect(() => {
     // console.log("selfMode in ProfileFollowSection:", selfMode);
   }, [selfMode]);
@@ -82,54 +57,6 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
     console.log(`Open Edit Profile`);
     dispatch(updateDisplayEditProfile());
   };
-
-  function FollowSection() {
-    return (
-      <div className="profile-follow-section-left">
-        <div className="profile-follow-section-more">
-          <MoreHorizIcon
-            sx={{
-              width: "20px",
-              height: "20px",
-            }}
-          />
-        </div>
-
-        {followingList.find(
-          (person) => person.username === profileUser.username
-        ) && (
-          <div className="profile-follow-section-more">
-            <NotificationAddIcon
-              sx={{
-                width: "20px",
-                height: "20px",
-              }}
-            />
-          </div>
-        )}
-
-        {followingList.find(
-          (person) => person.username === profileUser.username
-        ) ? (
-          <button
-            className="profile-follow-section-unfollow-button"
-            onMouseEnter={() => setHoveringOverUnfollow(true)}
-            onMouseLeave={() => setHoveringOverUnfollow(false)}
-            onClick={handleFollowUser}
-          >
-            {hoveringOverUnfollow ? "Unfollow" : "Following"}
-          </button>
-        ) : (
-          <button
-            className="profile-follow-section-follow-button"
-            onClick={handleFollowUser}
-          >
-            Follow
-          </button>
-        )}
-      </div>
-    );
-  }
 
   return (
     <div
@@ -159,7 +86,14 @@ export const ProfileFollowSection: React.FC<ProfileFollowSectionProps> = ({
             />
           </div>
           <div></div>
-          {selfMode ? <EditButton /> : <FollowSection />}
+          {selfMode ? (
+            <EditButton />
+          ) : (
+            <FollowSection
+              followingList={followingList}
+              profileUser={profileUser}
+            />
+          )}
         </div>
         <div className="h-10 w-full"></div>
       </div>

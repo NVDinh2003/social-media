@@ -29,7 +29,7 @@ export const IndividualReply: React.FC<IndividualReplyProps> = ({
   const navigate = useNavigate();
 
   const navigateToProfile = () => {
-    navigate(`/profile/${originalPost.author.username}`);
+    navigate(`/${originalPost.author.username}`);
   };
 
   const initReply = () => {

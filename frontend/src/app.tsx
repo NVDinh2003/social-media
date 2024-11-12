@@ -19,6 +19,8 @@ import { Authenticate } from "./features/auth/Authenticate";
 
 import "./assets/css/index.css";
 import "./assets/css/tailwind.css";
+import { FollowersPage } from "./pages/user/FollowersPage";
+import { FollowingPage } from "./pages/user/FollowingPage";
 
 const theme: Theme = {
   colors: {
@@ -110,6 +112,8 @@ export const App = () => {
             <Route path="/home" element={<Feed />} />
             <Route path="/explore" element={<>Explore</>} />
             <Route path="/:username" element={<Profile />} />
+            <Route path="/:username/followers" element={<FollowersPage />} />
+            <Route path="/:username/following" element={<FollowingPage />} />
             <Route path="/post/:postId" element={<ViewPost />} />
             <Route path="/notifications" element={<NotificationsPage />} />
             <Route
