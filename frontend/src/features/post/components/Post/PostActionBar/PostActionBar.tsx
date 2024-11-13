@@ -53,7 +53,7 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
       ...prevColors,
       repost: hasUserReposted(post) ? "rgb(0, 230, 64)" : "#aab8c2",
       like: hasUserLiked(post) ? "rgb(242, 38, 19)" : "#aab8c2",
-      bookmark: hasUserBookmarked(post) ? "rgb(29, 155, 240)" : "#aab8c2",
+      bookmark: hasUserBookmarked(post) ? "rgb(248, 184, 78)" : "#aab8c2",
     }));
   }, [post, hasUserLiked, hasUserReposted, hasUserBookmarked]);
 
@@ -88,7 +88,7 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
       case "bookmark":
         setColors((prevColors) => ({
           ...prevColors,
-          bookmark: "rgb(29, 155, 240)",
+          bookmark: "rgb(248, 184, 78)",
         }));
         break;
       case "share":
@@ -107,7 +107,7 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
       ...prevColors,
       repost: hasUserReposted(post) ? "rgb(0, 230, 64)" : "#aab8c2",
       like: hasUserLiked(post) ? "rgb(242, 38, 19)" : "#aab8c2",
-      bookmark: hasUserBookmarked(post) ? "rgb(29, 155, 240)" : "#aab8c2",
+      bookmark: hasUserBookmarked(post) ? "rgb(248, 184, 78)" : "#aab8c2",
     }));
   };
 
@@ -227,7 +227,7 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
               createBookmark(post);
             }}
           >
-            <BookmarksSVG height={20} width={20} color={colors.bookmark} />
+            <BookmarksSVG height={16} width={16} color={colors.bookmark} />
           </div>
           {/* Number of bookmarks beside it */}
           {post.bookmarks.length > 0 && (

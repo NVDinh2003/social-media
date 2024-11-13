@@ -15,6 +15,7 @@ import {
 } from "../redux/Slices/ModalSlice";
 import ModalContainer from "../components/ModalContainer/ModalContainer";
 import { MessagesPopup } from "../features/messaging/components/MessagesPopup/MessagesPopup";
+import { TopUser } from "../features/topuser/TopUser";
 
 export const LayoutPage: React.FC = () => {
   //
@@ -74,6 +75,7 @@ export const LayoutPage: React.FC = () => {
         </div>
         <div className="layout-info-section">
           <Discovery />
+          <TopUser />
         </div>
       </div>
 
