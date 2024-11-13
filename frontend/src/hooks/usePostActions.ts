@@ -4,7 +4,7 @@ import { Post, User } from "../utils/GlobalInterface";
 import { setCurrentPost, updatePost } from "../redux/Slices/FeedSlice";
 import { updateDisplayCreateReply } from "../redux/Slices/ModalSlice";
 import {
-  bookmarkPost,
+  starPost,
   likePost,
   repostPost,
   viewPost,
@@ -35,11 +35,10 @@ export function usePostActions() {
     [loggedIn]
   );
 
-  const hasUserBookmarked = useCallback(
+  const hasUserStarred = useCallback(
     (post: Post) => {
       return (
-        loggedIn &&
-        post.bookmarks.some((user) => user.userId === loggedIn.userId)
+        loggedIn && post.stars.some((user) => user.userId === loggedIn.userId)
       );
     },
     [loggedIn]
@@ -126,36 +125,36 @@ export function usePostActions() {
     );
   };
 
-  const createBookmark = (post: Post) => {
+  const giveStar = (post: Post) => {
     let updatedPost = JSON.parse(JSON.stringify(post));
     if (
       loggedIn &&
-      !post.bookmarks.some((user) => user.userId === loggedIn.userId)
+      !post.stars.some((user) => user.userId === loggedIn.userId)
     ) {
-      let bookmarks = [...post.bookmarks, loggedIn];
+      let stars = [...post.stars, loggedIn];
       updatedPost = {
         ...updatedPost,
-        bookmarks,
+        stars,
       };
       dispatch(updatePost(updatedPost));
     }
     if (
       loggedIn &&
-      post.bookmarks.some((user) => user.userId === loggedIn.userId)
+      post.stars.some((user) => user.userId === loggedIn.userId)
     ) {
-      let bookmarks = updatedPost.bookmarks.filter(
+      let stars = updatedPost.stars.filter(
         (user: User) => user.userId !== loggedIn.userId
       );
       updatedPost = {
         ...updatedPost,
-        bookmarks,
+        stars,
       };
 
       dispatch(updatePost(updatedPost));
     }
 
     dispatch(
-      bookmarkPost({
+      starPost({
         postId: post.postId,
         token,
       })
@@ -185,12 +184,12 @@ export function usePostActions() {
 
   return {
     toggleReply,
-    createBookmark,
+    giveStar,
     createLike,
     createSingleView,
     createRepost,
     hasUserLiked,
     hasUserReposted,
-    hasUserBookmarked,
+    hasUserStarred,
   };
 }

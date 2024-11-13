@@ -31,7 +31,7 @@ public class PostDTO implements Comparable<PostDTO> {
     private Integer replyTo;
     private Set<Post> replies;
     private Set<ApplicationUser> reposts;
-    private Set<ApplicationUser> bookmarks;
+    private Set<ApplicationUser> stars;
     private Set<Integer> views;
     private boolean scheduled;
     private LocalDateTime scheduledDate;

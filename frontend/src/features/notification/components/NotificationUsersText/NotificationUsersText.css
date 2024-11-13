@@ -10,3 +10,7 @@
   align-items: center;
   gap: 4px;
 }
+
+.notification-users-text-bold {
+  font-weight: 900;
+}

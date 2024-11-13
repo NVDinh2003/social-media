@@ -103,9 +103,9 @@ public class PostController {
         return postService.likePost(id, token);
     }
 
-    @PutMapping("/bookmark/{id}")
-    public PostDTO bookmarkPost(@PathVariable int id, @RequestHeader(value = "Authorization") String token) {
-        return postService.bookmarkPost(id, token);
+    @PutMapping("/give-star/{id}")
+    public PostDTO giveStarToPost(@PathVariable int id, @RequestHeader(value = "Authorization") String token) {
+        return postService.giveStarToPost(id, token);
     }
 
     @PutMapping("/view/{id}")

@@ -35,7 +35,7 @@ public class NotificationService {
             NotificationType.LIKE,
             NotificationType.REPLY,
             NotificationType.REPOST,
-            NotificationType.BOOKMARK,
+            NotificationType.STAR,
             NotificationType.MESSAGE,
             NotificationType.MENTION);
 

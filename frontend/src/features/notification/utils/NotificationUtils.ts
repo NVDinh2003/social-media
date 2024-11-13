@@ -1,6 +1,6 @@
 import { Notification } from "../../../utils/GlobalInterface";
 
-export function sortNotificationsByTimestamp(
+export function sortNotificationsByTS(
   notifications: Notification[]
 ): Notification[] {
   return notifications.sort((a, b) => {

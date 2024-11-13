@@ -1,10 +1,8 @@
 import React from "react";
-import { Notification as INotification } from "../../../../utils/GlobalInterface";
-
-import "./PostActionNotification.css";
 import { Notification } from "../Notification/Notification";
-import { NotificationUsersText } from "../NotificationUsersText/NotificationUsersText";
 import { NotificationPostContent } from "../NotificationPostContent/NotificationPostContent";
+import { NotificationUsersText } from "../NotificationUsersText/NotificationUsersText";
+import { Notification as INotification } from "../../../../utils/GlobalInterface";
 
 interface PostActionNotificationsProps {
   icon: JSX.Element;

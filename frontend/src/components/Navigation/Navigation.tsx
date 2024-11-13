@@ -10,7 +10,7 @@ import ListsSVG from "../SVGs/ListsSVG";
 import CommunitiesSVG from "../SVGs/CommunitiesSVG";
 import ProfileSVG from "../SVGs/ProfileSVG";
 import MoreSVG from "../SVGs/MoreSVG";
-import BookmarksSVG from "../SVGs/BookmarksSVG";
+import BookmarksSVG from "../SVGs/StarsSVG";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/Store";
 import Circle from "@mui/icons-material/Circle";

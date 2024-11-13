@@ -272,7 +272,7 @@ public class PostService {
         post.getReplies().clear();
         post.getViews().clear();
         post.getReposts().clear();
-        post.getBookmarks().clear();
+        post.getStars().clear();
         post.getImages().clear();
 
         postRepository.delete(post);
@@ -356,6 +356,7 @@ public class PostService {
         }
     }
 
+    @Transactional
     public PostDTO repostPost(Integer postId, String token) {
         Post post = postRepository.findById(postId).orElseThrow(PostDoesNotExistException::new);
         String username = tokenService.getUsernameFromToken(token);
@@ -363,16 +364,17 @@ public class PostService {
 
         Set<ApplicationUser> reposts = post.getReposts();
         if (reposts.contains(user)) {
-            reposts = reposts.stream().filter(u -> !Objects.equals(u.getUserId(), user.getUserId())).collect(Collectors.toSet());
+            reposts.remove(user);
         } else {
             reposts.add(user);
+            notificationService.createAndSendNotifications(NotificationType.REPOST, post.getAuthor(), user, post, null);
         }
         post.setReposts(reposts);
-        notificationService.createAndSendNotifications(NotificationType.REPOST, post.getAuthor(), user, post, null);
         post = postRepository.save(post);
         return postMapper.convertToDTO(post);
     }
 
+    @Transactional
     public PostDTO likePost(Integer postId, String token) {
         Post post = postRepository.findById(postId).orElseThrow(PostDoesNotExistException::new);
         String username = tokenService.getUsernameFromToken(token);
@@ -380,29 +382,30 @@ public class PostService {
 
         Set<ApplicationUser> likes = post.getLikes();
         if (likes.contains(user)) {
-            likes = likes.stream().filter(u -> !Objects.equals(u.getUserId(), user.getUserId())).collect(Collectors.toSet());
+            likes.remove(user);
         } else {
             likes.add(user);
+            notificationService.createAndSendNotifications(NotificationType.LIKE, post.getAuthor(), user, post, null);
         }
         post.setLikes(likes);
-        notificationService.createAndSendNotifications(NotificationType.LIKE, post.getAuthor(), user, post, null);
         post = postRepository.save(post);
         return postMapper.convertToDTO(post);
     }
 
-    public PostDTO bookmarkPost(Integer postId, String token) {
+    @Transactional
+    public PostDTO giveStarToPost(Integer postId, String token) {
         Post post = postRepository.findById(postId).orElseThrow(PostDoesNotExistException::new);
         String username = tokenService.getUsernameFromToken(token);
         ApplicationUser user = userService.getUserByUsername(username);
 
-        Set<ApplicationUser> bookmarks = post.getBookmarks();
-        if (bookmarks.contains(user)) {
-            bookmarks = bookmarks.stream().filter(u -> !Objects.equals(u.getUserId(), user.getUserId())).collect(Collectors.toSet());
+        Set<ApplicationUser> stars = post.getStars();
+        if (stars.contains(user)) {
+            stars.remove(user);
         } else {
-            bookmarks.add(user);
+            stars.add(user);
+            notificationService.createAndSendNotifications(NotificationType.STAR, post.getAuthor(), user, post, null);
         }
-        post.setBookmarks(bookmarks);
-        notificationService.createAndSendNotifications(NotificationType.BOOKMARK, post.getAuthor(), user, post, null);
+        post.setStars(stars);
         post = postRepository.save(post);
         return postMapper.convertToDTO(post);
     }

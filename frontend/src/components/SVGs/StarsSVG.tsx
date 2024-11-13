@@ -1,6 +1,6 @@
 import { SVGProps } from "../../utils/GlobalInterface";
 
-export default function BookmarksSVG(props: SVGProps) {
+export default function StarsSVG(props: SVGProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

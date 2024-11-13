@@ -9,7 +9,7 @@ import {
 } from "../../utils/GlobalInterface";
 import axios from "axios";
 import FormData from "form-data";
-import { setSessionTime, updatePost } from "./FeedSlice";
+import { loadFeedPage, setSessionTime, updatePost } from "./FeedSlice";
 
 export interface PostSliceState {
   loading: boolean;
@@ -64,7 +64,7 @@ interface CreatereplyWithMediaBody {
   token: string;
 }
 
-// repost, like, bookmarks,..
+// repost, like, stars,..
 interface PostActionBody {
   postId: number;
   token: string;
@@ -325,12 +325,13 @@ export const likePost = createAsyncThunk(
   }
 );
 
-export const bookmarkPost = createAsyncThunk(
-  "post/bookmark",
+export const starPost = createAsyncThunk(
+  "post/star",
   async (body: PostActionBody, thunkAPI) => {
     try {
+      // console.log("give start");
       let req = await axios.put(
-        `${baseUrl}/posts/bookmark/${body.postId}`,
+        `${baseUrl}/posts/give-star/${body.postId}`,
         {},
         {
           headers: {
@@ -789,7 +790,7 @@ export const PostSlice = createSlice({
         return state;
       });
 
-    // action with post (repost, like, bookmark,...)
+    // action with post (repost, like, star,...)
     builder
       .addCase(repostPost.fulfilled, (state, action) => {
         //TODO: setup so that it modifies the current feed in place
@@ -809,7 +810,7 @@ export const PostSlice = createSlice({
         };
         return state;
       })
-      .addCase(bookmarkPost.fulfilled, (state, action) => {
+      .addCase(starPost.fulfilled, (state, action) => {
         //TODO: setup so that it modifies the current feed in place
         state = {
           ...state,

@@ -3,7 +3,7 @@ import { Notification as INotification } from "../../../../utils/GlobalInterface
 
 import "./NotificationsAll.css";
 import { FollowNotification } from "../FollowNotification/FollowNotification";
-import { sortNotificationsByTimestamp } from "../../utils/NotificationUtils";
+
 import { lessThanMonth, lessThanYear } from "../../../../utils/DateUtils";
 import { PostActionNotification } from "../PostActionNotifications/PostActionNotification";
 import { Notification } from "../Notification/Notification";
@@ -11,13 +11,15 @@ import { Post } from "../../../post/components/Post/Post";
 import LikeNotificationSVG from "../../../../components/SVGs/NotificationAction/LikeNotificationSVG";
 import RepostNotificationSVG from "../../../../components/SVGs/NotificationAction/RepostNotificationSVG";
 import { Nothing } from "../../../../components/Nothing/Nothing";
+import { sortNotificationsByTS } from "../../utils/NotificationUtils";
+import StarsSVG from "../../../../components/SVGs/StarsSVG";
+import StarNotificationSVG from "../../../../components/SVGs/NotificationAction/StarNotificationSVG";
 
 export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
   notifications,
 }) => {
-  console.log(notifications.length);
   const groupedNotifications = (): JSX.Element[] => {
-    const sorted: INotification[] = sortNotificationsByTimestamp(notifications);
+    const sorted: INotification[] = sortNotificationsByTS(notifications);
     let notificationMap = new Map<string, INotification[]>();
     let notificationComponents: JSX.Element[] = [];
     let key = "";
@@ -147,6 +149,21 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
             }
           />
         );
+      case "STAR":
+        return (
+          <PostActionNotification
+            key={notificationList[0].notificationId}
+            notifications={notificationList}
+            text={" starred to your post"}
+            icon={
+              <StarNotificationSVG
+                height={35}
+                width={35}
+                color={"rgb(234, 165, 5)"}
+              />
+            }
+          />
+        );
       case "REPLY":
         feedPost = {
           post: notificationList[0].reply!,
@@ -185,9 +202,5 @@ export const NotificationsAll: React.FC<{ notifications: INotification[] }> = ({
     }
   };
 
-  return (
-    <div className="notifications-all">
-      {notifications.length === 0 ? <Nothing /> : groupedNotifications()}
-    </div>
-  );
+  return <div className="notifications-all">{groupedNotifications()}</div>;
 };

@@ -115,7 +115,7 @@ export const NotificationSlice = createSlice({
           return state;
         case "LIKE":
         case "REPOST":
-        case "BOOKMARK":
+        case "STAR":
           if (
             !notificationExists(state.postActionNotifications, action.payload)
           ) {
@@ -167,7 +167,7 @@ export const NotificationSlice = createSlice({
         switch (notification.notificationType) {
           case "LIKE":
           case "REPOST":
-          case "BOOKMARK":
+          case "STAR":
             posts.push(notification);
             break;
           case "REPLY":
@@ -239,7 +239,7 @@ export const NotificationSlice = createSlice({
         switch (notification.notificationType) {
           case "LIKE":
           case "REPOST":
-          case "BOOKMARK":
+          case "STAR":
             posts.push(notification);
             break;
           case "REPLY":

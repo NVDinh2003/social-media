@@ -77,11 +77,11 @@ public class Post implements Comparable<Post> {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "post_bookmark_junction",
+            name = "post_star_junction",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<ApplicationUser> bookmarks;
+    private Set<ApplicationUser> stars;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -131,7 +131,7 @@ public class Post implements Comparable<Post> {
         this.images = new ArrayList<>();
         this.replies = new HashSet<>();
         this.reposts = new HashSet<>();
-        this.bookmarks = new HashSet<>();
+        this.stars = new HashSet<>();
         this.views = new HashSet<>();
     }
 

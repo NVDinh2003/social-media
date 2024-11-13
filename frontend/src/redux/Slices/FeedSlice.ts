@@ -137,6 +137,7 @@ export const FeedSlice = createSlice({
       return state;
     },
     updatePost(state, action: PayloadAction<Post>) {
+      // console.log("update something");
       let updatedPosts: FeedPost[] = state.posts.map((post) => {
         if (action.payload.postId === post.post.postId) {
           return {
@@ -186,14 +187,27 @@ export const FeedSlice = createSlice({
 
         return state;
       })
+      // .addCase(loadFeedPage.fulfilled, (state, action) => {
+      //   state = {
+      //     ...state,
+      //     posts: action.payload.posts,
+      //     sessionStart: action.payload.sessionStart,
+      //     loading: false,
+      //     error: false,
+      //   };
+
+      //   return state;
+      // })
       .addCase(loadFeedPage.fulfilled, (state, action) => {
         state = {
           ...state,
-          posts: action.payload.posts,
+          posts: [], // Reset danh sách posts
           sessionStart: action.payload.sessionStart,
           loading: false,
           error: false,
         };
+
+        state.posts = action.payload.posts; // Thêm các bài viết mới
 
         return state;
       })

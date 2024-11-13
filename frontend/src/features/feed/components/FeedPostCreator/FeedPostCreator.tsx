@@ -40,7 +40,7 @@ export const FeedPostCreator: React.FC = () => {
         images: [],
         reposts: [],
         views: [],
-        bookmarks: [],
+        stars: [],
         scheduled: false,
         audience: "EVERYONE",
         replyRestriction: "EVERYONE",

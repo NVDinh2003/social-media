@@ -115,7 +115,7 @@ export interface Post {
   poll?: Poll;
   reposts: User[];
   views: User[];
-  bookmarks: User[];
+  stars: User[];
   scheduled: boolean;
   scheduledDate?: Date;
   address?: string;
@@ -169,7 +169,7 @@ export interface Notification {
     | "REPOST"
     | "LIKE"
     | "REPLY"
-    | "BOOKMARK"
+    | "STAR"
     | "MESSAGE"
     | "FOLLOW"
     | "MENTION";

@@ -4,12 +4,12 @@ import ReplyOutlineSVG from "../../../../../components/SVGs/ReplyOutlineSVG";
 import RepostOutlineSVG from "../../../../../components/SVGs/RepostOutlineSVG";
 import LikeOutlineSVG from "../../../../../components/SVGs/LikeOutlineSVG";
 import ViewsSVG from "../../../../../components/SVGs/ViewsSVG";
-import BookmarksSVG from "../../../../../components/SVGs/BookmarksSVG";
 import ShareSVG from "../../../../../components/SVGs/ShareSVG";
 import { convertCount, getMarginLeft } from "../../../utils/PostUtils";
 import { usePostActions } from "../../../../../hooks/usePostActions";
 
 import "./PostActionBar.css";
+import StarsSVG from "../../../../../components/SVGs/StarsSVG";
 
 interface PostActionBarProps {
   post: Post;
@@ -21,7 +21,7 @@ interface HoverColor {
   repost: string;
   like: string;
   views: string;
-  bookmark: string;
+  star: string;
   share: string;
 }
 
@@ -33,10 +33,10 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
     toggleReply,
     createRepost,
     createLike,
-    createBookmark,
+    giveStar,
     hasUserLiked,
     hasUserReposted,
-    hasUserBookmarked,
+    hasUserStarred,
   } = usePostActions();
 
   const [colors, setColors] = useState<HoverColor>({
@@ -44,7 +44,7 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
     repost: "#aab8c2",
     like: "#aab8c2",
     views: "#aab8c2",
-    bookmark: "#aab8c2",
+    star: "#aab8c2",
     share: "#aab8c2",
   });
 
@@ -53,9 +53,9 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
       ...prevColors,
       repost: hasUserReposted(post) ? "rgb(0, 230, 64)" : "#aab8c2",
       like: hasUserLiked(post) ? "rgb(242, 38, 19)" : "#aab8c2",
-      bookmark: hasUserBookmarked(post) ? "rgb(248, 184, 78)" : "#aab8c2",
+      star: hasUserStarred(post) ? "rgb(248, 184, 78)" : "#aab8c2",
     }));
-  }, [post, hasUserLiked, hasUserReposted, hasUserBookmarked]);
+  }, [post, hasUserLiked, hasUserReposted, hasUserStarred]);
 
   const updateHoverColor = (e: React.MouseEvent<HTMLDivElement>) => {
     const id = e.currentTarget.id;
@@ -85,10 +85,10 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
           views: "rgb(29, 155, 240)",
         }));
         break;
-      case "bookmark":
+      case "star":
         setColors((prevColors) => ({
           ...prevColors,
-          bookmark: "rgb(248, 184, 78)",
+          star: "rgb(248, 184, 78)",
         }));
         break;
       case "share":
@@ -107,7 +107,7 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
       ...prevColors,
       repost: hasUserReposted(post) ? "rgb(0, 230, 64)" : "#aab8c2",
       like: hasUserLiked(post) ? "rgb(242, 38, 19)" : "#aab8c2",
-      bookmark: hasUserBookmarked(post) ? "rgb(248, 184, 78)" : "#aab8c2",
+      star: hasUserStarred(post) ? "rgb(248, 184, 78)" : "#aab8c2",
     }));
   };
 
@@ -215,42 +215,44 @@ export const PostActionBar: React.FC<PostActionBarProps> = ({
         )}
       </div>
 
-      <div className="post-action-bar-right">
-        <div className="post-action-bar-group">
-          <div
-            className="post-action-bar-blue-wrapper"
-            id="bookmark"
-            onMouseOver={updateHoverColor}
-            onMouseLeave={resetColors}
-            onClick={(e) => {
-              e.stopPropagation();
-              createBookmark(post);
-            }}
-          >
-            <BookmarksSVG height={16} width={16} color={colors.bookmark} />
-          </div>
-          {/* Number of bookmarks beside it */}
-          {post.bookmarks.length > 0 && (
-            <p
-              className="post-action-bar-count"
-              style={{
-                color: colors.bookmark,
-              }}
-            >
-              {convertCount(post.bookmarks.length)}
-            </p>
-          )}
-        </div>
+      {/* <div className="post-action-bar-right"> */}
+      <div className="post-action-bar-group">
         <div
           className="post-action-bar-blue-wrapper"
-          id="share"
+          id="star"
           onMouseOver={updateHoverColor}
           onMouseLeave={resetColors}
+          onClick={(e) => {
+            e.stopPropagation();
+            giveStar(post);
+          }}
         >
-          <ShareSVG height={20} width={20} color={colors.share} />
+          <StarsSVG height={16} width={16} color={colors.star} />
         </div>
-        {/* Number of share beside it */}
+        {/* Number of stars beside it */}
+        {post.stars.length > 0 && (
+          <p
+            className="post-action-bar-count"
+            style={{
+              color: colors.star,
+              paddingLeft: "2px",
+              marginLeft: getMarginLeft(post.stars.length),
+            }}
+          >
+            {convertCount(post.stars.length)}
+          </p>
+        )}
       </div>
+      <div
+        className="post-action-bar-blue-wrapper"
+        id="share"
+        onMouseOver={updateHoverColor}
+        onMouseLeave={resetColors}
+      >
+        <ShareSVG height={20} width={20} color={colors.share} />
+      </div>
+      {/* Number of share beside it */}
+      {/* </div> */}
     </div>
   );
 };

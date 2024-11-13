@@ -36,7 +36,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "\n" +
             "        SELECT p.*\n" +
             "        FROM posts p\n" +
-            "        INNER JOIN post_repost_juntion prj ON p.post_id = prj.post_id\n" +
+            "        INNER JOIN post_repost_junction prj ON p.post_id = prj.post_id\n" +
             "        WHERE prj.user_id IN (\n" +
             "            SELECT u.user_id AS following_id \n" +
             "            FROM users u\n" +
