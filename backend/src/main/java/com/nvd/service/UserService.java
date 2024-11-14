@@ -359,4 +359,10 @@ public class UserService implements UserDetailsService {
         }
         return user;
     }
+
+    // statistics
+
+    public List<Object[]> getTop5UsersByPostsAndStarsCurrentMonth() {
+        return userRepository.findTop5UsersByPostsAndStarsCurrentMonth();
+    }
 }
