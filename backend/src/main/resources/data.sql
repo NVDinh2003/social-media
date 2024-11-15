@@ -42,6 +42,7 @@ values (1, 1),
        (6, 1),
        (7, 1);
 
+
 -- insert into posts (audience, content, posted_date, reply_restriction, scheduled, author_id)
 -- values (0,
 --         'This is a post by Dinh Nguyen',

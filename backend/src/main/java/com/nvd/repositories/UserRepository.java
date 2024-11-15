@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Integer> 
 
     Optional<ApplicationUser> findByEmail(String email);
 
-    @Query(value = "SELECT u.*, COUNT(p.post_id) AS post_count, COUNT(psj.user_id) AS star_count " +
+    @Query(value = "SELECT u.username, COUNT(p.post_id) AS post_count, COUNT(psj.user_id) AS star_count " +
             "FROM users u " +
             "LEFT JOIN posts p ON u.user_id = p.author_id " +
             "LEFT JOIN post_star_junction psj ON p.post_id = psj.post_id " +

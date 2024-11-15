@@ -29,19 +29,18 @@ public class UserStatisticsController {
             List<UserTop5> listTop5 = new ArrayList<>();
 
             for (Object[] obj : top5Users) {
-                ApplicationUser user = (ApplicationUser) obj[0];
+                String username = String.valueOf(obj[0]);
+                ApplicationUser user = userService.getUserByUsername(username);
+
                 int totalPosts = ((Number) obj[1]).intValue();
                 int totalStars = ((Number) obj[2]).intValue();
-
                 UserTop5 userTop5 = UserTop5.builder()
                         .user(user)
                         .totalPosts(totalPosts)
                         .totalStars(totalStars)
                         .build();
-
                 listTop5.add(userTop5);
             }
-
             return ResponseEntity.ok(listTop5);
         } catch (Exception e) {
             log.info("Error at admin/get-top-5-users: " + e);
