@@ -7,8 +7,8 @@ import { Theme } from "./utils/GlobalInterface";
 import { LayoutPage } from "./pages/LayoutPage";
 import { Feed } from "./features/feed/components/Feed/Feed";
 import { Profile } from "./pages/Profile";
-import { useSelector } from "react-redux";
-import { RootState } from "./redux/Store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "./redux/Store";
 import { useEffect } from "react";
 import { ViewPost } from "./pages/ViewPost";
 import { useWebSocket } from "./hooks/useWebsocket";
@@ -21,6 +21,7 @@ import "./assets/css/index.css";
 import "./assets/css/tailwind.css";
 import { FollowersPage } from "./pages/user/FollowersPage";
 import { FollowingPage } from "./pages/user/FollowingPage";
+import { loadConversations } from "./redux/Slices/MessagesSlice";
 
 const theme: Theme = {
   colors: {
@@ -42,17 +43,27 @@ const GlobalStyle = createGlobalStyle`
 }`;
 
 export const App = () => {
-  const user = useSelector((state: RootState) => state.user.loggedIn);
-  const conversations = useSelector(
-    (state: RootState) => state.message.conversations
-  );
-  const { connected, connect } = useWebSocket();
+  const user = useSelector((state: RootState) => state.user);
+  const messageState = useSelector((state: RootState) => state.message);
+  const dispatch: AppDispatch = useDispatch();
+  const { connected, connect, disconnect } = useWebSocket();
 
   useEffect(() => {
-    if (user && !connected) {
+    if (user.loggedIn && user.token && !messageState.initComplete) {
+      dispatch(
+        loadConversations({
+          userId: user.loggedIn.userId,
+          token: user.token,
+        })
+      );
+    }
+    if (user.loggedIn && messageState.initComplete && !connected) {
       connect();
     }
-  }, [user, conversations]);
+    return () => {
+      disconnect();
+    };
+  }, [user.loggedIn, user.token, messageState.initComplete]);
 
   // Cấu hình interceptor cho axios
   useEffect(() => {

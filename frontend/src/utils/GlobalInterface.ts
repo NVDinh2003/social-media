@@ -179,9 +179,16 @@ export interface Notification {
   actionUser: User;
   post: Post | null;
   reply: Post | null;
+  message: Message | null;
 }
 
 // Message and Conversation
+
+export interface Reaction {
+  messageReactionId: number;
+  reactionUser: User[];
+  reaction: string;
+}
 
 export interface Message {
   messageId: number;
@@ -192,6 +199,9 @@ export interface Message {
   seenBy: User[];
   messageImage: string;
   messageText: string;
+  replyTo: Message | null;
+  hiddenBy: User[];
+  reactions: Reaction[];
 }
 
 export interface Conversation {

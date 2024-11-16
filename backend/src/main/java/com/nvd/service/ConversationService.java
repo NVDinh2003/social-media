@@ -38,7 +38,7 @@ public class ConversationService {
 //                    conversation.setConversationMessage(conversationMessages);
 //                    return conversation;
                     List<Message> conversationMessages = conversation.getConversationMessage();
-                    Collections.sort(conversationMessages, new MessageComparator());
+                    conversationMessages.sort(new MessageComparator());
 
                     // Decrypt each message in the conversation
                     for (Message message : conversationMessages) {

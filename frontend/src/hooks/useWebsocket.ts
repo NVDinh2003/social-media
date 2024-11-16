@@ -72,12 +72,25 @@ export function useWebSocket() {
     };
   }, []);
 
+  // function disconnect() {
+  //   if (stompClient) {
+  //     stompClient.disconnect(() => {
+  //       console.log("Disconnected from websocket server");
+  //       setConnected(false);
+  //     });
+  //   }
+  // }
+
   function disconnect() {
-    if (stompClient) {
-      stompClient.disconnect(() => {
-        console.log("Disconnected from websocket server");
-        setConnected(false);
-      });
+    if (user && stompClient && connected) {
+      setConnected(false);
+      stompClient.disconnect(onDisconnected);
+    }
+  }
+  function onDisconnected() {
+    if (stompClient && user) {
+      stompClient.unsubscribe(`/user/${user?.username}/notifications`);
+      stompClient.unsubscribe(`/user/${user?.username}/messages`);
     }
   }
 
@@ -100,12 +113,15 @@ export function useWebSocket() {
   }
 
   function onMessageRecieved(payload: any) {
+    console.log("on message recieved", conversations);
+
     const message = JSON.parse(payload.body);
     const conversationExists = conversations.some(
       (conversation) => conversation.conversationId === message.conversationId
     );
 
     if (!conversationExists && user && token) {
+      console.log("load conversations");
       dispatch(
         loadConversations({
           userId: user.userId,
@@ -117,5 +133,5 @@ export function useWebSocket() {
     }
   }
 
-  return { connected, connect };
+  return { connected, connect, disconnect };
 }

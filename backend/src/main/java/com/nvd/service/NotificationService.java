@@ -140,7 +140,7 @@ public class NotificationService {
                 .convertAndSendToUser(user.getUsername(), "/messages", messageDTO));
     }
 
-    public void readMessageNotifications(List<Message> messages, ApplicationUser recipient) {
+    public List<Notification> readMessageNotifications(List<Message> messages, ApplicationUser recipient) {
         // lấy tất cả noti liên quan đến list mess
         List<Notification> notifications = notificationRepository.findByMessageIn(messages);
 
@@ -150,5 +150,7 @@ public class NotificationService {
                 .toList();
 
         this.acknowledgeNotification(filteredNotifications);
+
+        return notificationRepository.getByRecipientAndNotificationTypeInOrderByNotificationTimestampDesc(recipient, List.of(NotificationType.MESSAGE));
     }
 }

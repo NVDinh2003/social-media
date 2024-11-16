@@ -32,6 +32,9 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
   const dispatch: AppDispatch = useDispatch();
   const state = useSelector((state: RootState) => state.user);
   const notifications = useSelector((state: RootState) => state.notification);
+  const unreadMessages = useSelector(
+    (state: RootState) => state.message.unreadMessages
+  );
 
   const [newNotifications, setNewNotifications] = useState<number>(0);
 
@@ -148,7 +151,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
         <div className="navigation-item">
           <Link to="" className="navigation-link">
             <div className="navigation-notification-wrapper">
-              {notifications.messageNotifications.length > 0 && (
+              {unreadMessages.length > 0 && (
                 <Circle
                   sx={{
                     color: "#1da1f2",

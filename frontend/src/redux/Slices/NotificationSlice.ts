@@ -154,6 +154,13 @@ export const NotificationSlice = createSlice({
           return state;
       }
     },
+    readMessageNotifications(state, action: PayloadAction<Notification[]>) {
+      state = {
+        ...state,
+        messageNotifications: action.payload,
+      };
+      return state;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(loadNotifications.fulfilled, (state, action) => {
@@ -267,6 +274,7 @@ export const NotificationSlice = createSlice({
   },
 });
 
-export const { recievedNotification } = NotificationSlice.actions;
+export const { recievedNotification, readMessageNotifications } =
+  NotificationSlice.actions;
 
 export default NotificationSlice.reducer;

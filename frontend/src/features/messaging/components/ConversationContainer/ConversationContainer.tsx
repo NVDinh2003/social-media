@@ -1,21 +1,33 @@
 import React, { useEffect, useRef } from "react";
 
+import { useDispatch, useSelector } from "react-redux";
+
+import { AppDispatch, RootState } from "../../../../redux/Store";
+
 import "./ConversationContainer.css";
 import { Conversation } from "../../../../utils/GlobalInterface";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux/Store";
 import { ConversationUserInfo } from "../ConversationUserInfo/ConversationUserInfo";
 import { filterConversationUsers } from "../../utils/utils";
 import { MessageContainer } from "../MessageContainer/MessageContainer";
+import { readMessages } from "../../../../redux/Slices/MessagesSlice";
 
 export const ConversationContainer: React.FC<{
   conversation: Conversation;
 }> = ({ conversation }) => {
   //
   const loggedIn = useSelector((state: RootState) => state.user.loggedIn);
+  const token = useSelector((state: RootState) => state.user.token);
+
   const messages = useSelector(
     (state: RootState) => state.message.conversation?.conversationMessage
   );
+  const unreadMessages = useSelector(
+    (state: RootState) => state.message.unreadMessages
+  );
+  const conversationState = useSelector(
+    (state: RootState) => state.message.conversation
+  );
+  const dispatch: AppDispatch = useDispatch();
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -28,8 +40,28 @@ export const ConversationContainer: React.FC<{
   };
 
   useEffect(() => {
+    console.log(messages);
+
     if (scrollRef && scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+    if (
+      loggedIn &&
+      token &&
+      unreadMessages.some(
+        (message) =>
+          message.message &&
+          messages &&
+          message.message.conversationId === messages[0].conversationId
+      )
+    ) {
+      dispatch(
+        readMessages({
+          userId: loggedIn.userId,
+          conversationId: conversation.conversationId,
+          token,
+        })
+      );
     }
   }, [messages?.length]);
 
@@ -37,16 +69,18 @@ export const ConversationContainer: React.FC<{
     <div className="conversation-container" ref={scrollRef}>
       <ConversationUserInfo user={filteredConversationUsers()[0]} />
       <div className="conversation-messages">
-        {conversation.conversationMessage.map((message, idx) => {
-          const showSent = idx === conversation.conversationMessage.length - 1;
-          return (
-            <MessageContainer
-              key={message.messageId}
-              message={message}
-              showSent={showSent}
-            />
-          );
-        })}
+        {conversationState &&
+          conversationState.conversationMessage.map((message, idx) => {
+            const showSent =
+              idx === conversation.conversationMessage.length - 1;
+            return (
+              <MessageContainer
+                key={message.messageId}
+                message={message}
+                showSent={showSent}
+              />
+            );
+          })}
       </div>
       <div ref={scrollRef} className="conversation-container-bottom"></div>
     </div>

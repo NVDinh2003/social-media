@@ -7,6 +7,7 @@ import {
   Message,
 } from "../../utils/GlobalInterface";
 import axios from "axios";
+import { readMessageNotifications } from "./NotificationSlice";
 
 const baseURL = process.env.REACT_APP_API_URL;
 
@@ -18,6 +19,7 @@ interface MessagesSliceState {
   gifUrl: string | null;
   conversationUsers: ConversationUser[];
   conversations: Conversation[];
+  initComplete: boolean;
   conversation: Conversation | undefined;
   loading: boolean;
   error: boolean;
@@ -38,6 +40,13 @@ interface SendMessagePayload {
   image: File | null;
   token: string;
 }
+
+interface ReadMessagesPayload {
+  userId: number;
+  conversationId: number;
+  token: string;
+}
+
 const initialState: MessagesSliceState = {
   unreadMessages: [],
   popupOpen: false,
@@ -46,6 +55,7 @@ const initialState: MessagesSliceState = {
   conversationOpen: false,
   conversationUsers: [],
   conversations: [],
+  initComplete: false,
   conversation: undefined,
   loading: false,
   error: false,
@@ -154,6 +164,26 @@ export const sendMessage = createAsyncThunk(
   }
 );
 
+export const readMessages = createAsyncThunk(
+  "message/read",
+  async (payload: ReadMessagesPayload, thunkAPI) => {
+    try {
+      let res = await axios.get(
+        `http://localhost:8000/message/read?userId=${payload.userId}&conversationId=${payload.conversationId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${payload.token}`,
+          },
+        }
+      );
+      thunkAPI.dispatch(readMessageNotifications(res.data));
+      return res.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
 export const MessageSlice = createSlice({
   name: "message",
   initialState,
@@ -257,6 +287,7 @@ export const MessageSlice = createSlice({
           ...state,
           conversations: action.payload,
           loading: false,
+          initComplete: true,
         };
         return state;
       })
@@ -268,6 +299,40 @@ export const MessageSlice = createSlice({
         };
         return state;
       });
+
+    // read messages
+    builder.addCase(readMessages.fulfilled, (state, action) => {
+      const { readMessages, conversation, notifications } = action.payload;
+      const updatedUnreadMessages: INotification[] = [];
+      readMessages.forEach((message: Message) => {
+        state.unreadMessages.forEach((unreadMessage) => {
+          if (
+            unreadMessage.message &&
+            message.messageId !== unreadMessage.message.messageId
+          ) {
+            updatedUnreadMessages.push(unreadMessage);
+          }
+        });
+      });
+      state = {
+        ...state,
+        unreadMessages: updatedUnreadMessages,
+      };
+      if (state.conversation) {
+        const updatedConversations = state.conversations.map((c) => {
+          if (c.conversationId === conversation.conversationId) {
+            return conversation;
+          }
+          return c;
+        });
+        state = {
+          ...state,
+          conversation,
+          conversations: updatedConversations,
+        };
+      }
+      return state;
+    });
 
     builder
       .addCase(openConversation.pending, (state, action) => {

@@ -3,6 +3,7 @@ package com.nvd.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nvd.dto.request.message.CreateMessageDTO;
 import com.nvd.dto.response.MessageDTO;
+import com.nvd.dto.response.ReadMessageResponseDTO;
 import com.nvd.exceptions.InvalidMessageException;
 import com.nvd.exceptions.MessageDoesNotExistException;
 import com.nvd.exceptions.UnableToCreateMessageException;
@@ -109,19 +110,63 @@ public class MessageService {
         message.setReplyTo(replyToMessage);
         message.setMessageType(MessageType.REPLY);
 
-        return decryptMessageAndConvertToMessageDTO(message.getSentBy(), message);
+        MessageDTO messageDTO = decryptMessageAndConvertToMessageDTO(message.getSentBy(), message);
+        MessageDTO replyToMessageDTO = decryptMessageAndConvertToMessageDTO(message.getSentBy(), replyToMessage);
+        messageDTO.setReplyTo(replyToMessageDTO);
+
+        return messageDTO;
     }
 
-    public List<MessageDTO> readMessages(Integer userId, Integer conversationId) {
+//    public ReadMessageResponseDTO readMessages(Integer userId, Integer conversationId) {
+//        //TODO: Pass back the updated read messages, the updated conversation, the read notifications
+//
+//        ApplicationUser user = userService.getUserById(userId);
+//        Conversation conversation = conversationService.findById(conversationId);
+//
+//        // get list of messages from conversation
+//        List<Message> messagesToRead = conversation.getConversationMessage()
+//                .stream()
+//                .filter(message -> !message.getSeenBy().contains(user))
+//                // lọc các mess không phải của user hiện tại gửi (loại trừ mess của current user)
+//                .filter(mess -> !Objects.equals(mess.getSentBy().getUserId(), userId))
+//                // set các mess khác được đọc bởi user hiện tại
+//                .map(mess -> {
+//                    Set<ApplicationUser> seenBy = mess.getSeenBy();
+//                    seenBy.add(user);
+//                    mess.setSeenBy(seenBy);
+//                    return mess;
+//                })
+//                .toList();
+//
+//        // set lại noti (các mess đã được đọc, để không hiện . noti mess mới nữa)
+//        List<Notification> notifications = notificationService.readMessageNotifications(messagesToRead, user);
+//
+//        messagesToRead = messageRepository.saveAll(messagesToRead);
+//
+////        List<MessageDTO> readMessagesDto = messagesToRead.stream()
+////                .map(mess -> decryptMessageAndConvertToMessageDTO(user, mess))
+////                .toList();
+//
+//        List<MessageDTO> readMessagesDto = messagesToRead.stream()
+//                .map(messageMapper::convertToDTO).toList();
+//
+//        conversation = conversationService.findById(conversationId);
+//        return new ReadMessageResponseDTO(readMessagesDto, conversation, notifications);
+//
+////        return messagesToRead.stream()
+////                .map(mess -> decryptMessageAndConvertToMessageDTO(user, mess))
+////                .toList();
+//    }
+
+    public ReadMessageResponseDTO readMessages(Integer userId, Integer conversationId) {
         ApplicationUser user = userService.getUserById(userId);
         Conversation conversation = conversationService.findById(conversationId);
 
         // get list of messages from conversation
         List<Message> messagesToRead = conversation.getConversationMessage()
                 .stream()
-                // lọc các mess không phải của user hiện tại gửi (loại trừ mess của current user)
+                .filter(message -> !message.getSeenBy().contains(user))
                 .filter(mess -> !Objects.equals(mess.getSentBy().getUserId(), userId))
-                // set các mess khác được đọc bởi user hiện tại
                 .map(mess -> {
                     Set<ApplicationUser> seenBy = mess.getSeenBy();
                     seenBy.add(user);
@@ -131,11 +176,26 @@ public class MessageService {
                 .toList();
 
         // set lại noti (các mess đã được đọc, để không hiện . noti mess mới nữa)
-        notificationService.readMessageNotifications(messagesToRead, user);
+        List<Notification> notifications = notificationService.readMessageNotifications(messagesToRead, user);
 
-        return messagesToRead.stream()
-                .map(mess -> decryptMessageAndConvertToMessageDTO(user, mess))
+        messagesToRead = messageRepository.saveAll(messagesToRead);
+
+        List<MessageDTO> readMessagesDto = messagesToRead.stream()
+                .map(message -> {
+                    MessageDTO dto = messageMapper.convertToDTO(message);
+                    String decryptedText = MessageUtils.decryptMessage(
+                            message.getMessageText(),
+                            userId,
+                            message.getSentBy().getUserId(),
+                            message.getConversation().getConversationUsers().size() > 2
+                    );
+                    dto.setMessageText(decryptedText);
+                    return dto;
+                })
                 .toList();
+
+        conversation = conversationService.findById(conversationId);
+        return new ReadMessageResponseDTO(readMessagesDto, conversation, notifications);
     }
 
     public Message reactToMessage(ApplicationUser user, Message message, String reaction) {

@@ -25,4 +25,5 @@ public class MessageDTO {
     private MessageDTO replyTo;
     private Set<MessageReaction> messageReactions;
     private Set<ApplicationUser> hiddenBy;
+
 }
