@@ -51,14 +51,5 @@ public class MessageController {
     public MessageDTO hideMessageForUser(@RequestBody HideMessageRequestDTO body) {
         return messageService.hideMessageForUser(body.getUser(), body.getMessageId());
     }
-
-    @GetMapping(value = "/d/{id}")
-    public MessageDTO getMessageByIdD(@PathVariable("id") Integer messageId) {
-        return messageService.getMessageByIdD(messageId);
-    }
-
-    @GetMapping(value = "/{id}")
-    public Message getMessageByIdE(@PathVariable("id") Integer messageId) {
-        return messageService.getMessageById(messageId);
-    }
+    
 }

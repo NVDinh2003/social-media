@@ -1,6 +1,5 @@
 package com.nvd.dto.response;
 
-import com.nvd.models.Conversation;
 import com.nvd.models.Notification;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ReadMessageResponseDTO {
     private List<MessageDTO> readMessages;
-    private Conversation conversation;
+    private ConversationDTO conversation;
     private List<Notification> notifications;
 
 }

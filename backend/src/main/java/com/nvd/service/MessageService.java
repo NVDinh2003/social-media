@@ -2,11 +2,13 @@ package com.nvd.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nvd.dto.request.message.CreateMessageDTO;
+import com.nvd.dto.response.ConversationDTO;
 import com.nvd.dto.response.MessageDTO;
 import com.nvd.dto.response.ReadMessageResponseDTO;
 import com.nvd.exceptions.InvalidMessageException;
 import com.nvd.exceptions.MessageDoesNotExistException;
 import com.nvd.exceptions.UnableToCreateMessageException;
+import com.nvd.mappers.ConversationMapper;
 import com.nvd.mappers.MessageMapper;
 import com.nvd.models.*;
 import com.nvd.models.enums.MessageType;
@@ -35,7 +37,9 @@ public class MessageService {
     private final ConversationService conversationService;
     private final MessageReactionService messageReactionService;
     private final MessageMapper messageMapper;
+    private final ConversationMapper conversationMapper;
 
+    @Transactional
     public Message createMessage(String messagePayload, List<MultipartFile> files) {
         Message message;
         String messageImage = "";
@@ -117,62 +121,18 @@ public class MessageService {
         return messageDTO;
     }
 
-//    public ReadMessageResponseDTO readMessages(Integer userId, Integer conversationId) {
-//        //TODO: Pass back the updated read messages, the updated conversation, the read notifications
-//
-//        ApplicationUser user = userService.getUserById(userId);
-//        Conversation conversation = conversationService.findById(conversationId);
-//
-//        // get list of messages from conversation
-//        List<Message> messagesToRead = conversation.getConversationMessage()
-//                .stream()
-//                .filter(message -> !message.getSeenBy().contains(user))
-//                // lọc các mess không phải của user hiện tại gửi (loại trừ mess của current user)
-//                .filter(mess -> !Objects.equals(mess.getSentBy().getUserId(), userId))
-//                // set các mess khác được đọc bởi user hiện tại
-//                .map(mess -> {
-//                    Set<ApplicationUser> seenBy = mess.getSeenBy();
-//                    seenBy.add(user);
-//                    mess.setSeenBy(seenBy);
-//                    return mess;
-//                })
-//                .toList();
-//
-//        // set lại noti (các mess đã được đọc, để không hiện . noti mess mới nữa)
-//        List<Notification> notifications = notificationService.readMessageNotifications(messagesToRead, user);
-//
-//        messagesToRead = messageRepository.saveAll(messagesToRead);
-//
-////        List<MessageDTO> readMessagesDto = messagesToRead.stream()
-////                .map(mess -> decryptMessageAndConvertToMessageDTO(user, mess))
-////                .toList();
-//
-//        List<MessageDTO> readMessagesDto = messagesToRead.stream()
-//                .map(messageMapper::convertToDTO).toList();
-//
-//        conversation = conversationService.findById(conversationId);
-//        return new ReadMessageResponseDTO(readMessagesDto, conversation, notifications);
-//
-////        return messagesToRead.stream()
-////                .map(mess -> decryptMessageAndConvertToMessageDTO(user, mess))
-////                .toList();
-//    }
-
     public ReadMessageResponseDTO readMessages(Integer userId, Integer conversationId) {
+        //TODO: Pass back the updated read messages, the updated conversation, the read notifications
+
         ApplicationUser user = userService.getUserById(userId);
         Conversation conversation = conversationService.findById(conversationId);
 
         // get list of messages from conversation
         List<Message> messagesToRead = conversation.getConversationMessage()
                 .stream()
-                .filter(message -> !message.getSeenBy().contains(user))
-                .filter(mess -> !Objects.equals(mess.getSentBy().getUserId(), userId))
-                .map(mess -> {
-                    Set<ApplicationUser> seenBy = mess.getSeenBy();
-                    seenBy.add(user);
-                    mess.setSeenBy(seenBy);
-                    return mess;
-                })
+                // lọc các mess không phải của user hiện tại gửi (loại trừ mess của current user)
+                .filter(message -> !message.getSeenBy().contains(user) && !Objects.equals(message.getSentBy().getUserId(), userId))
+                .peek(message -> message.getSeenBy().add(user))
                 .toList();
 
         // set lại noti (các mess đã được đọc, để không hiện . noti mess mới nữa)
@@ -194,8 +154,31 @@ public class MessageService {
                 })
                 .toList();
 
-        conversation = conversationService.findById(conversationId);
-        return new ReadMessageResponseDTO(readMessagesDto, conversation, notifications);
+        // Create ConversationDTO
+        ConversationDTO conversationDTO = conversationMapper.convertToDTO(conversation);
+
+        // Decrypt each message in the conversation for the response only
+        List<MessageDTO> decryptedMessagesDto = conversationDTO.getConversationMessage().stream()
+                .map(message -> {
+//                    MessageDTO dto = messageMapper.convertToDTO(message);
+
+                    boolean isGroupMessage = conversation.getConversationUsers().size() > 2;
+                    String decryptedText = MessageUtils.decryptMessage(
+                            message.getMessageText(),
+                            userId,
+                            message.getSentBy().getUserId(),
+                            isGroupMessage
+                    );
+                    message.setMessageText(decryptedText);
+                    return message;
+                })
+                .toList();
+
+        conversationDTO.setConversationMessage(decryptedMessagesDto);
+
+//        List<MessageDTO> aaa = readMessagesDto;
+
+        return new ReadMessageResponseDTO(readMessagesDto, conversationDTO, notifications);
     }
 
     public Message reactToMessage(ApplicationUser user, Message message, String reaction) {
@@ -240,11 +223,4 @@ public class MessageService {
         return dto;
     }
 
-    public Message getMessageById(Integer messageId) {
-        return messageRepository.findById(messageId).get();
-    }
-
-    public MessageDTO getMessageByIdD(Integer messageId) {
-        return messageMapper.convertToDTO(messageRepository.findById(messageId).get());
-    }
 }

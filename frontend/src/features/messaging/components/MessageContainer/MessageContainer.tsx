@@ -139,14 +139,16 @@ export const MessageContainer: React.FC<{
             )}
             <div className="message-subtitle">
               {sentAt()}
-              {(showSent || message.seenBy.length !== 0) && (
+              {(showSent ||
+                (message.seenBy && message.seenBy.length !== 0)) && (
                 <Circle sx={{ fontSize: "4px", color: "#657786" }} />
               )}
               {showSent && <>Sent</>}
               {conversation &&
                 conversation.conversationUsers.length > 2 &&
+                message.seenBy &&
                 message.seenBy.length > 0 && (
-                  <>Seen by ${message.seenBy.length} person</>
+                  <>Seen by {message.seenBy.length} person</>
                 )}
             </div>
           </div>
