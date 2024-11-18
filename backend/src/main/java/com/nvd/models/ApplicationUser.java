@@ -10,9 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @AllArgsConstructor
 //@NoArgsConstructor
@@ -92,11 +90,21 @@ public class ApplicationUser {
     )
     private Set<Role> authorities;  // set để không trùng role
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "userSendReport")
+    private List<UserReported> userSendReports;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "reportedUser")
+    private List<UserReported> reportedUsers;
+
     public ApplicationUser() {
         this.createTimestamp = LocalDateTime.now();
         this.authorities = new HashSet<>();
         this.following = new HashSet<>();
         this.followers = new HashSet<>();
+        this.reportedUsers = new ArrayList<>();
+        this.userSendReports = new ArrayList<>();
         this.enabled = false;
     }
 

@@ -184,6 +184,9 @@ src/main/resources/credentials.json
 tokens/**
 tokens/StoredCredential
 tokens/gmail_token
+ssl/**
+ssl/certificate.pem
+ssl/private_key.pem
 .env
 
 # Để đảm bảo, thêm các pattern tổng quát
@@ -191,6 +194,8 @@ tokens/gmail_token
 **/StoredCredential
 **/gmail_token
 **/.env
+**/certificate.pem
+**/private_key.pem
 
 # misc react env
 .env

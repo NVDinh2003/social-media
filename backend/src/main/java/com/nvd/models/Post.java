@@ -1,5 +1,6 @@
 package com.nvd.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nvd.models.enums.Audience;
 import com.nvd.models.enums.ReplyRestriction;
@@ -105,6 +106,10 @@ public class Post implements Comparable<Post> {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "poll_id", referencedColumnName = "poll_id")
     private Poll poll;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "reportedPost")
+    List<PostReported> reportedPosts;
 
     private String address;
     //    @JsonIgnore
