@@ -1,6 +1,10 @@
 package com.nvd.service;
 
+import com.nvd.models.ApplicationUser;
+import com.nvd.models.Post;
+import com.nvd.models.PostReported;
 import com.nvd.repositories.PostReportedRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,15 +14,12 @@ public class PostReportedService {
 
     private final PostReportedRepository postReportedRepository;
 
+    public boolean checkExistReport(Post post, ApplicationUser userSendReport) {
+        return postReportedRepository.existsByReportedPostAndUserSendReport(post, userSendReport);
+    }
 
-    public boolean checkExistReport(String post_reported_id, String user_send_report_id) {
-
-
-//        if (postReported != null) {
-//            System.out.println("Ban da bao cao roi");
-//            return true;
-//        } else {
-//            return false;
-//        }
+    @Transactional
+    public void saveReport(PostReported postReported) {
+        postReportedRepository.save(postReported);
     }
 }

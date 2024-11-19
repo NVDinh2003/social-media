@@ -70,9 +70,9 @@ values (1, 1),
 --        (false, 1, 6, null, 5, '2024-08-30 02:58:57'),
 --        (false, 1, 6, null, 5, '2024-08-30 02:58:57');
 
--- insert into posts (audience, content, posted_date, is_reply, reply_restriction, reply_to, scheduled, scheduled_date,
---                    author_id, poll_id)
--- values (0, 'Test post for notifications', now(), null, 0, null, false, null, 5, null);
+insert into posts (audience, content, posted_date, is_reply, reply_restriction, reply_to, scheduled, scheduled_date,
+                   author_id, poll_id)
+values (0, 'Test post for report!', now(), null, 0, null, false, null, 5, null);
 --
 -- insert into posts (audience, content, posted_date, is_reply, reply_restriction, reply_to, scheduled, scheduled_date,
 --                    author_id, poll_id)

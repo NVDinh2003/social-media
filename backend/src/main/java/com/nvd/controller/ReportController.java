@@ -1,11 +1,13 @@
 package com.nvd.controller;
 
 import com.google.common.net.HttpHeaders;
-import com.nvd.service.PostReportedService;
-import com.nvd.service.TokenService;
-import com.nvd.service.UserReportedService;
-import com.nvd.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.nvd.dto.request.report.PostReportDTO;
+import com.nvd.dto.request.report.UserRepostDTO;
+import com.nvd.models.ApplicationUser;
+import com.nvd.models.Post;
+import com.nvd.models.PostReported;
+import com.nvd.models.UserReported;
+import com.nvd.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,38 +20,50 @@ public class ReportController {
 
     private final TokenService tokenService;
     private final UserService userService;
+    private final PostService postService;
     private final UserReportedService userReportedService;
     private final PostReportedService postReportedService;
 
     @PostMapping("/user")
-    public ResponseEntity<Void> reportUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-                                           @RequestParam("to") Integer toUserId,
-                                           @RequestParam("content") String content) {
-//        String loggedInUser = tokenService.getUsernameFromToken(token);
-//        ApplicationUser user = userService.getUserByUsername(loggedInUser);
-//        UserReported reported = new UserReported();
-//        reported.set(toUserId);
-//        reported.setUser_send_report_id(user.getUser_id() + "");
-//        reported.setContent_report(content);
-//        reported.setDate_report(new Date());
-//        if (moderatorUserReportedService.checkExistReport(to, user.getUser_id() + "") == false) {
-//            moderatorUserReportedService.insert(reported);
-//        }
-//        return null;
+    public ResponseEntity<String> reportUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+                                             @RequestBody UserRepostDTO body) {
+        String loggedInUser = tokenService.getUsernameFromToken(token);
+        ApplicationUser user = userService.getUserByUsername(loggedInUser);
+        ApplicationUser reportedUser = userService.getUserById(body.getToUserId());
+        String result;
+
+        if (!userReportedService.checkExistReport(reportedUser, user)) {
+            UserReported reported = new UserReported();
+            reported.setReportedUser(reportedUser);
+            reported.setUserSendReport(user);
+            reported.setContentReport(body.getContent());
+            userReportedService.saveReport(reported);
+            result = "User reported successfully!";
+        } else {
+            result = "You have already reported this user.";
+        }
+
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Void> reportPost(HttpServletRequest request, @RequestParam("postId") String postId, @RequestParam("content") String content) {
-//        String email = jwtTokenUtil.getEmailFromHeader(request);
-//        User user = userService.findByEmail(email);
-//        ModeratorPostReported reported = new ModeratorPostReported();
-//        reported.setPost_reported_id(postId);
-//        reported.setUser_send_report_id(user.getUser_id() + "");
-//        reported.setContent_report(content);
-//        reported.setDate_report(new Date());
-//        if (moderatorPostReportedService.checkExistReport(postId, user.getUser_id() + "") == false) {
-//            moderatorPostReportedService.insert(reported);
-//        }
-//        return null;
+    public ResponseEntity<String> reportPost(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+                                             @RequestBody PostReportDTO body) {
+        String loggedInUser = tokenService.getUsernameFromToken(token);
+        ApplicationUser user = userService.getUserByUsername(loggedInUser);
+        Post post = postService.getPostEntityById(body.getPostId());
+        String result;
+
+        if (!postReportedService.checkExistReport(post, user)) {
+            PostReported reported = new PostReported();
+            reported.setReportedPost(post);
+            reported.setUserSendReport(user);
+            reported.setContentReport(body.getContent());
+            postReportedService.saveReport(reported);
+            result = "Post reported successfully!";
+        } else
+            result = "You have already reported this post.";
+
+        return ResponseEntity.ok(result);
     }
 }
