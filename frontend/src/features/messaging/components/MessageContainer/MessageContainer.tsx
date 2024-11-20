@@ -31,19 +31,17 @@ export const MessageContainer: React.FC<{
   const [messageHover, setMessageHover] = useState<boolean>(false);
   const [displayMore, setDisplayMore] = useState<boolean>(false);
   const [displayReact, setDisplayReact] = useState<boolean>(false);
-  const [moreDistance, setMoreDistance] = useState<{
-    top: number;
-    left: number;
-  }>({ top: 0, left: 0 });
   const [reactDistance, setReactDistance] = useState<{
     bottom: number;
     right: number;
   }>({ bottom: 0, right: 0 });
-
-  const moreRef = useRef<HTMLDivElement>(null);
+  const [moreDistance, setMoreDistance] = useState<{
+    top: number;
+    left: number;
+  }>({ top: 0, left: 0 });
   const reactRef = useRef<HTMLDivElement>(null);
+  const moreRef = useRef<HTMLDivElement>(null);
   const watcherRef = useRef<HTMLDivElement>(null);
-
   const handleClickOutside = (e: any) => {
     if (
       watcherRef &&
@@ -105,13 +103,13 @@ export const MessageContainer: React.FC<{
       const right =
         window.innerWidth -
         Math.round(reactRef.current.getBoundingClientRect().right);
+      console.log(bottom, right);
       setReactDistance({ bottom, right });
     }
   };
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -187,7 +185,7 @@ export const MessageContainer: React.FC<{
                 onClick={react}
                 id="messageReact"
               >
-                <ReactSVG height={20} width={20} color={"#657786"} />
+                <ReactSVG height={20} width={20} color="#657786" />
               </div>
             </div>
             <div

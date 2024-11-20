@@ -42,7 +42,7 @@
   width: fit-content;
   max-width: 240px;
   white-space: nowrap;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .messages-bar-username {

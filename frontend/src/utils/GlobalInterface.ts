@@ -186,8 +186,8 @@ export interface Notification {
 
 export interface Reaction {
   messageReactionId: number;
-  reactionUser: User[];
-  reaction: string;
+  reactionUser: User;
+  reaction: String;
 }
 
 export interface Message {

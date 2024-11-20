@@ -4,18 +4,16 @@ import { mapReactionBar } from "../../../../utils/EmojiUtils";
 
 import "./MessageReactModal.css";
 
-interface MessageReactProps {
+interface MessageReactModalProps {
   handleClick: (e: React.MouseEvent<HTMLImageElement>) => void;
   distance: { bottom: number; right: number };
 }
-
-export const MessageReactModal: React.FC<MessageReactProps> = ({
+export const MessageReactModal: React.FC<MessageReactModalProps> = ({
   handleClick,
   distance,
 }) => {
   const reactionBarData = mapReactionBar();
   const [displayDropDown, setDisplayDropDown] = useState<boolean>(false);
-
   return (
     <div
       className={`message-react-modal ${
@@ -23,10 +21,10 @@ export const MessageReactModal: React.FC<MessageReactProps> = ({
       }`}
       style={{
         marginBottom: `${distance.bottom + 8}px`,
-        marginLeft: `-${distance.right - 132}px`,
+        marginLeft: `-${distance.right - 94}px`,
       }}
     >
-      {!displayDropDown ? (
+      {!displayDropDown && (
         <>
           {reactionBarData.map((emoji) => {
             return (
@@ -36,7 +34,7 @@ export const MessageReactModal: React.FC<MessageReactProps> = ({
                 onClick={handleClick}
               >
                 <img
-                  className="message-react-modal-option-emoji"
+                  className="message-react-moda-option-emoji"
                   src={emoji.img}
                 />
               </div>
@@ -54,8 +52,6 @@ export const MessageReactModal: React.FC<MessageReactProps> = ({
             />
           </div>
         </>
-      ) : (
-        <></>
       )}
     </div>
   );

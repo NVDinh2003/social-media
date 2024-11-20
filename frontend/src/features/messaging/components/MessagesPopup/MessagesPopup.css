@@ -25,6 +25,7 @@
   max-height: 373px;
   height: fit-content;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .messages-popup-content {

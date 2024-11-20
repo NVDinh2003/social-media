@@ -2,7 +2,7 @@
   width: 168px;
   height: 132px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
-  /* position: absolute; */
+  position: fixed;
   position: fixed;
   top: 0;
   left: 0;
@@ -20,7 +20,7 @@
   color: black;
   font-size: 15px;
   font-weight: 800;
-  padding: 12px;
+  padding-left: 12px;
   gap: 8px;
 }
 .message-more-modal-option-group:hover {

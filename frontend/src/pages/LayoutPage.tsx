@@ -59,6 +59,7 @@ export const LayoutPage: React.FC = () => {
   // }, [jwt, state.token]);
 
   const closeOpenedModals = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (displayPostMore) dispatch(updateDisplayPostMore());
     if (displayPostMention) dispatch(updateDisplayPostMention(false));
   };

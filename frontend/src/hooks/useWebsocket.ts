@@ -89,8 +89,8 @@ export function useWebSocket() {
   }
   function onDisconnected() {
     if (stompClient && user) {
-      stompClient.unsubscribe(`/user/${user?.username}/notifications`);
-      stompClient.unsubscribe(`/user/${user?.username}/messages`);
+      stompClient.unsubscribe(`/user/${user.username}/notifications`);
+      stompClient.unsubscribe(`/user/${user.username}/messages`);
     }
   }
 

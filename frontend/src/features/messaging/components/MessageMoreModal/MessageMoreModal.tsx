@@ -36,7 +36,7 @@ export const MessageMoreModal: React.FC<MessageMoreModalProps> = ({
         onClick={handleCopyClicked}
       >
         <CopyMessageSVG height={20} width={20} color="black" />
-        Copy Message
+        Copy message
       </div>
       <div
         className="message-more-modal-option-group"
