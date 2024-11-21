@@ -23,7 +23,7 @@ public class MessageDTO {
     private String messageImage;
     private String messageText;
     private MessageDTO replyTo;
-    private Set<MessageReaction> messageReactions;
+    private Set<MessageReaction> reactions;
     private Set<ApplicationUser> hiddenBy;
 
 }

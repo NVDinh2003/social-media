@@ -19,6 +19,10 @@ import java.util.List;
 public class MessageController {
     private final MessageService messageService;
 
+    @GetMapping(value = "/")
+    public Message getMessage(@RequestParam("id") Integer id) {
+        return messageService.getById(id);
+    }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public MessageDTO sendMessage(@RequestPart("messagePayload") String messagePayload,
@@ -43,13 +47,13 @@ public class MessageController {
 
 
     @PostMapping(value = "/react")
-    public Message reactToMessage(@RequestBody MessageReactDTO body) {
-        return messageService.reactToMessage(body.getUser(), body.getMessage(), body.getReaction());
+    public MessageDTO reactToMessage(@RequestBody MessageReactDTO body) {
+        return messageService.reactToMessage(body.getUser(), body.getMessageId(), body.getReaction());
     }
 
     @PostMapping(value = "/hide")
     public MessageDTO hideMessageForUser(@RequestBody HideMessageRequestDTO body) {
         return messageService.hideMessageForUser(body.getUser(), body.getMessageId());
     }
-    
+
 }

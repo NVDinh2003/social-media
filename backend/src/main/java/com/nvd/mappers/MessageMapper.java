@@ -13,10 +13,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface MessageMapper extends BaseMapper<Message, MessageDTO> {
     @Override
     @Mapping(target = "conversationId", source = "conversation.conversationId")
+    @Mapping(target = "reactions", source = "reactions")
     MessageDTO convertToDTO(Message entity);
 
     @Override
     @Mapping(target = "conversation", ignore = true)
     Message convertToEntity(MessageDTO dto);
-
 }

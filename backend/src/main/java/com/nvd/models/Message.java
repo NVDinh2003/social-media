@@ -61,7 +61,12 @@ public class Message {
     @JoinColumn(name = "message_reply_to", referencedColumnName = "message_id")
     private Message replyTo;
 
-    @OneToMany(mappedBy = "messageReactionId")
+    @ManyToMany
+    @JoinTable(
+            name = "message_reactions_junction",
+            joinColumns = @JoinColumn(name = "reaction_id"),
+            inverseJoinColumns = @JoinColumn(name = "message_id")
+    )
     private Set<MessageReaction> reactions;
 
     @ManyToMany

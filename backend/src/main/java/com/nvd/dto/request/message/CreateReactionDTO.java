@@ -1,6 +1,6 @@
 package com.nvd.dto.request.message;
 
-import com.nvd.models.ApplicationUser;
+import com.nvd.models.MessageReaction;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +10,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageReactDTO {
+public class CreateReactionDTO {
 
-    private ApplicationUser user;
-    private Integer messageId;
-    private String reaction;
+    private MessageReaction messageReaction;
+    private MessageReactionOperation operation;
+
+
 }

@@ -13,6 +13,7 @@ import com.nvd.mappers.MessageMapper;
 import com.nvd.models.*;
 import com.nvd.models.enums.MessageType;
 import com.nvd.repositories.ConversationRepository;
+import com.nvd.repositories.MessageReactionRepository;
 import com.nvd.repositories.MessageRepository;
 import com.nvd.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
@@ -35,9 +33,17 @@ public class MessageService {
     private final ConversationRepository conversationRepository;
     private final UserService userService;
     private final ConversationService conversationService;
-    private final MessageReactionService messageReactionService;
+    private final MessageReactionRepository messageReactionRepository;
     private final MessageMapper messageMapper;
     private final ConversationMapper conversationMapper;
+
+    public Message getById(Integer messageId) {
+        return messageRepository.getById(messageId);
+    }
+
+    public List<Message> findAllMessagesByConversation(Conversation conversation) {
+        return messageRepository.findAllByConversation(conversation);
+    }
 
     @Transactional
     public Message createMessage(String messagePayload, List<MultipartFile> files) {
@@ -181,24 +187,54 @@ public class MessageService {
         return new ReadMessageResponseDTO(readMessagesDto, conversationDTO, notifications);
     }
 
-    public Message reactToMessage(ApplicationUser user, Message message, String reaction) {
-        // check xem user đã reaction mess này chưa
-        boolean deleted = messageReactionService.reactionExists(user, reaction, message);
-        // tạo hoặc hủy reaction mess này cho user hiện tại
-        MessageReaction messageReaction = messageReactionService.createOrDeleteReaction(user, reaction, message);
+//    public MessageDTO reactToMessage2(ApplicationUser user, Message message, String reaction) {
+//        // check xem user đã reaction mess này chưa
+//        boolean deleted = messageReactionService.reactionExists(user, reaction, message);
+//        // tạo hoặc hủy reaction mess này cho user hiện tại
+//        MessageReaction messageReaction = messageReactionService.createOrDeleteReaction(user, reaction, message);
+//
+//        // lấy reactions của mess hiện tại
+//        Set<MessageReaction> messageReactions = message.getReactions();
+//
+//
+//        if (deleted) { // nếu đã thả react thì hủy react đó ra khỏi list
+//            messageReactions.stream().filter(r -> r.getMessageReactionId() != messageReaction.getMessageReactionId())
+//                    .toList();
+//        } else { // chưa thì thêm react
+//            messageReactions.add(messageReaction);
+//        }
+//        message.setReactions(messageReactions);
+//
+//        return messageMapper.convertToDTO(message);
+//    }
 
-        // lấy reactions của mess hiện tại
-        Set<MessageReaction> messageReactions = message.getReactions();
+    public MessageDTO reactToMessage(ApplicationUser user, Integer messageId, String reaction) {
+        Message message = messageRepository.findById(messageId).orElseThrow();
+        Set<MessageReaction> reactions = message.getReactions();
 
+        // find reaction of current user in message
+        Optional<MessageReaction> currentReaction = reactions.stream()
+                .filter(r -> r.getReactionUser().getUserId().equals(user.getUserId()))
+                .findFirst();
 
-        if (deleted) { // nếu đã thả react thì hủy react đó ra khỏi list
-            messageReactions.stream().filter(r -> r.getMessageReactionId() != messageReaction.getMessageReactionId())
-                    .toList();
-        } else { // chưa thì thêm react
-            messageReactions.add(messageReaction);
+        if (currentReaction.isPresent()) {
+            MessageReaction currentMessageReaction = currentReaction.get();
+            reactions.remove(currentMessageReaction);
+            messageReactionRepository.delete(currentMessageReaction);
+            if (!currentMessageReaction.getReaction().equals(reaction)) {
+                MessageReaction newReaction = new MessageReaction(user, reaction);
+                reactions.add(messageReactionRepository.save(newReaction));
+            }
+        } else {
+            MessageReaction newReaction = new MessageReaction(user, reaction);
+            reactions.add(messageReactionRepository.save(newReaction));
         }
-        message.setReactions(messageReactions);
-        return message;
+
+        message.setReactions(reactions);
+        message = messageRepository.save(message);
+
+        MessageDTO m = messageMapper.convertToDTO(message);
+        return m;
     }
 
     public MessageDTO hideMessageForUser(ApplicationUser user, Integer messageId) {

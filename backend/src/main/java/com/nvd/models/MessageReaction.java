@@ -1,6 +1,5 @@
 package com.nvd.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,27 +19,28 @@ public class MessageReaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "message_reaction_id")
     private Integer messageReactionId;
+
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "message_reaction_user", referencedColumnName = "user_id")
     ApplicationUser reactionUser;
+
     @Column(name = "reaction")
     private String reaction;
-    @ManyToOne
-    @JoinColumn(name = "message_id")
-    @JsonIgnore
-    private Message message;
 
+    public MessageReaction(ApplicationUser reactionUser, String reaction) {
+        this.reactionUser = reactionUser;
+        this.reaction = reaction;
+    }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MessageReaction that = (MessageReaction) o;
-        return Objects.equals(messageReactionId, that.messageReactionId) && Objects.equals(reaction, that.reaction) && Objects.equals(reactionUser, that.reactionUser) && Objects.equals(message, that.message);
+        return Objects.equals(messageReactionId, that.messageReactionId) && Objects.equals(reactionUser, that.reactionUser) && Objects.equals(reaction, that.reaction);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(messageReactionId, reaction, reactionUser, message);
+        return Objects.hash(messageReactionId, reactionUser, reaction);
     }
 }
