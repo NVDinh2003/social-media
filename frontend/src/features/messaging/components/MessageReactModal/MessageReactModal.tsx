@@ -5,24 +5,43 @@ import { mapReactionBar } from "../../../../utils/EmojiUtils";
 import "./MessageReactModal.css";
 
 interface MessageReactModalProps {
-  handleClick: (e: React.MouseEvent<HTMLImageElement>) => void;
+  handleClick: (emoji: string) => void;
   distance: { bottom: number; right: number };
+  fromUser: boolean;
 }
 export const MessageReactModal: React.FC<MessageReactModalProps> = ({
   handleClick,
   distance,
+  fromUser,
 }) => {
   const reactionBarData = mapReactionBar();
   const [displayDropDown, setDisplayDropDown] = useState<boolean>(false);
+
+  const modalStyle = () => {
+    if (fromUser) {
+      return {
+        marginBottom: `${distance.bottom + 8}px`,
+        marginLeft: `-${distance.right - 94}px`,
+      };
+    } else {
+      return {
+        marginBottom: `${distance.bottom + 8}px`,
+        marginLeft: `-${distance.right + 140}px`,
+      };
+    }
+  };
+
+  const emojiClicked = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    handleClick(e.currentTarget.id);
+  };
+
   return (
     <div
       className={`message-react-modal ${
         displayDropDown ? "react-modal-more" : "react-modal-default"
       }`}
-      style={{
-        marginBottom: `${distance.bottom + 8}px`,
-        marginLeft: `-${distance.right - 94}px`,
-      }}
+      style={modalStyle()}
     >
       {!displayDropDown && (
         <>
@@ -31,7 +50,7 @@ export const MessageReactModal: React.FC<MessageReactModalProps> = ({
               <div
                 className="message-react-modal-option"
                 id={emoji.emoji}
-                onClick={handleClick}
+                onClick={emojiClicked}
               >
                 <img
                   className="message-react-moda-option-emoji"

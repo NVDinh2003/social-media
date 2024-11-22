@@ -5,6 +5,7 @@ import {
   CreateMessageDTO,
   Notification as INotification,
   Message,
+  User,
 } from "../../utils/GlobalInterface";
 import axios from "axios";
 import { readMessageNotifications } from "./NotificationSlice";
@@ -44,6 +45,13 @@ interface SendMessagePayload {
 interface ReadMessagesPayload {
   userId: number;
   conversationId: number;
+  token: string;
+}
+
+interface ReactToMessagePayload {
+  user: User;
+  message: Message;
+  reaction: string;
   token: string;
 }
 
@@ -177,6 +185,29 @@ export const readMessages = createAsyncThunk(
         }
       );
       thunkAPI.dispatch(readMessageNotifications(res.data));
+      return res.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
+export const reactToMessage = createAsyncThunk(
+  "message/react",
+  async (payload: ReactToMessagePayload, thunkAPI) => {
+    try {
+      let body = {
+        user: payload.user,
+        messageId: payload.message.messageId,
+        reaction: payload.reaction,
+      };
+      console.log(body);
+      let res = await axios.post("http://localhost:8000/message/react", body, {
+        headers: {
+          Authorization: `Bearer ${payload.token}`,
+        },
+      });
+
       return res.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
@@ -373,6 +404,36 @@ export const MessageSlice = createSlice({
         };
         return state;
       });
+
+    // react to message
+    builder.addCase(reactToMessage.fulfilled, (state, action) => {
+      if (state.conversation) {
+        let messages = state.conversation.conversationMessage.map((message) => {
+          if (message.messageId == action.payload.messageId) {
+            return action.payload;
+          }
+
+          return message;
+        });
+        let updatedConversation = {
+          ...state.conversation,
+          conversationMessage: messages,
+        };
+        let updatedConversations = state.conversations.map((conversation) => {
+          if (conversation.conversationId === action.payload.conversationId) {
+            return updatedConversation;
+          }
+          return conversation;
+        });
+        state = {
+          ...state,
+          conversation: updatedConversation,
+          conversations: updatedConversations,
+        };
+      }
+
+      return state;
+    });
   },
 });
 

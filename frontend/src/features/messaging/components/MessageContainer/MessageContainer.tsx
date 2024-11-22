@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import "./MessageContainer.css";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux/Store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../redux/Store";
 import ProfilePicture from "../../../../components/ProfilePicture/ProfilePicture";
 import { Circle, MoreHoriz } from "@mui/icons-material";
 import {
@@ -19,12 +19,14 @@ import { MessageReactModal } from "../MessageReactModal/MessageReactModal";
 import { Message } from "../../../../utils/GlobalInterface";
 import { convertPostContentToElements } from "../../../post/utils/PostUtils";
 import ReactSVG from "../../../../components/SVGs/Messages/ReactSVG";
+import { MessageReactionContainer } from "../MessageReactionContainer/MessageReactionContainer";
+import { reactToMessage } from "../../../../redux/Slices/MessagesSlice";
 
 export const MessageContainer: React.FC<{
   message: Message;
   showSent: boolean;
 }> = ({ message, showSent }) => {
-  const loggedIn = useSelector((state: RootState) => state.user.loggedIn);
+  const { loggedIn, token } = useSelector((state: RootState) => state.user);
   const conversation = useSelector(
     (state: RootState) => state.message.conversation
   );
@@ -39,6 +41,10 @@ export const MessageContainer: React.FC<{
     top: number;
     left: number;
   }>({ top: 0, left: 0 });
+  const [flipMore, setFlipMore] = useState<boolean>(false);
+
+  const dispatch: AppDispatch = useDispatch();
+
   const reactRef = useRef<HTMLDivElement>(null);
   const moreRef = useRef<HTMLDivElement>(null);
   const watcherRef = useRef<HTMLDivElement>(null);
@@ -90,6 +96,15 @@ export const MessageContainer: React.FC<{
     if (moreRef && moreRef.current) {
       const top = moreRef.current.getBoundingClientRect().top;
       const left = moreRef.current.getBoundingClientRect().left;
+      if (
+        window.innerHeight - moreRef.current.getBoundingClientRect().top <
+        132
+      ) {
+        setFlipMore(true);
+      } else {
+        setFlipMore(false);
+      }
+
       setMoreDistance({ top, left });
     }
   };
@@ -106,6 +121,20 @@ export const MessageContainer: React.FC<{
       console.log(bottom, right);
       setReactDistance({ bottom, right });
     }
+  };
+
+  const messageReaction = (emoji: string) => {
+    if (loggedIn && token) {
+      dispatch(
+        reactToMessage({
+          user: loggedIn,
+          message,
+          reaction: emoji,
+          token,
+        })
+      );
+    }
+    setDisplayReact(false);
   };
 
   useEffect(() => {
@@ -135,13 +164,18 @@ export const MessageContainer: React.FC<{
             {message.messageText !== "" && (
               <div className="message message-blue">{textContent()}</div>
             )}
+            <div className="message-reaction-right-wrapper">
+              {message.reactions.length > 0 && (
+                <MessageReactionContainer message={message} />
+              )}
+            </div>
             <div className="message-subtitle">
               {sentAt()}
               {(showSent ||
                 (message.seenBy && message.seenBy.length !== 0)) && (
                 <Circle sx={{ fontSize: "4px", color: "#657786" }} />
               )}
-              {showSent && <>Sent</>}
+              {showSent && message.seenBy.length === 0 && <>Sent</>}
               {conversation &&
                 conversation.conversationUsers.length > 2 &&
                 message.seenBy &&
@@ -163,6 +197,13 @@ export const MessageContainer: React.FC<{
                 )}
               </div>
             </div>
+
+            <div className="message-reaction-left-wrapper">
+              {message.reactions.length > 0 && (
+                <MessageReactionContainer message={message} />
+              )}
+            </div>
+
             <div className="message-subtitle message-subtitle-left">
               {message.sentBy.nickname}
               <Circle sx={{ fontSize: "4px", color: "#657786" }} />
@@ -175,8 +216,9 @@ export const MessageContainer: React.FC<{
             <div className="message-content-react-options">
               {displayReact && (
                 <MessageReactModal
-                  handleClick={() => {}}
+                  handleClick={messageReaction}
                   distance={reactDistance}
+                  fromUser={usersMessage()}
                 />
               )}
               <div
@@ -197,7 +239,10 @@ export const MessageContainer: React.FC<{
               {displayMore && (
                 <MessageMoreModal
                   distance={moreDistance}
+                  fromUser={usersMessage()}
+                  flipMore={flipMore}
                   handleCopyClicked={() => {}}
+                  handleReportClicked={() => {}}
                   handleDeleteClicked={() => {}}
                   handleReplyClicked={() => {}}
                 />

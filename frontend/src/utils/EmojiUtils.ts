@@ -199,6 +199,18 @@ export const mapReactionBar = () => {
   return data;
 };
 
+export const getEmojiImageByEmojiAscii = (ascii: string): string => {
+  let emoji: Emoji | undefined;
+
+  for (let e of EMOJIS) {
+    if (e.emoji === ascii) emoji = e;
+  }
+
+  if (emoji) return emoji.images[0];
+
+  return "";
+};
+
 export const determineSkinToneColor = (currentSkinTone: string): string => {
   switch (currentSkinTone) {
     case "light":
