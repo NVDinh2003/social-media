@@ -69,4 +69,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     boolean hasUserViewedPost(@Param("postId") Integer postId, @Param("userId") Integer userId);
 
     Optional<List<Post>> findByPostIdIn(List<Integer> postIds);
+
+    // publish schedule post
+    List<Post> findAllByScheduledTrueAndScheduledDateBefore(LocalDateTime now);
+
 }

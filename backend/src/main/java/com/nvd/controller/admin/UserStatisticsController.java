@@ -3,6 +3,7 @@ package com.nvd.controller.admin;
 import com.nvd.dto.admin.UserTop5;
 import com.nvd.models.ApplicationUser;
 import com.nvd.service.UserService;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.List;
 @CrossOrigin("*")
 @RequiredArgsConstructor
 @Slf4j
+@RolesAllowed("ADMIN")
 public class UserStatisticsController {
     private final UserService userService;
 
@@ -47,5 +49,6 @@ public class UserStatisticsController {
             return ResponseEntity.status(403).body(null);
         }
     }
+
 
 }

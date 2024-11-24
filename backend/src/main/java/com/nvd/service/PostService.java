@@ -456,4 +456,18 @@ public class PostService {
     }
 
 
+    // publish schedule post
+    @Transactional
+    public void publishScheduledPosts() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Post> scheduledPosts = postRepository.findAllByScheduledTrueAndScheduledDateBefore(now);
+
+        for (Post post : scheduledPosts) {
+            post.setScheduled(false);
+            post.setPostedDate(now);  // reset scheduled time
+            postRepository.save(post);
+            log.info("Published scheduled post: {}", post.getPostId());
+        }
+    }
+
 }

@@ -152,6 +152,4 @@ public class Post implements Comparable<Post> {
     public int compareTo(Post o) {
         return -this.postedDate.compareTo(o.postedDate);
     }
-
-
 }
