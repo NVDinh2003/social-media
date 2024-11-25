@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RolesAllowed("ADMIN")
 public class AdminController {
-
+    
 }
