@@ -73,4 +73,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     // publish schedule post
     List<Post> findAllByScheduledTrueAndScheduledDateBefore(LocalDateTime now);
 
+    @Query(value = "SELECT count(p.post_id) as CountPost FROM posts p WHERE p.author_id = :userId", nativeQuery = true)
+    int countPostByUser(int userId);
 }

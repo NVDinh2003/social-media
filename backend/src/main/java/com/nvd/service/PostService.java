@@ -470,4 +470,8 @@ public class PostService {
         }
     }
 
+    public int countPostByUser(int userId) {
+        return postRepository.countPostByUser(userId);
+    }
+
 }
