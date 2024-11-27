@@ -365,4 +365,17 @@ public class UserService implements UserDetailsService {
     public List<Object[]> getTop5UsersByPostsAndStarsCurrentMonth() {
         return userRepository.findTop5UsersByPostsAndStarsCurrentMonth();
     }
+
+    public void disable(ApplicationUser user) {
+        int roleId = roleRepository.findRoleByUserID(user.getUserId());
+        if (Boolean.TRUE.equals(user.getEnabled())) {
+            if (roleId != 1) {
+                user.setEnabled(false);
+            }
+        } else {
+            user.setEnabled(true);
+        }
+        userRepository.save(user);
+    }
+
 }

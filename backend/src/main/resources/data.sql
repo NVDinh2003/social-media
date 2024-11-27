@@ -1,6 +1,6 @@
 insert into roles
-values (1, 'USER'),
-       (2, 'ADMIN');
+values (1, 'ADMIN'),
+       (2, 'USER');
 
 insert into users(email, enabled, first_name, last_name, nickname, password, username, bio, create_ts, dob)
 values ('rick@mail.com', true, 'Rick', 'Sanchez', 'Rick',
@@ -34,13 +34,13 @@ values ('Beth', 'Smith', 'beth@mail.com', 'TheBethSmith',
         false, false, now(), '2000-01-01');
 
 insert into user_roles_junction(user_id, role_id)
-values (1, 1),
-       (2, 1),
-       (3, 1),
-       (4, 1),
-       (5, 1),
-       (6, 1),
-       (7, 1);
+values (1, 2),
+       (2, 2),
+       (3, 2),
+       (4, 2),
+       (5, 2),
+       (6, 2),
+       (7, 2);
 
 
 -- insert into posts (audience, content, posted_date, reply_restriction, scheduled, author_id)
