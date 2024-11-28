@@ -58,6 +58,7 @@ public class Post implements Comparable<Post> {
     @Column(name = "reply_to")
     private Integer replyTo;
 
+    private Boolean isBan;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -138,12 +139,20 @@ public class Post implements Comparable<Post> {
         this.reposts = new HashSet<>();
         this.stars = new HashSet<>();
         this.views = new HashSet<>();
+        this.isBan = false;
     }
 
     public Boolean isReply() {
         if (isReply == null)
             return false;
         return isReply;
+    }
+
+    public Boolean isBan() {
+        if (isBan == null) {
+            return false;
+        }
+        return isBan;
     }
 
 

@@ -464,9 +464,9 @@ public class PostService {
 
         for (Post post : scheduledPosts) {
             post.setScheduled(false);
-            post.setPostedDate(now);  // reset scheduled time
+            post.setPostedDate(now);
             postRepository.save(post);
-            log.info("Published scheduled post: {}", post.getPostId());
+            notificationService.createAndSendPostNotifications(post);
         }
     }
 
@@ -474,4 +474,12 @@ public class PostService {
         return postRepository.countPostByUser(userId);
     }
 
+    public void disable(Post post) {
+        if (!post.isBan()) {
+            post.setIsBan(true);
+        } else {
+            post.setIsBan(false);
+        }
+        postRepository.save(post);
+    }
 }

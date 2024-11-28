@@ -12,4 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RolesAllowed("ADMIN")
 public class AdminPostRepostedController {
     private PostReportedService postReportedService;
+
+
 }
