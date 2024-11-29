@@ -30,7 +30,7 @@ public class AdminUserRepostedController {
     Calendar now = Calendar.getInstance();
     int month = now.get(Calendar.MONTH) + 1;
 
-    @GetMapping("/list-users-reported-by-day")
+    @GetMapping("/list-users-reported/day")
     public ResponseEntity<List<UserReportedDetail>> getListUserReportedByDay() {
         try {
             int day = now.get(Calendar.DAY_OF_MONTH);
@@ -43,7 +43,7 @@ public class AdminUserRepostedController {
         }
     }
 
-    @GetMapping("/list-users-reported-by-year")
+    @GetMapping("/list-users-reported/year")
     public ResponseEntity<List<UserReportedDetail>> getListUserReportedByYear() {
         try {
             int year = Year.now().getValue();
@@ -60,27 +60,26 @@ public class AdminUserRepostedController {
         }
 
     }
-
-
-    @GetMapping("/total-user-reported-by-year")
+    
+    @GetMapping("/total-user-reported/year")
     public int getTotalUserReportedByYear() {
         int year = now.get(Calendar.YEAR);
         return userReportedService.getTotalUserReportedByYear(year);
     }
 
-    @GetMapping("/total-user-reported-by-month")
+    @GetMapping("/total-user-reported/month")
     public int getTotalUserReportedByMonth() {
 
         return userReportedService.getTotalUserReportedByMonth(month);
     }
 
-    @GetMapping("/total-user-reported-by-day")
+    @GetMapping("/total-user-reported/day")
     public int getTotalUserReportedByDay() {
         int day = now.get(Calendar.DAY_OF_MONTH);
         return userReportedService.getTotalUserReportedByDay(day, month);
     }
 
-    @GetMapping("/percent-user-reported-year-increase")
+    @GetMapping("/percent-user-reported-increase/year")
     public double getPercentUserReportedYearIncrease() {
         int previousYear = now.get(Calendar.YEAR) - 1;
         int currentYear = now.get(Calendar.YEAR);
@@ -90,7 +89,7 @@ public class AdminUserRepostedController {
         return caculatePercentIncrease(previousMonthValue, currentMonthValue);
     }
 
-    @GetMapping("/percent-user-reported-month-increase")
+    @GetMapping("/percent-user-reported-increase/month")
     public double getPercentUserReportedMonthIncrease() {
         int previousMonth = now.get(Calendar.MONTH);
         int currentMonth = previousMonth + 1;
@@ -100,7 +99,7 @@ public class AdminUserRepostedController {
         return caculatePercentIncrease(previousMonthValue, currentMonthValue);
     }
 
-    @GetMapping("/percent-user-reported-day-increase")
+    @GetMapping("/percent-user-reported-increase/day")
     public double getPercentUserReportedDayIncrease() {
         int previousDay = now.get(Calendar.DAY_OF_MONTH) - 1;
         int currentDay = now.get(Calendar.DAY_OF_MONTH);
