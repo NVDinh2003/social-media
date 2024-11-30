@@ -22,6 +22,8 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Integer> 
 
     Optional<ApplicationUser> findByEmail(String email);
 
+
+    // STATISTICS users
     @Query(value = "SELECT u.username, COUNT(p.post_id) AS post_count, COUNT(psj.user_id) AS star_count " +
             "FROM users u " +
             "LEFT JOIN posts p ON u.user_id = p.author_id " +
@@ -32,5 +34,20 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Integer> 
             "LIMIT 5", nativeQuery = true)
     List<Object[]> findTop5UsersByPostsAndStarsCurrentMonth();
 
+    //-lấy tổng số người dùng theo ngày
+    @Query(value = "SELECT COUNT(user_id) FROM users WHERE EXTRACT(DAY FROM create_ts)=:day AND EXTRACT(MONTH FROM create_ts)=:month AND EXTRACT(YEAR FROM create_ts)=:year", nativeQuery = true)
+    int getTotalUserByDay(int day, int month, int year);
 
+    // -lấy tổng số người dùng theo tháng
+    @Query(value = "SELECT COUNT(user_id) FROM users WHERE EXTRACT(MONTH FROM create_ts)=:month AND EXTRACT(YEAR FROM create_ts)=:year", nativeQuery = true)
+    int getTotalUserByMonth(int month, int year);
+
+    //  -lấy tổng số người dùng theo năm
+    @Query(value = "SELECT COUNT(user_id) FROM users WHERE EXTRACT(YEAR FROM create_ts)=:year", nativeQuery = true)
+    int getTotalUserByYear(int year);
+
+    //  -Tổng số người dùng tham gia từng theo từng tháng
+    @Query(value = "SELECT EXTRACT(MONTH FROM create_ts) AS MONTH, COUNT(user_id) "
+            + "FROM users WHERE EXTRACT(YEAR FROM create_ts)=:year GROUP BY EXTRACT(MONTH FROM create_ts) ORDER BY EXTRACT(MONTH FROM create_ts) ASC", nativeQuery = true)
+    List<Object[]> getTotalUserEveryMonth(int year);
 }

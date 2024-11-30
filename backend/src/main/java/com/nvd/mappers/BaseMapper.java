@@ -27,4 +27,5 @@ public interface BaseMapper<E, DTO> {
     // ánh xạ dữ liệu từ DTO vào entity này
     E updateEntity(DTO dto, @MappingTarget E entity);
 
+
 }

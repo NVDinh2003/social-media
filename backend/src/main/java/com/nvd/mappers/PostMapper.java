@@ -51,6 +51,7 @@ public interface PostMapper extends BaseMapper<Post, PostDTO> {
         }).collect(Collectors.toSet());
     }
 
+
     @Override
     default Optional<PostDTO> convertOptional(Optional<Post> user) {
         return user.map(this::convertToDTO);

@@ -44,6 +44,8 @@ export const ConversationUserInfo: React.FC<{ user: User }> = ({ user }) => {
   };
 
   useEffect(() => {
+    console.log(user);
+
     const fetchUsersFollowers = async () => {
       const fetchedFollowers = await getFollowers(user.username);
       //   console.log(fetchedFollowers.length);

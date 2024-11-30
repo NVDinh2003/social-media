@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Date;
 import java.text.Normalizer;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -48,6 +49,9 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
     private final UserMapper userMapper;
+
+    Calendar now = Calendar.getInstance();
+    int year = now.get(Calendar.YEAR);
 
 
     public ApplicationUser registerUser(RegistrationObject ro) {
@@ -360,12 +364,7 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    // statistics
-
-    public List<Object[]> getTop5UsersByPostsAndStarsCurrentMonth() {
-        return userRepository.findTop5UsersByPostsAndStarsCurrentMonth();
-    }
-
+    // ban user if in reported
     public void disable(ApplicationUser user) {
         int roleId = roleRepository.findRoleByUserID(user.getUserId());
         if (Boolean.TRUE.equals(user.getEnabled())) {
@@ -376,6 +375,31 @@ public class UserService implements UserDetailsService {
             user.setEnabled(true);
         }
         userRepository.save(user);
+    }
+
+    // ==========  STATISTICS users
+    public List<Object[]> getTop5UsersByPostsAndStarsCurrentMonth() {
+        return userRepository.findTop5UsersByPostsAndStarsCurrentMonth();
+    }
+
+    // lấy tổng số người dùng theo ngày
+    public int getTotalUserByDay(int day, int month) {
+        return userRepository.getTotalUserByDay(day, month, year);
+    }
+
+    // lấy tổng số người dùng theo tháng
+    public int getTotalUserByMonth(int month) {
+        return userRepository.getTotalUserByMonth(month, year);
+    }
+
+    // lấy tổng số người dùng theo năm
+    public int getTotalUserByYear(int yearx) {
+        return userRepository.getTotalUserByYear(yearx);
+    }
+
+    // Tổng số người dùng tham gia từng theo từng tháng
+    public List<Object[]> getTotalUserEveryMonth() {
+        return userRepository.getTotalUserEveryMonth(year);
     }
 
 }

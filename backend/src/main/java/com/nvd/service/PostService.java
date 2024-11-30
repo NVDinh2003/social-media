@@ -470,6 +470,8 @@ public class PostService {
         }
     }
 
+    // ==== POST STATISTICS
+
     public int countPostByUser(int userId) {
         return postRepository.countPostByUser(userId);
     }
@@ -481,5 +483,35 @@ public class PostService {
             post.setIsBan(false);
         }
         postRepository.save(post);
+    }
+
+
+    Calendar now = Calendar.getInstance();
+    int year = now.get(Calendar.YEAR);
+
+    // -lấy tổng số bài đăng theo ngày
+    public int getTotalPostByDay(int day, int month) {
+        return postRepository.getTotalPostByDay(day, month, year);
+    }
+
+    // -lấy tổng số bài đăng theo tháng
+    // lastest update 14-10
+    public int getTotalPostByMonth(int month) {
+        return postRepository.getTotalPostByMonth(month, year);
+    }
+
+    // -lấy tổng số bài đăng theo năm
+    public int getTotalPostByYear(int year) {
+        return postRepository.getTotalPostByYear(year);
+    }
+
+    //Top 5 bài đăng có lượt yêu thích nhiều stars và like nhất
+    public List<Object[]> getTop5PostsByStarsAndLikesCurrentMonth() {
+        return postRepository.getTop5PostsByStarsAndLikesCurrentMonth();
+    }
+
+    //Tổng số bài đăng theo từng tháng
+    public List<Object[]> getTotalPostEveryMonth() {
+        return postRepository.getTotalPostEveryMonth(year);
     }
 }

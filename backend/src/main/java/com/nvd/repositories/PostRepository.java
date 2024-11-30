@@ -73,6 +73,36 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     // publish schedule post
     List<Post> findAllByScheduledTrueAndScheduledDateBefore(LocalDateTime now);
 
+    // ===== STATICTIS posts
     @Query(value = "SELECT count(p.post_id) as CountPost FROM posts p WHERE p.author_id = :userId", nativeQuery = true)
     int countPostByUser(int userId);
+
+    // lấy tổng số bài đăng theo ngày
+    @Query(value = "SELECT COUNT(post_id) FROM post WHERE EXTRACT(DAY FROM posted_date)=:day AND EXTRACT(MONTH FROM posted_date)=:month AND EXTRACT(YEAR FROM posted_date)=:year", nativeQuery = true)
+    int getTotalPostByDay(int day, int month, int year);
+
+    // lấy tổng số bài đăng theo tháng
+    @Query(value = "SELECT COUNT(post_id) FROM post WHERE EXTRACT(MONTH FROM posted_date)=:month AND EXTRACT(YEAR FROM posted_date)=:year", nativeQuery = true)
+    int getTotalPostByMonth(int month, int year);
+
+    // lấy tổng số bài đăng theo năm
+    @Query(value = "SELECT COUNT(post_id) FROM post WHERE EXTRACT(YEAR FROM posted_date)=:year", nativeQuery = true)
+    int getTotalPostByYear(int year);
+
+    // Top 4 bài đăng có lượt yêu thích nhiều nhất
+    @Query(value = "SELECT p.post_id, COUNT(DISTINCT psj.user_id) AS Total_Stars, COUNT(DISTINCT plj.user_id) AS Total_Likes\n" +
+            " FROM posts p LEFT JOIN post_star_junction psj ON p.post_id = psj.post_id\n" +
+            " LEFT JOIN post_likes_junction plj ON p.post_id = plj.post_id\n" +
+            " WHERE EXTRACT(MONTH FROM p.posted_date) = EXTRACT(MONTH FROM CURRENT_DATE)\n" +
+            " AND EXTRACT(YEAR FROM p.posted_date) = EXTRACT(YEAR FROM CURRENT_DATE)\n" +
+            " GROUP BY p.post_id\n" +
+            " ORDER BY Total_Stars DESC, Total_Likes DESC\n" +
+            " LIMIT 5;", nativeQuery = true)
+    List<Object[]> getTop5PostsByStarsAndLikesCurrentMonth();
+
+    // Tổng số bài đăng theo từng tháng
+    @Query(value = "SELECT EXTRACT(MONTH FROM posted_date) AS MONTH, COUNT(*) \r\n"
+            + "FROM post WHERE EXTRACT(YEAR FROM posted_date)=:year\r\n" + "GROUP BY EXTRACT(MONTH FROM posted_date) \r\n"
+            + "ORDER BY EXTRACT(MONTH FROM posted_date) ASC;", nativeQuery = true)
+    List<Object[]> getTotalPostEveryMonth(int year);
 }
