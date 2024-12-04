@@ -8,7 +8,7 @@ import com.nvd.models.ApplicationUser;
 import com.nvd.service.NotificationService;
 import com.nvd.service.TokenService;
 import com.nvd.service.UserService;
-import com.nvd.utils.SpamRrequestCheck;
+import com.nvd.utils.SpamRequestCheck;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ public class UserController {
     private final TokenService tokenService;
     private final NotificationService notificationService;
 
-    @SpamRrequestCheck // Áp dụng kiểm tra Redis trước khi xử lý method này
+    @SpamRequestCheck // Áp dụng kiểm tra Redis trước khi xử lý method này
     @GetMapping("/{username}")
     public ApplicationUser getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username);

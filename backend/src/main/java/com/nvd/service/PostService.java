@@ -357,6 +357,38 @@ public class PostService {
     }
 
     @Transactional
+    public PostDTO updatePost(int id, CreatePostDTO postDTO) {
+        Post post = postRepository.findById(id).orElseThrow(PostDoesNotExistException::new);
+
+        post.setContent(postDTO.getContent());
+        post.setScheduled(postDTO.getScheduled());
+        post.setScheduledDate(postDTO.getScheduledDate());
+        post.setAudience(postDTO.getAudience());
+        post.setReplyRestriction(postDTO.getReplyRestriction());
+
+        // Update images
+        if (postDTO.getImages() != null) {
+            post.setImages(postDTO.getImages());
+        }
+
+        if (postDTO.getPoll() != null) {
+            Poll savedPoll = pollService.generatePoll(postDTO.getPoll());
+            post.setPoll(savedPoll);
+        }
+
+        // Update location details
+        if (postDTO.getAddress() != null || postDTO.getProvinceCode() != null) {
+            post.setAddress(postDTO.getAddress());
+            post.setProvince(provinceService.findProvinceByID(postDTO.getProvinceCode()));
+            post.setDistrict(districtService.findByCodeAndProvinceCode(postDTO.getDistrictCode(), postDTO.getProvinceCode()));
+            post.setWard(wardService.findByCodeAndDistrictCode(postDTO.getWardCode(), postDTO.getDistrictCode()));
+        }
+
+        Post updatedPost = postRepository.save(post);
+        return postMapper.convertToDTO(updatedPost);
+    }
+
+    @Transactional
     public PostDTO repostPost(Integer postId, String token) {
         Post post = postRepository.findById(postId).orElseThrow(PostDoesNotExistException::new);
         String username = tokenService.getUsernameFromToken(token);

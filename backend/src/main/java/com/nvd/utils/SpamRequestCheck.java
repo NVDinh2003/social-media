@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD) // chỉ sử dụng cho method
 @Retention(RetentionPolicy.RUNTIME) // @SpamRrequestCheck sẽ được giữ lại trong thời gian chạy (runtime)
 // định nghĩa một annotation trong Java
-public @interface SpamRrequestCheck {
+public @interface SpamRequestCheck {
 }

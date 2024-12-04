@@ -64,6 +64,11 @@ public class PostController {
     public PostDTO createMediaPost(@RequestPart("post") String post, @RequestPart("files") List<MultipartFile> files) {
         return postService.createMediaPost(post, files);
     }
+    
+    @PutMapping("/{id}")
+    public PostDTO updatePost(@PathVariable int id, @RequestBody CreatePostDTO postDTO) {
+        return postService.updatePost(id, postDTO);
+    }
 
     @GetMapping("/{id}")
     public PostDTO getPostById(@PathVariable int id) {
